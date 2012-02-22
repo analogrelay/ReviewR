@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 11
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewR.Web", "ReviewR.Web\ReviewR.Web.csproj", "{596974E4-6D9A-4D35-BB1F-053918A00C42}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewR.Diff", "ReviewR.Diff\ReviewR.Diff.csproj", "{DC7ACBDF-CD03-4ADE-8CBB-54AC01C80995}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewR.Diff.Facts", "ReviewR.Diff.Facts\ReviewR.Diff.Facts.csproj", "{4496BB12-1F69-43A5-AEF8-0A78080AF0EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewR.Web", "ReviewR.Web\ReviewR.Web.csproj", "{90CED1D5-B517-46E0-AAE8-F7D3CDB88003}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{4496BB12-1F69-43A5-AEF8-0A78080AF0EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4496BB12-1F69-43A5-AEF8-0A78080AF0EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4496BB12-1F69-43A5-AEF8-0A78080AF0EB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{596974E4-6D9A-4D35-BB1F-053918A00C42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{596974E4-6D9A-4D35-BB1F-053918A00C42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{596974E4-6D9A-4D35-BB1F-053918A00C42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{596974E4-6D9A-4D35-BB1F-053918A00C42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90CED1D5-B517-46E0-AAE8-F7D3CDB88003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90CED1D5-B517-46E0-AAE8-F7D3CDB88003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90CED1D5-B517-46E0-AAE8-F7D3CDB88003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90CED1D5-B517-46E0-AAE8-F7D3CDB88003}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DC7ACBDF-CD03-4ADE-8CBB-54AC01C80995}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DC7ACBDF-CD03-4ADE-8CBB-54AC01C80995}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC7ACBDF-CD03-4ADE-8CBB-54AC01C80995}.Release|Any CPU.ActiveCfg = Release|Any CPU

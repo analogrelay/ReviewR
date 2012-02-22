@@ -1,52 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>@ViewBag.Title - My ASP.NET MVC Application</title>
-        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-        <link href="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/Content/css")" rel="stylesheet" type="text/css" />
-        <link href="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/Content/themes/base/css")" rel="stylesheet" type="text/css" />
-        <script src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/Scripts/js")"></script>
-        <meta name="viewport" content="width=device-width" />
-    </head>
-    <body>
-        <header>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p class="site-title">@Html.ActionLink("your logo here.", "Index", "Home")</p>
-                </div>
-                <div class="float-right">
-                    <section id="login">
-                        @Html.Partial("_LoginPartial")
-                    </section>
-                    <nav>
-                        <ul id="menu">
-                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                            <li>@Html.ActionLink("About", "About", "Home")</li>
-                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </header>
-        <div id="body">
-            @RenderSection("featured", required: false)
-            <section class="content-wrapper main-content clear-fix">
-                @RenderBody()
-            </section>
-        </div>
-        <footer>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p>&copy; @DateTime.Now.Year - My ASP.NET MVC Application</p>
-                </div>
-                <div class="float-right">
-                    <ul id="social">
-                        <li><a href="http://facebook.com" class="facebook">Facebook</a></li>
-                        <li><a href="http://twitter.com" class="twitter">Twitter</a></li>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/themes/base/jquery.ui.all.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/DiffViewer.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
+    
+    <script type="text/javascript" src="~/Scripts/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.17.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.render.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/Kudu.DiffViewer.js"></script>
+    <script type="text/javascript" src="~/Client/ReviewR.js"></script>
+    @if(!Request.IsAuthenticated) {
+        <script type="text/javascript" src="~/Client/ReviewR.Auth.js"></script>
+    }
+</head>
+<body>
+    <header class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand" href="~/">
+                    ReviewR
+                </a>
+                <nav id="master-nav">
+                    <ul class="nav pull-right">
+                        @if (Request.IsAuthenticated)
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    @Gravatar.GetHtml(User.Identity.Name)
+                                    @User.Identity
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("Logout", "Account")</li>
+                                </ul>
+                            </li>
+                        } 
+                        else {
+                            <li>@Html.ActionLink("Register", "Register", "Account", null, new { title = "Create a ReviewR Account", data_dialog = "data-dialog" })</li>
+                            <li>@Html.ActionLink("Login", "Login", "Account", null, new { title = "Login to ReviewR", data_dialog = "data-dialog" })</li>
+                        }
                     </ul>
-                </div>
+                </nav>
             </div>
-        </footer>
-    </body>
+        </div>
+    </header>
+    <div class="container-fluid">
+        @RenderBody()
+    </div>
+    <footer class="container-fluid">
+        By Andrew Nurse
+    </footer>
+</body>
 </html>

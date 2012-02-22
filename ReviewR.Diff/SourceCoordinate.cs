@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ReviewR.Diff
 {
-    public struct SourceCoordinate
+    public struct SourceCoordinate : IEquatable<SourceCoordinate>
     {
         public int Line { get; private set; }
         public int Column { get; private set; }
@@ -14,6 +14,21 @@ namespace ReviewR.Diff
         {
             Line = line;
             Column = column;
+        }
+        
+        public override bool Equals(object obj)
+        {
+            return Equals((SourceCoordinate)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Line.GetHashCode() ^ Line.GetHashCode()).GetHashCode();
+        }
+
+        public bool Equals(SourceCoordinate other)
+        {
+            return Line == other.Line && Column == other.Column;
         }
     }
 }

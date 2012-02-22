@@ -1,41 +1,43 @@
-@model ReviewR.Web.Models.LoginModel
+﻿@model ReviewR.Web.Models.LoginViewModel
 
 @{
-    ViewBag.Title = "Log in";
+    ViewBag.Title = "Login";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Enter your user name and password below.</h2>
+<hgroup>
+    <h2>Log in.</h2>
+    <h3>Enter your email address and password.</h3>
 </hgroup>
 
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
 
-@using (Html.BeginForm((string)ViewBag.FormAction, "Account")) {
-    @Html.ValidationSummary(true, "Log in was unsuccessful. Please correct the errors and try again.")
+@using (Html.BeginForm()) 
+{
+    @Html.ValidationSummary(excludePropertyErrors: true)
 
-    <fieldset>
-        <legend>Log in Form</legend>
+    <fieldset class="no-legend">
+        <legend>Log in.</legend>
         <ol>
-            <li>
-                @Html.LabelFor(m => m.UserName)
-                @Html.TextBoxFor(m => m.UserName)
-                @Html.ValidationMessageFor(m => m.UserName)
+            <li class="control-group">
+                @Html.LabelFor(model => model.Email)
+                @Html.EditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
             </li>
-            <li>
-                @Html.LabelFor(m => m.Password)
-                @Html.PasswordFor(m => m.Password)
-                @Html.ValidationMessageFor(m => m.Password)
+            <li class="control-group">
+                @Html.LabelFor(model => model.Password)
+                @Html.EditorFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
             </li>
-            <li>
-                @Html.CheckBoxFor(m => m.RememberMe)
-                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+            <li class="control-group">
+                <label class="checkbox">
+                    @Html.EditorFor(model => model.RememberMe)
+                    Remember Me
+                </label>
             </li>
         </ol>
-        <input type="submit" value="Log in" />
     </fieldset>
-    <p>
-        @Html.ActionLink("Register", "Register") if you don't have an account.
-    </p>
+    <div class="modal-bar">
+        <input type="submit" value="Log In" class="btn-primary btn-large" />
+    </div>
 }

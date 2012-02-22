@@ -12,16 +12,18 @@ namespace ReviewR.Diff
     {
         private static readonly Regex HunkHeaderRegex = new Regex(@"@@\s*\-(?<l1>\d+),(?<c1>\d+)\s*\+(?<l2>\d+),(?<c2>\d+)\s*@@");
 
-        public static async Task<Diff> Read(TextReader unifiedDiff)
+        public static Diff Read(TextReader source)
         {
+            if (source == null) { throw new ArgumentNullException("source"); }
+
             // Start by reading the file names
-            string original = await ReadFileName(unifiedDiff, "---");
-            string modified = await ReadFileName(unifiedDiff, "+++");
+            string original = ReadFileName(source, "---");
+            string modified = ReadFileName(source, "+++");
             Diff diff = new Diff(original, modified);
 
             // Read Hunks
             DiffHunk hunk;
-            while ((hunk = await ReadHunk(unifiedDiff)) != null)
+            while ((hunk = ReadHunk(source)) != null)
             {
                 diff.Hunks.Add(hunk);
             }
@@ -29,10 +31,14 @@ namespace ReviewR.Diff
             return diff;
         }
 
-        private static async Task<DiffHunk> ReadHunkAsync(TextReader reader)
+        private static DiffHunk ReadHunk(TextReader reader)
         {
             // Read hunk header
-            string header = await reader.ReadLineAsync();
+            string header = reader.ReadLine();
+            if (String.IsNullOrEmpty(header))
+            {
+                return null;
+            }
             Match m = HunkHeaderRegex.Match(header);
             if (!m.Success)
             {
@@ -44,16 +50,23 @@ namespace ReviewR.Diff
             DiffHunk hunk = new DiffHunk(original, modified);
 
             DiffLine line;
-            while (((await line = ReadLineAsync(reader)) != null)
+            while ((line = ReadLine(reader)) != null)
             {
                 hunk.Lines.Add(line);
             }
+            return hunk;
         }
 
-        private static async Task<DiffLine> ReadLineAsync(TextReader reader)
+        private static DiffLine ReadLine(TextReader reader)
         {
-            int typeChar = reader.Peek();
+            int typeInt = reader.Peek();
+            if (typeInt == -1)
+            {
+                return null;
+            }
+
             DiffLineType type;
+            char typeChar = (char)typeInt;
             switch (typeChar)
             {
                 case '+':
@@ -65,9 +78,13 @@ namespace ReviewR.Diff
                 case ' ':
                     type = DiffLineType.Same;
                     break;
+                case '@':
+                    // Start of next hunk
+                    return null;
                 default:
                     throw new FormatException("Unknown diff line type: " + typeChar);
             }
+            return new DiffLine(type, reader.ReadLine().Substring(1).TrimEnd('\n', '\r'));
         }
 
         private static SourceCoordinate ReadSourceCoord(string lineStr, string colStr)
@@ -85,12 +102,12 @@ namespace ReviewR.Diff
             return new SourceCoordinate(line, col);
         }
 
-        private static async Task<string> ReadFileName(TextReader reader, string expectedPrefix)
+        private static string ReadFileName(TextReader reader, string expectedPrefix)
         {
-            string line = (await reader.ReadLineAsync()).Trim();
+            string line = reader.ReadLine().Trim();
             if (!line.StartsWith(expectedPrefix))
             {
-                throw new FormatException("Invalid Unified Diff file");
+                throw new FormatException("Invalid Unified Diff header");
             }
             // Extract file name
             return line.Substring(3).Trim();
