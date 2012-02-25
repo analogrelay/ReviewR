@@ -163,6 +163,10 @@
     <Compile Include="App_Start\AuthenticationModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="Models\DiffHunk.cs" />
+    <Compile Include="Models\DiffLine.cs" />
+    <Compile Include="Models\FileChange.cs" />
+    <Compile Include="Models\Review.cs" />
     <Compile Include="ViewModels\NewReviewViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Content Include="DynamicData\Default.aspx" />
