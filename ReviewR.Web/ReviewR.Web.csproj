@@ -167,10 +167,19 @@
     <Compile Include="Migrations\201202251925120_Reviews.Designer.cs">
       <DependentUpon>201202251925120_Reviews.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\DiffHunk.cs" />
+    <Compile Include="Migrations\201202252104340_RemoveDiffHunks.cs" />
+    <Compile Include="Migrations\201202252104340_RemoveDiffHunks.Designer.cs">
+      <DependentUpon>201202252104340_RemoveDiffHunks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201202252108520_FixMisnamedChangeIdColumn.cs" />
+    <Compile Include="Migrations\201202252108520_FixMisnamedChangeIdColumn.Designer.cs">
+      <DependentUpon>201202252108520_FixMisnamedChangeIdColumn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\DiffLine.cs" />
     <Compile Include="Models\FileChange.cs" />
     <Compile Include="Models\Review.cs" />
+    <Compile Include="Services\DiffConverter.cs" />
+    <Compile Include="Services\DiffService.cs" />
     <Compile Include="ViewModels\NewReviewViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Content Include="DynamicData\Default.aspx" />

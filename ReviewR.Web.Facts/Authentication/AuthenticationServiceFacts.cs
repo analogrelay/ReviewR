@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using Moq;
 using ReviewR.Web.Models;
 using ReviewR.Web.Services;
 using VibrantUtils;
@@ -130,7 +132,7 @@ namespace ReviewR.Web.Facts.Authentication
 
         private static AuthenticationService CreateService()
         {
-            return new AuthenticationService(new TestDataRepository(), new TestHashService());
+            return new AuthenticationService(new TestDataRepository(), new TestHashService(), new Mock<HttpContextBase>().Object);
         }
     }
 }

@@ -14,6 +14,6 @@ namespace ReviewR.Web.ViewModels
         public string Name { get; set; }
 
         [Required]
-        public HttpPostedFile Diff { get; set; }
+        public HttpPostedFileBase Diff { get; set; }
     }
 }

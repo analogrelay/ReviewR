@@ -473,7 +473,8 @@ namespace ReviewR.Web.Facts.Controllers
             var c = new TestableAccountController(
                 new AuthenticationService(
                     new TestDataRepository(), 
-                    new TestHashService()), 
+                    new TestHashService(),
+                    new Mock<HttpContextBase>().Object), 
                 new TestAuthTokenService(),
                 new TestUrlService());
             return c;

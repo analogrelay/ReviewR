@@ -3,15 +3,22 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using ReviewR.Web.Infrastructure;
 
-namespace ReviewR.Web.Facts.Authentication
+namespace ReviewR.Web.Facts
 {
     public class TestEntitySet<T> : IEntitySet<T> where T : class
     {
         private IList<T> _items = new List<T>();
         private IList<Tuple<bool, T>> _pending = new List<Tuple<bool, T>>();
+        private TestDataRepository _repo;
+
+        public TestEntitySet(TestDataRepository repo)
+        {
+            _repo = repo;
+        }
 
         public IEntityQuery<T> Include(string path)
         {
@@ -62,6 +69,8 @@ namespace ReviewR.Web.Facts.Authentication
             {
                 if (action.Item1)
                 {
+                    int id = _repo.GetId();
+                    action.Item2.GetType().GetProperty("Id", BindingFlags.Public | BindingFlags.Instance).SetValue(action.Item2, id);
                     _items.Add(action.Item2);
                 }
                 else

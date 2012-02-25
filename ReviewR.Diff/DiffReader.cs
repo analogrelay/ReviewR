@@ -12,7 +12,7 @@ namespace ReviewR.Diff
     {
         private static readonly Regex HunkHeaderRegex = new Regex(@"^\s*@@\s*\-(?<l1>\d+),(?<c1>\d+)\s*\+(?<l2>\d+),(?<c2>\d+)\s*@@(?<c>.*)$", RegexOptions.Multiline);
 
-        public DiffSet Read(TextReader source)
+        public virtual DiffSet Read(TextReader source)
         {
             if (source == null) { throw new ArgumentNullException("source"); }
 

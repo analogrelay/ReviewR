@@ -9,14 +9,21 @@ namespace VibrantUtils
 {
     internal class PropertyEqualityComparer : IEqualityComparer<object>
     {
+        public bool TypeEquality { get; set; }
+
+        public PropertyEqualityComparer() : this(typeEquality: true) { }
+        public PropertyEqualityComparer(bool typeEquality)
+        {
+            TypeEquality = typeEquality;
+        }
+
         public new bool Equals(object x, object y)
         {
-            // Strings are enumerable, shortcut them
             if (x is IEnumerable && y is IEnumerable)
             {
                 return Enumerable.SequenceEqual(((IEnumerable)x).OfType<object>(), ((IEnumerable)y).OfType<object>(), new PropertyEqualityComparer());
             }
-            return (x == null && y == null) || (x != null && y != null && (Object.Equals(x, y) || MemberwiseEqual(x, y)));
+            return (x == null && y == null) || (x != null && y != null && (!TypeEquality || x.GetType().IsAssignableFrom(y.GetType())) && (Object.Equals(x, y) || MemberwiseEqual(x, y)));
         }
 
         public int GetHashCode(object obj)

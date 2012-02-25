@@ -54,7 +54,7 @@ namespace VibrantUtils
         public static void IsJsonResult(ActionResult result, object data)
         {
             JsonResult jsonResult = Assert.IsType<JsonResult>(result);
-            Assert.Equal(data, jsonResult.Data, new PropertyEqualityComparer());
+            Assert.Equal(data, jsonResult.Data, new PropertyEqualityComparer(typeEquality: false));
         }
 
         private static void VerifyViewResult(ViewResultBase viewResultBase, string viewName, object model)

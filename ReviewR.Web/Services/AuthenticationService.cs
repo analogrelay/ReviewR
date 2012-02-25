@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
+using System.Web;
 using ReviewR.Web.Models;
 using VibrantUtils;
 
@@ -9,13 +11,24 @@ namespace ReviewR.Web.Services
 {
     public class AuthenticationService
     {
+        private const string SessionIdKey = "AuthenticationService.CurrentUserId";
+
         public IDataRepository Data { get; set; }
         public HashService Hasher { get; set; }
+        public HttpContextBase Context { get; set; }
 
-        public AuthenticationService(IDataRepository data, HashService hasher)
+        public virtual bool IsAuthenticated
+        {
+            get { return Context.Request.IsAuthenticated; }
+        }
+
+        protected AuthenticationService() { }
+
+        public AuthenticationService(IDataRepository data, HashService hasher, HttpContextBase context)
         {
             Data = data;
             Hasher = hasher;
+            Context = context;
         }
 
         public virtual User LogIn(string email, string password)
@@ -45,7 +58,7 @@ namespace ReviewR.Web.Services
             }
         }
 
-        public CreateUserResult CreateUser(string email, string displayName, string password)
+        public virtual CreateUserResult CreateUser(string email, string displayName, string password)
         {
             Requires.NotNullOrEmpty(email, "email");
             Requires.NotNullOrEmpty(displayName, "displayName");
@@ -71,12 +84,37 @@ namespace ReviewR.Web.Services
             return CreateUserResult.Success;
         }
 
-        public User GetUser(string email)
+        public virtual User GetUser(string email)
         {
             return Data.Users
                        .Include("Roles")
                        .Where(u => u.Email == email)
                        .Single();
+        }
+
+        public virtual int GetCurrentUserId()
+        {
+            // Check Session Cookie
+            string cached = Context.Session[SessionIdKey] as string;
+            int id;
+            if (!String.IsNullOrEmpty(cached) && Int32.TryParse(cached, out id))
+            {
+                return id;
+            }
+            else if (Context.Request.IsAuthenticated)
+            {
+                // Find the user
+                User user = Data.Users
+                                .Where(u => u.Email == Context.User.Identity.Name)
+                                .SingleOrDefault();
+                if (user != null)
+                {
+                    id = user.Id;
+                    Context.Session[SessionIdKey] = id.ToString();
+                    return id;
+                }
+            }
+            throw new SecurityException("This action requires a currently logged in user");
         }
     }
 }

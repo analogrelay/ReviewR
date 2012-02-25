@@ -10,6 +10,7 @@ namespace ReviewR.Web.App_Start
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
     using Ninject;
     using Ninject.Web.Mvc;
+    using ReviewR.Diff;
     using ReviewR.Web.Models;
     using ReviewR.Web.Services;
 
@@ -54,8 +55,11 @@ namespace ReviewR.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            //kernel.Bind<IDataRepository>().To<DefaultDataRepository>();
+            kernel.Bind<IDataRepository>().To<DefaultDataRepository>();
             kernel.Bind<AuthenticationService>().ToSelf();
+            kernel.Bind<DiffService>().ToSelf();
+            kernel.Bind<DiffConverter>().ToSelf();
+            kernel.Bind<DiffReader>().ToSelf();
             kernel.Bind<AuthTokenService>().ToSelf();
             kernel.Bind<HashService>().ToSelf();
             kernel.Bind<UrlService>().ToSelf();

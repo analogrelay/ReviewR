@@ -106,10 +106,13 @@
     <Compile Include="Authentication\AuthenticationServiceFacts.cs" />
     <Compile Include="Authentication\HashServiceFacts.cs" />
     <Compile Include="Authentication\TestHashService.cs" />
-    <Compile Include="Authentication\TestEntitySet.cs" />
+    <Compile Include="TestEntitySet.cs" />
     <Compile Include="Controllers\HomeControllerFacts.cs" />
     <Compile Include="Controllers\ReviewControllerFacts.cs" />
     <Compile Include="Controllers\TestAuthTokenService.cs" />
+    <Compile Include="Controllers\TestPostedFile.cs" />
+    <Compile Include="Diff\DiffConverterFacts.cs" />
+    <Compile Include="Diff\DiffServiceFacts.cs" />
     <Compile Include="TestUrlService.cs" />
     <Compile Include="TestDataRepository.cs" />
     <Compile Include="Controllers\AccountControllerFacts.cs" />
@@ -121,6 +124,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ReviewR.Diff\ReviewR.Diff.csproj">
+      <Project>{dc7acbdf-cd03-4ade-8cbb-54ac01c80995}</Project>
+      <Name>ReviewR.Diff</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ReviewR.Web\ReviewR.Web.csproj">
       <Project>{90ced1d5-b517-46e0-aae8-f7d3cdb88003}</Project>
       <Name>ReviewR.Web</Name>

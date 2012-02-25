@@ -9,6 +9,12 @@ namespace VibrantUtils
 {
     internal static class ContractAssert
     {
+        public static void NotNull(Action op, string paramName)
+        {
+            ArgumentNullException argEx = Assert.Throws<ArgumentNullException>(() => op());
+            VerifyArgEx(argEx, paramName);
+        }
+
         public static void NotNullOrEmpty(Action<string> op, string paramName)
         {
             VerifyNotNullOrEmpty(Assert.Throws<ArgumentException>(() => op(null)), paramName);

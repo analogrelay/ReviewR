@@ -69,7 +69,8 @@ namespace ReviewR.Web.Controllers
                 User user = AuthService.LogIn(model.Email, model.Password);
                 if (user != null)
                 {
-                    TokenService.SetAuthCookie(model.Email, createPersistentCookie: model.RememberMe, roles: user.Roles.Select(r => r.RoleName));
+                    IEnumerable<Role> roles = user.Roles ?? Enumerable.Empty<Role>();
+                    TokenService.SetAuthCookie(model.Email, createPersistentCookie: model.RememberMe, roles: roles.Select(r => r.RoleName));
                     return CreateSuccessResult(returnUrl, isAjaxRequest);
                 }
                 else
