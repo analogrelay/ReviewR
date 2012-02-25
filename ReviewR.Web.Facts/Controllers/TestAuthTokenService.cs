@@ -10,11 +10,13 @@ namespace ReviewR.Web.Facts.Controllers
     {
         public string UserName { get; set; }
         public bool Persistent { get; set; }
+        public IEnumerable<string> Roles { get; set; }
 
-        public override void SetAuthCookie(string userName, bool createPersistentCookie)
+        public override void SetAuthCookie(string userName, bool createPersistentCookie, IEnumerable<string> roles)
         {
             UserName = userName;
             Persistent = createPersistentCookie;
+            Roles = roles;
         }
     }
 }

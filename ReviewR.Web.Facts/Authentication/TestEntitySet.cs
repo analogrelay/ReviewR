@@ -4,43 +4,25 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using ReviewR.Web.Infrastructure;
 
 namespace ReviewR.Web.Facts.Authentication
 {
-    public class TestDbSet<T> : IDbSet<T> where T : class
+    public class TestEntitySet<T> : IEntitySet<T> where T : class
     {
         private IList<T> _items = new List<T>();
         private IList<Tuple<bool, T>> _pending = new List<Tuple<bool, T>>();
+
+        public IEntityQuery<T> Include(string path)
+        {
+            // Don't do anything special here.
+            return this;
+        }
 
         public T Add(T entity)
         {
             _pending.Add(Tuple.Create(/* add/modify */ true, entity));
             return entity;
-        }
-
-        public T Attach(T entity)
-        {
-            throw new NotImplementedException("Not supported by TestDbSet right now");
-        }
-
-        public TDerivedEntity Create<TDerivedEntity>() where TDerivedEntity : class, T
-        {
-            throw new NotImplementedException("Not supported by TestDbSet right now");
-        }
-
-        public T Create()
-        {
-            throw new NotImplementedException("Not supported by TestDbSet right now");
-        }
-
-        public T Find(params object[] keyValues)
-        {
-            throw new NotImplementedException("Not supported by TestDbSet right now");
-        }
-
-        public ObservableCollection<T> Local
-        {
-            get { throw new NotImplementedException("Not supported by TestDbSet right now"); }
         }
 
         public T Remove(T entity)

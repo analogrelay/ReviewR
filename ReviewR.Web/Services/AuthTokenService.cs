@@ -8,9 +8,32 @@ namespace ReviewR.Web.Services
 {
     public class AuthTokenService
     {
-        public virtual void SetAuthCookie(string userName, bool createPersistentCookie)
+        public HttpContextBase Context { get; private set; }
+
+        protected AuthTokenService() { }
+
+        public AuthTokenService(HttpContextBase context)
         {
-            FormsAuthentication.SetAuthCookie(userName, createPersistentCookie);
+            Context = context;
+        }
+
+        public virtual void SetAuthCookie(string userName, bool createPersistentCookie, IEnumerable<string> roles)
+        {
+            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                version: 1,
+                name: userName,
+                issueDate: DateTime.UtcNow,
+                expiration: DateTime.UtcNow.AddMinutes(30),
+                isPersistent: createPersistentCookie,
+                userData: String.Join("|", roles.ToArray()));
+            string encryptedTicket = FormsAuthentication.Encrypt(ticket);
+            HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+            Context.Response.Cookies.Add(cookie);
+        }
+
+        public virtual void SignOut()
+        {
+            FormsAuthentication.SignOut();
         }
     }
 }

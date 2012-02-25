@@ -70,5 +70,13 @@ namespace ReviewR.Web.Services
             Data.SaveChanges();
             return CreateUserResult.Success;
         }
+
+        public User GetUser(string email)
+        {
+            return Data.Users
+                       .Include("Roles")
+                       .Where(u => u.Email == email)
+                       .Single();
+        }
     }
 }

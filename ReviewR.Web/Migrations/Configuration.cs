@@ -15,8 +15,11 @@ namespace ReviewR.Web.Migrations
 
         protected override void Seed(DefaultDataRepository context)
         {
-            context.Roles.Add(new Role() { RoleName = "Admin" });
-            context.SaveChanges();
+            if (!context.Roles.Where(r => r.RoleName == "Admin").Any())
+            {
+                context.Roles.Add(new Role() { RoleName = "Admin" });
+                context.SaveChanges();
+            }
         }
     }
 }

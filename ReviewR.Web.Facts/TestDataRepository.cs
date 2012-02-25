@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using ReviewR.Web.Infrastructure;
 using ReviewR.Web.Models;
 
 namespace ReviewR.Web.Facts.Authentication
 {
     public class TestDataRepository : IDataRepository
     {
-        private TestDbSet<Role> _roles = new TestDbSet<Role>();
-        private TestDbSet<User> _users = new TestDbSet<User>();
+        private TestEntitySet<Role> _roles = new TestEntitySet<Role>();
+        private TestEntitySet<User> _users = new TestEntitySet<User>();
 
-        public IDbSet<Role> Roles { get { return _roles; } }
-        public IDbSet<User> Users { get { return _users; } }
+        public IEntitySet<Role> Roles { get { return _roles; } }
+        public IEntitySet<User> Users { get { return _users; } }
 
         public int SaveChanges()
         {

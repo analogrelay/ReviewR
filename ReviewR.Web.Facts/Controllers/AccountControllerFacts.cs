@@ -89,6 +89,12 @@ namespace ReviewR.Web.Facts.Controllers
                 var model = new LoginViewModel() { Email = "real@user.com", Password = "password" };
                 var c = CreateController();
                 c.AuthService.CreateUser("real@user.com", "Real User", "password");
+                var user = c.AuthService.Data.Users.Where(u => u.Email == "real@user.com").Single();
+                user.Roles = new List<Role>() {
+                    new Role() { RoleName = "Role1" },
+                    new Role() { RoleName = "Role2" },
+                    new Role() { RoleName = "Role3" }
+                };
 
                 // Act
                 var result = c.Login(model, returnUrl: null, isAjaxRequest: false);
@@ -97,6 +103,7 @@ namespace ReviewR.Web.Facts.Controllers
                 ActionAssert.IsRedirectResult(result, "/app/Home/Index");
                 Assert.Equal("real@user.com", c.TestTokenService.UserName);
                 Assert.False(c.TestTokenService.Persistent);
+                Assert.Equal(new[] { "Role1", "Role2", "Role3" }, c.TestTokenService.Roles.ToArray());
             }
 
             [Fact]

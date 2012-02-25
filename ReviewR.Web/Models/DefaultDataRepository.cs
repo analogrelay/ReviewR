@@ -3,20 +3,28 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using ReviewR.Web.Infrastructure;
 
 namespace ReviewR.Web.Models
 {
     public interface IDataRepository
     {
-        IDbSet<Role> Roles { get; }
-        IDbSet<User> Users { get; }
+        IEntitySet<Role> Roles { get; }
+        IEntitySet<User> Users { get; }
         int SaveChanges();
     }
 
     public class DefaultDataRepository : DbContext, IDataRepository
     {
-        public virtual IDbSet<Role> Roles { get; set; }
-        public virtual IDbSet<User> Users { get; set; }
+        public virtual IEntitySet<Role> Roles { get; set; }
+        public virtual IEntitySet<User> Users { get; set; }
+
+        public DefaultDataRepository()
+            : base()
+        {
+            Users = new DbSetAdaptor<User>(Set<User>());
+            Roles = new DbSetAdaptor<Role>(Set<Role>());
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

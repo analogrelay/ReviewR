@@ -69,7 +69,7 @@ namespace ReviewR.Web.Controllers
                 User user = AuthService.LogIn(model.Email, model.Password);
                 if (user != null)
                 {
-                    TokenService.SetAuthCookie(model.Email, createPersistentCookie: model.RememberMe);
+                    TokenService.SetAuthCookie(model.Email, createPersistentCookie: model.RememberMe, roles: user.Roles.Select(r => r.RoleName));
                     return CreateSuccessResult(returnUrl, isAjaxRequest);
                 }
                 else
@@ -102,7 +102,7 @@ namespace ReviewR.Web.Controllers
                 CreateUserResult status = AuthService.CreateUser(model.Email, model.DisplayName, model.Password);
                 if (status == CreateUserResult.Success)
                 {
-                    TokenService.SetAuthCookie(model.Email, createPersistentCookie: false);
+                    TokenService.SetAuthCookie(model.Email, createPersistentCookie: false, roles: Enumerable.Empty<string>());
                     return CreateSuccessResult(returnUrl, isAjaxRequest);
                 }
                 else
@@ -116,7 +116,7 @@ namespace ReviewR.Web.Controllers
         [HttpGet]
         public ActionResult Logout()
         {
-            FormsAuthentication.SignOut();
+            TokenService.SignOut();
             return RedirectToAction("Index", "Home");
         }
 
