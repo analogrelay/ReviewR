@@ -106,7 +106,7 @@
             }
         }
 
-        $('#master-nav a[data-dialog]').each(function () {
+        $('#login-nav a[data-dialog]').each(function () {
             $(this).click(function(e) {
                 loadAndShowDialog($(this));
                 e.preventDefault();

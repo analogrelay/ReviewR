@@ -9,15 +9,16 @@ namespace ReviewR.Diff
     {
         public SourceCoordinate OriginalLocation { get; private set; }
         public SourceCoordinate ModifiedLocation { get; private set; }
-        public ICollection<DiffLine> Lines { get; private set; }
+        public ICollection<LineDiff> Lines { get; private set; }
+        public string Comment { get; private set; }
 
-        public DiffHunk(SourceCoordinate originalLocation, SourceCoordinate modifiedLocation) : this(originalLocation, modifiedLocation, null) {}
-
-        public DiffHunk(SourceCoordinate originalLocation, SourceCoordinate modifiedLocation, params DiffLine[] lines)
+        public DiffHunk(SourceCoordinate originalLocation, SourceCoordinate modifiedLocation, string comment) : this(originalLocation, modifiedLocation, comment, null) {}
+        public DiffHunk(SourceCoordinate originalLocation, SourceCoordinate modifiedLocation, string comment, params LineDiff[] lines)
         {
             OriginalLocation = originalLocation;
             ModifiedLocation = modifiedLocation;
-            Lines = lines == null ? new List<DiffLine>() : lines.ToList();
+            Comment = comment;
+            Lines = lines == null ? new List<LineDiff>() : lines.ToList();
         }
 
         public override bool Equals(object obj)

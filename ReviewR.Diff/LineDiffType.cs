@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ReviewR.Diff
 {
-    public enum DiffLineType
+    public enum LineDiffType
     {
         Same,
         Added,

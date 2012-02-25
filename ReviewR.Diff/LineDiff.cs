@@ -5,12 +5,12 @@ using System.Text;
 
 namespace ReviewR.Diff
 {
-    public class DiffLine : IEquatable<DiffLine>
+    public class LineDiff : IEquatable<LineDiff>
     {
-        public DiffLineType Type { get; private set; }
+        public LineDiffType Type { get; private set; }
         public string Content { get; private set; }
 
-        public DiffLine(DiffLineType type, string content)
+        public LineDiff(LineDiffType type, string content)
         {
             Type = type;
             Content = content;
@@ -18,7 +18,7 @@ namespace ReviewR.Diff
 
         public override bool Equals(object obj)
         {
-            DiffLine other = obj as DiffLine;
+            LineDiff other = obj as LineDiff;
             return other != null && Equals(other);
         }
 
@@ -27,7 +27,7 @@ namespace ReviewR.Diff
             return (Type.GetHashCode() ^ Content.GetHashCode()).GetHashCode();
         }
 
-        public bool Equals(DiffLine other)
+        public bool Equals(LineDiff other)
         {
             return Type == other.Type &&
                    String.Equals(Content, other.Content, StringComparison.Ordinal);
