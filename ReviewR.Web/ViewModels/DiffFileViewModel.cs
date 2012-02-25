@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ReviewR.Web.Models
+namespace ReviewR.Web.ViewModels
 {
     public class DiffFileViewModel
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ReviewR.Web.Models
+namespace ReviewR.Web.ViewModels
 {
     public class DiffViewModel
     {

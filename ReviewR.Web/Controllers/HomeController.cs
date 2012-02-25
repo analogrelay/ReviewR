@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using ReviewR.Diff;
-using ReviewR.Web.Models;
+using ReviewR.Web.ViewModels;
 
 namespace ReviewR.Web.Controllers
 {

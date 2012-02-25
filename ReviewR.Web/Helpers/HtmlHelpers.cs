@@ -26,5 +26,31 @@ namespace ReviewR.Web.Helpers
                 w.Write("</li>");
             });
         }
+
+        public static HelperResult CustomValidationSummary(this HtmlHelper helper, string errorMessage)
+        {
+            return new HelperResult(w =>
+            {
+                if (!helper.ViewData.ModelState.IsValid)
+                {
+                    w.Write("<div class=\"validation-summary-errors\">");
+                    if (!String.IsNullOrEmpty(errorMessage))
+                    {
+                        w.Write("<span>");
+                        w.Write(errorMessage);
+                        w.Write("</span>");
+                    }
+                    w.Write("<ul>");
+                    foreach (var message in helper.ViewData.ModelState.Values.SelectMany(m => m.Errors.Select(e => e.ErrorMessage)))
+                    {
+                        w.Write("<li class=\"alert alert-error\">");
+                        w.Write(message);
+                        w.Write("</li>");
+                    }
+                    w.Write("</ul>");
+                    w.Write("</div>");
+                }
+            });
+        }
     }
 }

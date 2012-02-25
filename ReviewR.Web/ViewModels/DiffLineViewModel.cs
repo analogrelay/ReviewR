@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ReviewR.Diff;
 
-namespace ReviewR.Web.Models
+namespace ReviewR.Web.ViewModels
 {
     public class DiffLineViewModel
     {

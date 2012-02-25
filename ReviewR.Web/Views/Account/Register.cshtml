@@ -1,12 +1,12 @@
-﻿@model ReviewR.Web.ViewModels.LoginViewModel
+﻿@model ReviewR.Web.ViewModels.RegisterViewModel
 
 @{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Register";
 }
 
 <hgroup>
-    <h2>Log in.</h2>
-    <h3>Enter your email address and password.</h3>
+    <h2>Register.</h2>
+    <h3>Create an account to start reviewing some code.</h3>
 </hgroup>
 
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
@@ -25,19 +25,24 @@
                 @Html.ValidationMessageFor(model => model.Email)
             </li>
             <li class="control-group">
+                @Html.LabelFor(model => model.DisplayName)
+                @Html.EditorFor(model => model.DisplayName)
+                @Html.ValidationMessageFor(model => model.DisplayName)
+            </li>
+            <li class="control-group">
                 @Html.LabelFor(model => model.Password)
                 @Html.EditorFor(model => model.Password)
                 @Html.ValidationMessageFor(model => model.Password)
             </li>
             <li class="control-group">
-                <label class="checkbox">
-                    @Html.EditorFor(model => model.RememberMe)
-                    Remember Me
-                </label>
+                @Html.LabelFor(model => model.ConfirmPassword)
+                @Html.EditorFor(model => model.ConfirmPassword)
+                @Html.ValidationMessageFor(model => model.ConfirmPassword)
             </li>
         </ol>
     </fieldset>
     <div class="modal-bar">
-        <input type="submit" value="Log In" class="btn-primary btn-large" />
+        <input type="submit" value="Register" class="btn-primary btn-large" />
     </div>
 }
+
