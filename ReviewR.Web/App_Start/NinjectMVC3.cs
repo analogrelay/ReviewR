@@ -54,7 +54,7 @@ namespace ReviewR.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IDataRepository>().To<DefaultDataRepository>();
+            //kernel.Bind<IDataRepository>().To<DefaultDataRepository>();
             kernel.Bind<AuthenticationService>().ToSelf();
             kernel.Bind<AuthTokenService>().ToSelf();
             kernel.Bind<HashService>().ToSelf();

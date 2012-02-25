@@ -19,7 +19,7 @@ namespace DynamicData
         public static void Register(RouteCollection routes)
         {
             DefaultModel.RegisterContext(
-                new EFCodeFirstDataModelProvider(() => new DefaultDataRepository()),
+                new EFCodeFirstDataModelProvider(() => new ReviewRDbContext()),
                 new ContextConfiguration() { ScaffoldAllTables = true });
             DefaultModel.DynamicDataFolderVirtualPath = "~/DynamicData/DynamicData";
 

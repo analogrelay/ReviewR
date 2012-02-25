@@ -6,14 +6,14 @@ namespace ReviewR.Web.Migrations
     using System.Linq;
     using ReviewR.Web.Models;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<DefaultDataRepository>
+    internal sealed class Configuration : DbMigrationsConfiguration<ReviewRDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(DefaultDataRepository context)
+        protected override void Seed(ReviewRDbContext context)
         {
             if (!context.Roles.Where(r => r.RoleName == "Admin").Any())
             {

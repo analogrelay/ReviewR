@@ -163,6 +163,10 @@
     <Compile Include="App_Start\AuthenticationModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="Migrations\201202251925120_Reviews.cs" />
+    <Compile Include="Migrations\201202251925120_Reviews.Designer.cs">
+      <DependentUpon>201202251925120_Reviews.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\DiffHunk.cs" />
     <Compile Include="Models\DiffLine.cs" />
     <Compile Include="Models\FileChange.cs" />
