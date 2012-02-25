@@ -27,6 +27,14 @@
                     ReviewR
                 </a>
                 <nav id="master-nav">
+                    <ul class="nav">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li><a href="~/_dbadmin">Database Admin</a></li>
+                        }
+                    </ul>
+                </nav>
+                <nav id="login-nav">
                     <ul class="nav pull-right">
                         @if (Request.IsAuthenticated)
                         {
@@ -52,8 +60,5 @@
     <div class="container-fluid">
         @RenderBody()
     </div>
-    <footer class="container-fluid">
-        By Andrew Nurse
-    </footer>
 </body>
 </html>

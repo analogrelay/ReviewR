@@ -18,20 +18,24 @@ namespace ReviewR.Web.App_Start
 
         public static void RegisterRoutes(RouteCollection routes)
         {
-            DynamicData.Registration.Register(routes);
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                defaults: new { id = RouteParameter.Optional },
+                constraints: new { controller = @"[A-Za-z]*" }
             );
 
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                constraints: new { controller = @"[A-Za-z]*" }
             );
+
+            DynamicData.Registration.Register(routes);
+            
         }
     }
 }

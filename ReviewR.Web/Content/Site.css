@@ -1,12 +1,14 @@
-/* Header/Nav Bar */
+/* Header/Footer */
 body {
     padding-top: 40px;
+    font-family: 'Segoe UI', "Helvetica Neue", Helvetica, Arial, sans-serif
 }
 
     body > header {
         width: 100%;
     }
-
+    
+/* Nav Bar */
 nav img {
     width: 16px;
     height: 16px;
@@ -43,4 +45,11 @@ form fieldset ol {
     margin: 0;
 }
 
-/* Inputs */
+/* General */
+h1 {
+    padding-bottom: 10px;
+}
+
+p em {
+    font-size: 12pt;
+}

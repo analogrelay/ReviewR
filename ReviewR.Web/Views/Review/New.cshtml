@@ -1,0 +1,35 @@
+﻿@model ReviewR.Web.ViewModels.NewReviewViewModel
+
+@{
+    ViewBag.Title = "New";
+}
+
+<h1>Create a new review.</h1>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset class="no-legend">
+        <legend>Create a new review.</legend>
+        <ol>
+            <li class="control-group">
+                @Html.LabelFor(model => model.Name)
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </li>
+            <li class="control-group">
+                @Html.LabelFor(model => model.Diff)
+                <input type="file" name="Diff" id="Diff" data-val="true" data-val-required="You must specify a diff file for the review"  />
+                <p class="help-block">Upload a diff file in either Unified Diff format or git diff format.</p>
+                @Html.ValidationMessageFor(m => m.Diff)
+            </li>
+        </ol>
+
+        <p>
+            <input type="submit" value="Create review" class="btn-primary" />
+        </p>
+    </fieldset>
+}

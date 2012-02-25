@@ -1,44 +1,32 @@
-﻿@{
+﻿@model ReviewR.Web.ViewModels.DashboardViewModel
+@{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-
-@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data",  target = "upload-helper" }))
-{
-    <label for="diff-file">Diff File: </label>
-    <input id="diff-file" name="diff-file" type="file" />
-    <input type="submit" value="Show It!" />
+<h1>Home</h1>
+@if(Request.IsAuthenticated) {
+    <section id="created-reviews-list" class="review-list">
+        <h3>Your Reviews</h3>
+        @if (!Model.Reviews.Any())
+        {
+            <p><em>You haven't created any reviews</em></p>
+        } else {
+            <table>
+                @foreach (var review in Model.Reviews)
+                {
+                    <tr>
+                        <td><a href="@Url.Action("View", "Review", new { id = review.Id })">@review.Name</a></td>
+                    </tr>
+                }
+            </table>
+        }
+        <footer>
+            @Html.ActionLink("Submit a new review", "New", "Review", null, new { @class = "btn btn-primary" })
+        </footer>
+    </section>
+} else {
+    <p>
+        You need to have an account before you can start submitting or participating in reviews. 
+        Please @Html.ActionLink("Login", "Login", "Account") or @Html.ActionLink("Register for a new account", "Register", "Account")
+    </p>
 }
-<iframe src="#" id="upload-helper" name="upload-helper" style="width: 0; height: 0; border: 0px solid #fff"></iframe>
-
-<div id="viewer">
-</div>
-<script id="diffViewer_files" type="text/x-jquery-tmpl">
-{{each(fileName, file) Files}}
-<div class="file" data-path="${fileName}">
-    <div class="header">
-        <a href="#" class="toggle icon ${$.diffUtils.diffFileClass(file)}">${fileName}{{if file.Binary}}<span class="binary-text">(Binary file diff not shown)</span>{{/if}}</a>
-    </div>
-    {{tmpl(file) "#diffViewer_file"}}
-</div>
-{{/each}}
-</script>
-
-<script id="diffViewer_file" type="text/x-jquery-tmpl">
-{{if !Binary}}
-<div class="source">
-    <table width="100%" cellpadding="0" cellspacing="0">
-        {{each(i, line) DiffLines}}
-            <tr>
-                <td class="line-number details">${line.LeftLine ? line.LeftLine : "&nbsp;"}</td>
-                <td class="line-number details">${line.RightLine ? line.RightLine : "&nbsp;"}</td>
-                <td class="line${$.diffUtils.diffClass(line.Type)}">
-                    <pre>${line.Text}</pre>
-                </td>
-            </tr>
-        {{/each}}
-    </table>
-</div>
-{{/if}}
-</script>

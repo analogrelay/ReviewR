@@ -11,9 +11,11 @@ namespace ReviewR.Web.Infrastructure
     {    
         public override IValueProvider GetValueProvider(ControllerContext controllerContext)
         {
+            var request = controllerContext.RequestContext.HttpContext.Request;
             return new DictionaryValueProvider<object>(new Dictionary<string, object>()
             {
-                { "IsAjaxRequest", controllerContext.RequestContext.HttpContext.Request.IsAjaxRequest() }
+                { "IsAjaxRequest", request.IsAjaxRequest() },
+                { "IsAuthenticated", request.IsAuthenticated }
             }, CultureInfo.InvariantCulture);
         }
     }

@@ -162,6 +162,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="App_Start\AuthenticationModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="ViewModels\NewReviewViewModel.cs" />
+    <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Content Include="DynamicData\Default.aspx" />
     <Content Include="DynamicData\DynamicData\Content\GridViewPager.ascx" />
     <Content Include="DynamicData\DynamicData\Content\Images\Back.gif" />
@@ -453,6 +456,7 @@
     <Compile Include="Services\CreateUserResult.cs" />
     <Compile Include="Services\HashService.cs" />
     <Compile Include="Services\UrlService.cs" />
+    <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\DiffFileViewModel.cs" />
     <Compile Include="ViewModels\DiffLineViewModel.cs" />
     <Compile Include="ViewModels\DiffViewModel.cs" />
@@ -578,9 +582,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\Upload.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Account\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -598,6 +599,9 @@
     <Content Include="DynamicData\DynamicData\web.config" />
     <Content Include="DynamicData\Site.master" />
     <Content Include="DynamicData\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Review\New.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

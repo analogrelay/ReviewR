@@ -24,7 +24,7 @@ namespace DynamicData
             DefaultModel.DynamicDataFolderVirtualPath = "~/DynamicData/DynamicData";
 
             // This route must come first to prevent some other route from the site to take over
-            routes.Insert(0, new DynamicDataRoute("dbadmin/{table}/{action}")
+            routes.Insert(0, new DynamicDataRoute("_dbadmin/{table}/{action}")
             {
                 Constraints = new RouteValueDictionary(new { action = "List|Details|Edit|Insert" }),
                 Model = DefaultModel
@@ -32,7 +32,7 @@ namespace DynamicData
 
             routes.MapPageRoute(
                 "dd_default",
-                "dbadmin",
+                "_dbadmin",
                 "~/DynamicData/Default.aspx");
         }
     }
