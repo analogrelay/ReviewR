@@ -11,7 +11,8 @@ namespace DynamicData
         {
             get
             {
-                return DynamicDataRouteHandler.GetRequestMetaTable(Context).Name;
+                var table = DynamicDataRouteHandler.GetRequestMetaTable(Context);
+                return table == null ? String.Empty : table.Name;
             }
         }
 

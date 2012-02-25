@@ -163,6 +163,20 @@
     <Compile Include="App_Start\AuthenticationModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="DynamicData\DynamicData\FieldTemplates\Code.ascx.cs">
+      <DependentUpon>Code.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DynamicData\DynamicData\FieldTemplates\Code.ascx.designer.cs">
+      <DependentUpon>Code.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DynamicData\DynamicData\FieldTemplates\Code_Edit.ascx.cs">
+      <DependentUpon>Code_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DynamicData\DynamicData\FieldTemplates\Code_Edit.ascx.designer.cs">
+      <DependentUpon>Code_Edit.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201202251925120_Reviews.cs" />
     <Compile Include="Migrations\201202251925120_Reviews.Designer.cs">
       <DependentUpon>201202251925120_Reviews.cs</DependentUpon>
@@ -175,7 +189,10 @@
     <Compile Include="Migrations\201202252108520_FixMisnamedChangeIdColumn.Designer.cs">
       <DependentUpon>201202252108520_FixMisnamedChangeIdColumn.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\DiffLine.cs" />
+    <Compile Include="Migrations\201202252329462_RemoveLineObjects.cs" />
+    <Compile Include="Migrations\201202252329462_RemoveLineObjects.Designer.cs">
+      <DependentUpon>201202252329462_RemoveLineObjects.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\FileChange.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Services\DiffConverter.cs" />
@@ -198,6 +215,8 @@
     <Content Include="DynamicData\DynamicData\FieldTemplates\Boolean_Edit.ascx" />
     <Content Include="DynamicData\DynamicData\FieldTemplates\Children.ascx" />
     <Content Include="DynamicData\DynamicData\FieldTemplates\Children_Insert.ascx" />
+    <Content Include="DynamicData\DynamicData\FieldTemplates\Code.ascx" />
+    <Content Include="DynamicData\DynamicData\FieldTemplates\Code_Edit.ascx" />
     <Content Include="DynamicData\DynamicData\FieldTemplates\DateTime.ascx" />
     <Content Include="DynamicData\DynamicData\FieldTemplates\DateTime_Edit.ascx" />
     <Content Include="DynamicData\DynamicData\FieldTemplates\Decimal_Edit.ascx" />

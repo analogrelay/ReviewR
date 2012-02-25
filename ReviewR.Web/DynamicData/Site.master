@@ -37,7 +37,7 @@
                         <LayoutTemplate>
                             <ul class="nav nav-list">
                                 <li class="nav-header">
-                                    Tables
+                                    Entities
                                 </li>
                                 <asp:PlaceHolder id="itemPlaceholder" runat="server" />
                             </ul>

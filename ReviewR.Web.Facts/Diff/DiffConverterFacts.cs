@@ -38,11 +38,10 @@ namespace ReviewR.Web.Facts.Diff
                 Assert.Equal(new Data.FileAddition()
                 {
                     FileName = "NewFile",
-                    Lines = new List<Data.DiffLine>() {
-                        new Data.DiffLineAdd() { SourceLine = 0, ModifiedLine = 10, Content = "Foo" },
-                        new Data.DiffLineAdd() { SourceLine = 1, ModifiedLine = 11, Content = "Bar" },
-                        new Data.DiffLineAdd() { SourceLine = 2, ModifiedLine = 12, Content = "Baz" }
-                    }
+                    Diff = @"@@ -0,0 +10,0 @@
++Foo
++Bar
++Baz"
                 }, actual, new PropertyEqualityComparer());
             }
 
@@ -63,12 +62,10 @@ namespace ReviewR.Web.Facts.Diff
                 Assert.Equal(new Data.FileDeletion()
                 {
                     FileName = "NewFile",
-                    Lines = new List<Data.DiffLine>()
-                    {
-                        new Data.DiffLineRemove() { SourceLine = 0, ModifiedLine = 10, Content = "Foo" },
-                        new Data.DiffLineRemove() { SourceLine = 1, ModifiedLine = 11, Content = "Bar" },
-                        new Data.DiffLineRemove() { SourceLine = 1, ModifiedLine = 11, Content = "Baz" },
-                    }
+                    Diff = @"@@ -0,0 +10,0 @@
+-Foo
+-Bar
+-Baz"
                 }, actual, new PropertyEqualityComparer());
             }
 
@@ -90,11 +87,10 @@ namespace ReviewR.Web.Facts.Diff
                 {
                     FileName = "OldFile",
                     NewFileName = "NewFile",
-                    Lines = new List<Data.DiffLine>() {
-                        new Data.DiffLineAdd() { SourceLine = 0, ModifiedLine = 10, Content = "Foo" },
-                        new Data.DiffLineRemove() { SourceLine = 1, ModifiedLine = 11, Content = "Bar" },
-                        new Data.DiffLineContext() { SourceLine = 2, ModifiedLine = 12, Content = "Baz" }
-                    }
+                    Diff = @"@@ -0,0 +10,0 @@
++Foo
+-Bar
+ Baz"
                 }, actual, new PropertyEqualityComparer());
             }
         }

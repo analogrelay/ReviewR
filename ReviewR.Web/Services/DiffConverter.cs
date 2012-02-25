@@ -36,36 +36,34 @@ namespace ReviewR.Web.Services
             }
 
             // Fill the lines
-            chg.Lines = fileDiff.Hunks.SelectMany(ConvertHunk).ToList();
+            chg.Diff = String.Join(Environment.NewLine, fileDiff.Hunks.Select(WriteHunk));
             return chg;
         }
 
-        public virtual IEnumerable<Data.DiffLine> ConvertHunk(DiffHunk arg)
+        private string WriteHunk(DiffHunk arg)
         {
-            return arg.Lines.Select((l, i) => ConvertLine(i, arg, l));
+            return String.Format(
+                "@@ -{0},{1} +{2},{3} @@{4}",
+                arg.OriginalLocation.Line,
+                arg.OriginalLocation.Column,
+                arg.ModifiedLocation.Line,
+                arg.ModifiedLocation.Column,
+                String.IsNullOrEmpty(arg.Comment) ? "" : (" " + arg.Comment)) +
+                Environment.NewLine +
+                String.Join(Environment.NewLine, arg.Lines.Select(WriteLine));
         }
 
-        public virtual Data.DiffLine ConvertLine(int lineIndex, DiffHunk hunk, LineDiff arg)
+        private string WriteLine(LineDiff arg)
         {
-            int source = hunk.OriginalLocation.Line + lineIndex;
-            int modified = hunk.ModifiedLocation.Line + lineIndex;
             switch (arg.Type)
             {
                 case LineDiffType.Added:
-                    return FillLine(new Data.DiffLineAdd(), source, modified, arg.Content);
+                    return "+" + arg.Content;
                 case LineDiffType.Removed:
-                    return FillLine(new Data.DiffLineRemove(), source, modified, arg.Content);
+                    return "-" + arg.Content;
                 default:
-                    return FillLine(new Data.DiffLineContext(), source, modified, arg.Content);
+                    return " " + arg.Content;
             }
-        }
-
-        private static Data.DiffLine FillLine(Data.DiffLine line, int source, int modified, string content)
-        {
-            line.SourceLine = source;
-            line.ModifiedLine = modified;
-            line.Content = content;
-            return line;
         }
     }
 }
