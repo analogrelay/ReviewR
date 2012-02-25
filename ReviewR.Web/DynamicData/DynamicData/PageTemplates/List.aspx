@@ -12,7 +12,7 @@
         </DataControls>
     </asp:DynamicDataManager>
 
-    <h2 class="DDSubHeader"><%= table.DisplayName%></h2>
+    <h1><%= table.DisplayName%></h1>
 
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
@@ -31,22 +31,51 @@
             </div>
 
             <asp:GridView ID="GridView1" runat="server" DataSourceID="GridDataSource" EnablePersistedSelection="true"
-                AllowPaging="True" AllowSorting="True" CssClass="DDGridView"
+                AllowPaging="True" AllowSorting="True" CssClass="ddtable table-bordered table-striped"
                 RowStyle-CssClass="td" HeaderStyle-CssClass="th" CellPadding="6">
                 <Columns>
-                    <asp:TemplateField>
+                    <asp:TemplateField ItemStyle-Width="250px">
                         <ItemTemplate>
-                            <asp:DynamicHyperLink runat="server" Action="Edit" Text="Edit"
-                            />&nbsp;<asp:LinkButton runat="server" CommandName="Delete" Text="Delete"
-                                OnClientClick='return confirm("Are you sure you want to delete this item?");'
-                            />&nbsp;<asp:DynamicHyperLink runat="server" Text="Details" />
+                            <asp:DynamicHyperLink runat="server" Action="Edit" CssClass="btn">
+                                <i class="icon-edit"></i>
+                                Edit
+                            </asp:DynamicHyperLink>
+                            <asp:LinkButton runat="server" CommandName="Delete" CssClass="btn btn-danger" OnClientClick='return confirm("Are you sure you want to delete this item?");'>
+                                <i class="icon-trash icon-white"></i>
+                                Delete
+                            </asp:LinkButton>
+                            <asp:DynamicHyperLink runat="server" CssClass="btn btn-primary">
+                                <i class="icon-list icon-white"></i>
+                                Details
+                            </asp:DynamicHyperLink>
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
 
                 <PagerStyle CssClass="DDFooter"/>        
                 <PagerTemplate>
-                    <asp:GridViewPager runat="server" />
+                    <ul class="pagination pagination-centered">
+                        <li>
+                            <asp:LinkButton CommandName="Page" CommandArgument="First" runat="server"><i class="icon-fast-backward"></i></asp:LinkButton>
+                        </li>
+                        <li>
+                            <asp:LinkButton CommandName="Page" CommandArgument="Prev" runat="server"><i class="icon-backward"></i></asp:LinkButton>
+                        </li>
+                        <asp:Repeater DataSource="<%# Enumerable.Range(-2, 5).Select(i => i + GridView1.PageIndex).Where(i => i >= 0) %>" runat="server" OnItemCommand="Unnamed_ItemCommand">
+                            <ItemTemplate>
+                                <li runat="server" class='<%# ((int)Container.DataItem) == GridView1.PageIndex ? "active" : "" %>'>
+                                    <asp:LinkButton CommandName="Page" CommandArgument="<%# (int)Container.DataItem %>" runat="server"><%# (int)Container.DataItem + 1 %></asp:LinkButton>
+                                </li>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                        <li>
+                            <asp:LinkButton CommandName="Page" CommandArgument="Next" runat="server"><i class="icon-forward"></i></asp:LinkButton>
+                        </li>
+                        <li>
+                            <asp:LinkButton CommandName="Page" CommandArgument="Last" runat="server"><i class="icon-fast-forward"></i></asp:LinkButton>
+                        </li>
+                    </ul>
+                    <%--<asp:GridViewPager runat="server" />--%>
                 </PagerTemplate>
                 <EmptyDataTemplate>
                     There are currently no items in this table.
@@ -61,8 +90,8 @@
 
             <br />
 
-            <div class="DDBottomHyperLink">
-                <asp:DynamicHyperLink ID="InsertHyperLink" runat="server" Action="Insert"><img runat="server" src="~/DynamicData/DynamicData/Content/Images/plus.gif" alt="Insert new item" />Insert new item</asp:DynamicHyperLink>
+            <div>
+                <asp:DynamicHyperLink ID="InsertHyperLink" runat="server" Action="Insert" CssClass="btn"><i class="icon-plus"></i> Insert</asp:DynamicHyperLink>
             </div>
         </ContentTemplate>
     </asp:UpdatePanel>

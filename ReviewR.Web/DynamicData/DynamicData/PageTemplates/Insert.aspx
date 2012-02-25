@@ -25,8 +25,8 @@
                         <asp:DynamicEntity runat="server" Mode="Insert" />
                         <tr class="td">
                             <td colspan="2">
-                                <asp:LinkButton runat="server" CommandName="Insert" Text="Insert" />
-                                <asp:LinkButton runat="server" CommandName="Cancel" Text="Cancel" CausesValidation="false" />
+                                <asp:LinkButton ID="LinkButton1" runat="server" CommandName="Insert" CssClass="btn btn-primary"><i class="icon-plus icon-white"></i> Insert</asp:LinkButton>
+                                <asp:LinkButton ID="LinkButton2" runat="server" CommandName="Cancel" CssClass="btn" CausesValidation="false"><i class="icon-remove"></i> Cancel</asp:LinkButton>
                             </td>
                         </tr>
                     </table>

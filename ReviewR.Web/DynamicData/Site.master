@@ -1,30 +1,72 @@
 ﻿<%@ Master Language="C#" CodeBehind="Site.master.cs" Inherits="DynamicData.Site" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Dynamic Data Site</title>
+    <link href="~/Content/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/DynamicData/Site.css" rel="stylesheet" type="text/css" />
     <asp:ContentPlaceHolder id="head" runat="server">
     </asp:ContentPlaceHolder>
+    <script type="text/javascript" src="<%: ResolveUrl("~/Scripts/jquery-1.7.1.js") %>"></script>
+    <script type="text/javascript" src="<%: ResolveUrl("~/Scripts/bootstrap.js") %>"></script>
 </head>
 <body>
-    <h1 class="DDMainHeader">Dynamic Data Site</h1>
-    <div class="DDNavigation">
-        <a runat="server" href="~/dbadmin"><img alt="Back to home page" runat="server" src="DynamicData/Content/Images/back.gif" />Back to home page</a>
-    </div>
-
+    <header class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand" href="~/" runat="server">
+                    ReviewR
+                </a>
+                <nav id="master-nav">
+                    <ul class="nav">
+                        <li class="active"><a href="~/_dbadmin" runat="server">Database Admin</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
     <form id="form1" runat="server">
-    <div>
-        <%-- TODO: Enable partial rendering by setting the EnablePartialRendering attribute to "true" to provide a smoother browsing experience.
-             Leaving partial rendering disabled will provide a better debugging experience while the application is in development. --%>
-        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="false"/>
+        <div id="root" class="container-fluid">
+            <div class="row-fluid">
+                <div id="table-list" class="span2 well">
+                    <asp:ListView ID="Menu1" runat="server" ItemPlaceholderID="itemPlaceholder">
+                        <LayoutTemplate>
+                            <ul class="nav nav-list">
+                                <li class="nav-header">
+                                    Tables
+                                </li>
+                                <asp:PlaceHolder id="itemPlaceholder" runat="server" />
+                            </ul>
+                        </LayoutTemplate>
+                        <ItemTemplate>
+                            <li class='<%# this.CurrentTableName == Eval("Name") ? "fix-icon active" : "fix-icon" %>' runat="server">
+                                <asp:DynamicHyperLink runat="server">
+                                    <%# Eval("DisplayName") %>
+                                </asp:DynamicHyperLink>
+                            </li>
+                        </ItemTemplate>
+                    </asp:ListView>
+                </div>
+                <div id="body" class="span8">
+                    <%-- TODO: Enable partial rendering by setting the EnablePartialRendering attribute to "true" to provide a smoother browsing experience.
+                         Leaving partial rendering disabled will provide a better debugging experience while the application is in development. --%>
+                    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="false"/>
         
-        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
-        </asp:ContentPlaceHolder>
-    </div>
+                    <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+            </div>
+        </div>
     </form>
+    <script type="text/javascript">
+        $(function () {
+            $('.fix-icon a').prepend("<i class=\"icon-list-alt\"></i>");
+        });
+    </script>
 </body>
 </html>
 

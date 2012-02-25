@@ -221,9 +221,6 @@
     <Content Include="DynamicData\DynamicData\PageTemplates\Insert.aspx" />
     <Content Include="DynamicData\DynamicData\PageTemplates\List.aspx" />
     <Content Include="DynamicData\DynamicData\PageTemplates\ListDetails.aspx" />
-    <Content Include="DynamicData\Scripts\jquery-1.4.1-vsdoc.js" />
-    <Content Include="DynamicData\Scripts\jquery-1.4.1.js" />
-    <Content Include="DynamicData\Scripts\jquery-1.4.1.min.js" />
     <Content Include="DynamicData\Site.css" />
     <Compile Include="DynamicData\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" CodeBehind="Default_Edit.ascx.cs" Inherits="DynamicData.Default_EditEntityTemplate" %>
 
-<%@ Reference Control="~/DynamicData/EntityTemplates/Default.ascx" %>
+<%@ Reference Control="~/DynamicData/DynamicData/EntityTemplates/Default.ascx" %>
 <asp:EntityTemplate runat="server" ID="EntityTemplate1">
     <ItemTemplate>
         <tr class="td">

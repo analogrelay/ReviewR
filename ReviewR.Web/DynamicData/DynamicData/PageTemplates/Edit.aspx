@@ -11,7 +11,7 @@
         </DataControls>
     </asp:DynamicDataManager>
 
-    <h2 class="DDSubHeader">Edit entry from table <%= table.DisplayName %></h2>
+    <h1>Edit entry from table <%= table.DisplayName %></h1>
 
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
@@ -26,8 +26,8 @@
                         <asp:DynamicEntity runat="server" Mode="Edit" />
                         <tr class="td">
                             <td colspan="2">
-                                <asp:LinkButton runat="server" CommandName="Update" Text="Update" />
-                                <asp:LinkButton runat="server" CommandName="Cancel" Text="Cancel" CausesValidation="false" />
+                                <asp:LinkButton runat="server" CommandName="Update" CssClass="btn btn-primary"><i class="icon-ok icon-white"></i> Update</asp:LinkButton>
+                                <asp:LinkButton runat="server" CommandName="Cancel" CssClass="btn" CausesValidation="false"><i class="icon-remove"></i> Cancel</asp:LinkButton>
                             </td>
                         </tr>
                     </table>
