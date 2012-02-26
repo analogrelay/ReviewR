@@ -28,7 +28,9 @@
                 </a>
                 <nav id="master-nav">
                     <ul class="nav">
-                        @Html.MenuLink("My Dashboard", "Index", "Reviews")
+                        @if(Request.IsAuthenticated) {
+                            @Html.MenuLink("My Dashboard", "Index", "Reviews")
+                        }
                     </ul>
                 </nav>
                 <nav id="login-nav">
@@ -51,8 +53,8 @@
                             </li>
                         } 
                         else {
-                            <li>@Html.ActionLink("Register", "Register", "Account", null, new { title = "Create a ReviewR Account", data_dialog = "data-dialog" })</li>
-                            <li>@Html.ActionLink("Login", "Login", "Account", null, new { title = "Login to ReviewR", data_dialog = "data-dialog" })</li>
+                            <li>@Html.ActionLink("Register", "Register", "Account", null, new { title = "Create a ReviewR Account", @class="dialog", data_dialog_key = "register" })</li>
+                            <li>@Html.ActionLink("Login", "Login", "Account", null, new { title = "Login to ReviewR", @class="dialog", data_dialog_key = "login" })</li>
                         }
                     </ul>
                 </nav>

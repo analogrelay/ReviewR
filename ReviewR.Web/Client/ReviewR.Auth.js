@@ -3,7 +3,7 @@
 
 (function ($) {
     $(function () {
-        var dialogCacheKey = "dialog_cached";
+        var dialogs = [];
 
         var getValidationSummaryErrors = function ($form) {
             // We verify if we created it beforehand
@@ -62,7 +62,7 @@
 
             // Cache empty jQuery just in case we get called again
             var $dialog = $();
-            $link.data(dialogCacheKey, $dialog);
+            dialogs[$link.data('dialog-key')] = $dialog;
 
             // Load the dialog
             $.get(url + separator + 'content=1')
@@ -87,7 +87,7 @@
                             .end()
                     .end()
                     .modal();
-                 $link.data(dialogCacheKey, $dialog);
+                 dialogs[$link.data('dialog-key')] = $dialog;
              });
         }
 
@@ -95,7 +95,7 @@
             /// <param name="$link" type="jQuery" />
 
             // Check the data for a cached copy
-            var $dialog = $link.data(dialogCacheKey);
+            var $dialog = dialogs[$link.data('dialog-key')]
             if (!$dialog) {
                 // No cache, load it
                 loadDialog($link, $link.attr('href'));
@@ -106,7 +106,7 @@
             }
         }
 
-        $('#login-nav a[data-dialog]').each(function () {
+        $('.dialog').each(function () {
             $(this).click(function(e) {
                 loadAndShowDialog($(this));
                 e.preventDefault();

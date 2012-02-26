@@ -39,7 +39,7 @@ namespace DynamicData
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            HyperLink1.Text = "View " + ChildrenColumn.ChildTable.DisplayName;
+            Literal1.Text = "View " + ChildrenColumn.ChildTable.DisplayName;
         }
 
         protected string GetChildrenPath()
