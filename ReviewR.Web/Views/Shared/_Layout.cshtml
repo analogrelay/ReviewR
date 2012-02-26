@@ -28,10 +28,6 @@
                 </a>
                 <nav id="master-nav">
                     <ul class="nav">
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li><a href="~/_dbadmin">Database Admin</a></li>
-                        }
                         @Html.MenuLink("My Dashboard", "Index", "Reviews")
                     </ul>
                 </nav>
@@ -41,10 +37,15 @@
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <span>@User.Identity.Name</span>
+                                    <span>@User.Identity.Name @if (User.IsInRole("Admin")) { <text>(Admin)</text> }</span>
                                     <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><a href="~/_dbadmin">Database Admin</a></li>
+                                        <li class="divider" />
+                                    }
                                     <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
                                 </ul>
                             </li>
