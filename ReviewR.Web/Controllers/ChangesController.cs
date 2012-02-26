@@ -10,7 +10,6 @@ using ReviewR.Web.ViewModels;
 
 namespace ReviewR.Web.Controllers
 {
-    [Authorize]
     public class ChangesController : Controller
     {
         public ReviewService Reviews { get; set; }
@@ -24,18 +23,18 @@ namespace ReviewR.Web.Controllers
             Diff = diff;
         }
 
-        public ActionResult View(int id, int reviewId)
+        public ActionResult View(int id)
         {
-            // Get the review
-            Review r = Reviews.GetReview(reviewId);
-            if (r == null || r.UserId != Auth.GetCurrentUserId())
+            // Get the change
+            FileChange chg = Reviews.GetChange(id);
+            if (chg == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            // Get the change in question
-            FileChange chg = r.Files.Where(c => c.Id == id).FirstOrDefault();
-            if (chg == null)
+            // Get the review
+            Review r = chg.Review;
+            if (r == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
@@ -43,6 +42,21 @@ namespace ReviewR.Web.Controllers
             // Build a diff model for it
             DiffFileViewModel diffModel = Diff.CreateViewModelFromUnifiedDiff(chg.FileName, chg.Diff);
             diffModel.Id = chg.Id;
+
+            // Attach comments
+            foreach (Comment c in chg.Comments.Where(c => c.DiffLineIndex > 0 && c.DiffLineIndex < diffModel.DiffLines.Count))
+            {
+                diffModel.DiffLines[c.DiffLineIndex]
+                         .Comments
+                         .Add(new LineCommentViewModel()
+                {
+                     Id = c.Id,
+                     AuthorName = c.User.DisplayName,
+                     AuthorEmail = c.User.Email,
+                     Body = c.Content,
+                     PostedOn = c.PostedOn
+                });
+            }
 
             // Return a view based on it
             ICollection<FolderChangeViewModel> folders = FileChangeViewModelMapper.MapFiles(r.Files);

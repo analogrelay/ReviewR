@@ -11,7 +11,6 @@ using ReviewR.Web.ViewModels;
 
 namespace ReviewR.Web.Controllers
 {
-    [Authorize]
     public class ReviewsController : Controller
     {
         public DiffService Diff { get; set; }
@@ -26,12 +25,14 @@ namespace ReviewR.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult New()
         {
             return View(new NewReviewViewModel());
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult New(NewReviewViewModel model)
         {
             if (ModelState.IsValid)
@@ -62,7 +63,7 @@ namespace ReviewR.Web.Controllers
         public ActionResult Index()
         {
             // Get the users reviews
-            IEnumerable<Review> reviews = Reviews.GetReviewsCreatedBy(userId: Auth.GetCurrentUserId());
+            IEnumerable<Review> reviews = Reviews.GetAllReviews();
             return View(new DashboardViewModel() { Reviews = reviews.Select(r => new ReviewSummaryViewModel() { Id = r.Id, Name = r.Name }).ToList() });
         }
 
@@ -70,7 +71,7 @@ namespace ReviewR.Web.Controllers
         public ActionResult View(int id)
         {
             Review review = Reviews.GetReview(id);
-            if (review == null || review.UserId != Auth.GetCurrentUserId())
+            if (review == null)
             {
                 // No such review, or user not authorized
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);

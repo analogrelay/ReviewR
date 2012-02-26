@@ -19,7 +19,7 @@
                     break;
             }
             <li class="@(file == Model.Selected ? "active" : null)">
-                <a href="@Url.Action("View", "Changes", new { id = file.Id, reviewId = Model.Id })" title="@file.FileName">
+                <a href="@Url.Action("View", "Changes", new { id = file.Id })" title="@file.FileName">
                     <i class="@icon"></i>
                     @file.FileName
                 </a>

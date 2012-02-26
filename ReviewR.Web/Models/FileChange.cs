@@ -19,6 +19,7 @@ namespace ReviewR.Web.Models
         public string Diff { get; set; }
     
         public virtual Review Review { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
 
         [NotMapped]
         public abstract FileChangeType ChangeType { get; }

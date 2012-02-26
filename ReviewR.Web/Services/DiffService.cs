@@ -46,15 +46,10 @@ namespace ReviewR.Web.Services
             IEnumerable<DiffLineViewModel> lines = hunks.SelectMany(h => 
                 Enumerable.Concat(
                     new [] { new DiffLineViewModel() { Type = LineDiffType.HunkHeader, Text = h.ToString() } },
-                    h.Lines.Select((l, i) =>
-                        new DiffLineViewModel() { 
-                            LeftLine = h.OriginalLocation.Line + i, 
-                            RightLine = h.ModifiedLocation.Line + i,
-                            Type = l.Type,
-                            Text = l.Content
-                        }
-                    )
+                    ConvertLines(h)
                 ));
+
+            // Attach comments
 
             return new DiffFileViewModel()
             {
@@ -64,6 +59,36 @@ namespace ReviewR.Web.Services
                 Insertions = lines.Count(m => m.Type == LineDiffType.Added),
                 DiffLines = lines.ToList()
             };
+        }
+
+        private IEnumerable<DiffLineViewModel> ConvertLines(DiffHunk h)
+        {
+            int leftLine = h.OriginalLocation.Line;
+            int rightLine = h.ModifiedLocation.Line;
+            int index = 0;
+            foreach(var line in h.Lines)
+            {
+                DiffLineViewModel newLine = new DiffLineViewModel()
+                {
+                    Index = index++,
+                    Type = line.Type,
+                    Text = line.Content
+                };
+                switch (line.Type)
+                {
+                    case LineDiffType.Same:
+                        newLine.LeftLine = leftLine++;
+                        newLine.RightLine = rightLine++;
+                        break;
+                    case LineDiffType.Added:
+                        newLine.RightLine = rightLine++;
+                        break;
+                    case LineDiffType.Removed:
+                        newLine.LeftLine = leftLine++;
+                        break;
+                }
+                yield return newLine;
+            }
         }
     }
 }

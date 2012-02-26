@@ -4,21 +4,23 @@
     ViewBag.Title = "Index";
 }
 
-<h1>Your Reviews</h1>
+<h1>Reviews</h1>
 
-<table class="table-bordered table-striped">
-    <tr>
-        <th>Name</th>
-    </tr>
-
-@foreach (var item in Model.Reviews) {
-    <tr>
-        <td>
-            @Html.ActionLink(item.Name, "View", "Reviews", new { id = item.Id }, null)
-        </td>
-    </tr>
-}
-</table>
-<p>
-    @Html.ActionLink("Submit a new Review", "New", "Reviews", null, new { @class = "btn btn-primary" })
-</p>
+<div class="well">
+    <ul id="reviews" class="nav nav-list">
+        <li class="nav-header">All Reviews</li>
+        @foreach (var item in Model.Reviews) {
+            <li>
+                <a href="@Url.Action("View", "Reviews", new { id = item.Id })">
+                    <i class="icon-th-list"></i>
+                    @item.Name
+                </a>
+            </li>
+        }
+    </ul>
+    @if(Request.IsAuthenticated) {
+        <p class="actions">
+            @Html.ActionLink("Submit a new Review", "New", "Reviews", null, new { @class = "btn btn-primary" })
+        </p>
+    }
+</div>

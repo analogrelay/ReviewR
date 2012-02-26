@@ -194,6 +194,11 @@
     <Compile Include="Migrations\201202252329462_RemoveLineObjects.Designer.cs">
       <DependentUpon>201202252329462_RemoveLineObjects.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201202262250081_Comments.cs" />
+    <Compile Include="Migrations\201202262250081_Comments.Designer.cs">
+      <DependentUpon>201202262250081_Comments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\FileChange.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Services\DiffConverter.cs" />
@@ -204,8 +209,10 @@
     <Compile Include="ViewModels\ChangeDetailViewModel.cs" />
     <Compile Include="ViewModels\FileChangeViewModel.cs" />
     <Compile Include="ViewModels\FolderChangeViewModel.cs" />
+    <Compile Include="ViewModels\LineCommentViewModel.cs" />
     <Compile Include="ViewModels\NewReviewViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
+    <Content Include="Client\ReviewR.Commenting.js" />
     <Content Include="DynamicData\Default.aspx" />
     <Content Include="DynamicData\DynamicData\Content\GridViewPager.ascx" />
     <Content Include="DynamicData\DynamicData\Content\Images\Back.gif" />
@@ -512,7 +519,6 @@
     <Content Include="Content\bootstrap\css\bootstrap.min.css" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings-white.png" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings.png" />
-    <Content Include="Content\DiffViewer.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -580,6 +586,7 @@
     <Content Include="Scripts\jquery-ui-1.8.17.min.js" />
     <Content Include="Scripts\jquery.render.js" />
     <Content Include="Scripts\jquery.render.min.js" />
+    <Content Include="Scripts\jquery.timeago.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate-vsdoc.js" />

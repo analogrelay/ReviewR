@@ -81,7 +81,7 @@ table.diff-view {
     }
 
     table.diff-view tr:hover td.diff-line {
-        background-color: #ffc; 
+        background-color: #ffb;
     }
 
     table.diff-view tr.diff-hunk-header td.diff-line {
@@ -92,24 +92,30 @@ table.diff-view {
             color: #999;
         }
 
-        table.diff-view tr.diff-hunk-header td.diff-line:hover {
-            background-color: #fafafa;
+        table.diff-view tr.diff-hunk-header td.diff-line:hover pre {
+            filter: alpha(opacity=75);
+            -moz-opacity: 0.75;
+            opacity: 0.75;
         }
 
     table.diff-view tr.diff-added td.diff-line {
-        background-color: #dfd;
+        background-color: #6f6;
     }
 
     table.diff-view tr.diff-added:hover td.diff-line {
-        background-color: #fafafa;
+        filter: alpha(opacity=75);
+        -moz-opacity: 0.75;
+        opacity: 0.75;
     }
 
     table.diff-view tr.diff-removed td.diff-line {
-        background-color: #fdd;
+        background-color: #f33;
     }
 
     table.diff-view tr.diff-removed:hover td.diff-line {
-        background-color: #fafafa;
+        filter: alpha(opacity=75);
+        -moz-opacity: 0.75;
+        opacity: 0.75;
     }
 
     table.diff-view tr td.diff-line i.diff-add-comment-button {
@@ -121,7 +127,52 @@ table.diff-view {
         cursor: pointer;
         display: none;
     }
-    
+
     table.diff-view tr:hover td.diff-line i.diff-add-comment-button {
         display: inline-block;
     }
+
+tr.diff-comments td.diff-comment-container .well {
+    margin: 10px 5px 10px 5px;
+    padding: 5px;
+}
+
+tr.diff-comments td.diff-comment-container ol {
+    margin: 0;
+    padding: 0;
+}
+
+    tr.diff-comments td.diff-comment-container ol li {
+        list-style-type: none;
+    }
+
+div.diff-comment-meta {
+    padding: 5px;
+    padding-bottom: 10px;
+    border: 1px solid #CCC;
+    border-bottom: none;
+}
+
+    div.diff-comment-meta img {
+        position: relative;
+        top: 5px;
+    }
+
+div.diff-comment-body {
+    background-color: white;
+    padding: 5px;
+    border: 1px solid #CCC;
+    min-height: 30px;
+}
+
+    div.diff-comment-body:hover p.diff-comment-actions {
+        display: block;
+    }
+
+p.actions {
+    margin-top: 10px;
+}
+
+p.diff-comment-actions {
+    display: none;
+}

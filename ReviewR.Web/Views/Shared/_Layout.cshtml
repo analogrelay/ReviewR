@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
     
     <script type="text/javascript" src="~/Scripts/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.timeago.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.17.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery.render.min.js"></script>
@@ -18,6 +19,7 @@
     @if(!Request.IsAuthenticated) {
         <script type="text/javascript" src="~/Client/ReviewR.Auth.js"></script>
     }
+    @Assets.GetScripts()
 </head>
 <body>
     <header class="navbar navbar-fixed-top">
@@ -28,9 +30,7 @@
                 </a>
                 <nav id="master-nav">
                     <ul class="nav">
-                        @if(Request.IsAuthenticated) {
-                            @Html.MenuLink("My Dashboard", "Index", "Reviews")
-                        }
+                        @Html.MenuLink("Dashboard", "Index", "Reviews")
                     </ul>
                 </nav>
                 <nav id="login-nav">

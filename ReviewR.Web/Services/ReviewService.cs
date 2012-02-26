@@ -44,5 +44,18 @@ namespace ReviewR.Web.Services
                        .Where(r => r.Id == id)
                        .FirstOrDefault();
         }
+
+        public virtual FileChange GetChange(int id)
+        {
+            return Data.Changes
+                       .Include("Review")
+                       .Where(c => c.Id == id)
+                       .FirstOrDefault();
+        }
+
+        public IEnumerable<Review> GetAllReviews()
+        {
+            return Data.Reviews;
+        }
     }
 }

@@ -22,13 +22,6 @@ namespace ReviewR.Web.App_Start
             );
 
             routes.MapRoute(
-                name: "FileChanges",
-                url: "Reviews/{reviewId}/{controller}/{id}/{action}",
-                defaults: new { action = "View", id = UrlParameter.Optional },
-                constraints: new { reviewId = @"\d+", controller = @"[A-Za-z]*", action = @"[A-Za-z]*", id = @"\d+" }
-            );
-
-            routes.MapRoute(
                 name: "View",
                 url: "{controller}/{id}/{action}",
                 defaults: new { action = "View" },

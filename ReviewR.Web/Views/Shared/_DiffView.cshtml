@@ -1,31 +1,91 @@
 ﻿@model ReviewR.Web.ViewModels.DiffFileViewModel
 @using ReviewR.Diff;
+
+@{
+    Assets.AddScript("~/Client/ReviewR.Commenting.js");
+}
+
 <table class="diff-view">
     @foreach (var line in Model.DiffLines)
     {
         string cls = null;
+        string leftLine = null;
+        string rightLine = null;
         switch (line.Type)
         {
             case LineDiffType.Added:
                 cls = "diff-added";
+                leftLine = "—";
+                rightLine = line.RightLine.ToString();
                 break;
             case LineDiffType.Removed:
                 cls = "diff-removed";
+                leftLine = line.LeftLine.ToString();
+                rightLine = "—";
                 break;
             case LineDiffType.HunkHeader:
                 cls = "diff-hunk-header";
+                leftLine = rightLine = "...";
+                break;
+            default:
+                leftLine = line.LeftLine.ToString();
+                rightLine = line.RightLine.ToString();
                 break;
         }
         <tr class="@cls">
-            <td class="diff-linenum">@line.LeftLine</td>
-            <td class="diff-linenum">@line.RightLine</td>
+            <td class="diff-linenum">@leftLine</td>
+            <td class="diff-linenum">@rightLine</td>
             <td class="diff-line">
-                <a href="#">
+                <a href="@Url.Action("New", "Comments", new { id = Model.Id, line = line.Index })" class="diff-add-comment">
                     <i class="icon-comment diff-add-comment-button"></i>
                 </a>
                 <pre>@line.Text</pre>
             </td>
         </tr>
+        if (line.Comments.Any())
+        {
+            <tr class="diff-comments">
+                <td class="diff-linenum" colspan="2"></td>
+                <td class="diff-comment-container">
+                    <div class="well">
+                        <ol>
+                            @foreach(var comment in line.Comments) {
+                                <li>
+                                    <div class="diff-comment-meta">
+                                        <p class="diff-comment-info pull-right">
+                                            <abbr class="timeago" title="@comment.PostedOn.ToString("O")">@comment.PostedOn.ToString("f")</abbr>
+                                        </p>
+                                        <p class="diff-comment-author">
+                                            @Gravatar.GetHtml(comment.AuthorEmail, imageSize: 20)
+                                            @comment.AuthorName
+                                        </p>
+                                    </div>
+                                    <div class="diff-comment-body">
+                                        <p class="diff-comment-actions pull-right">
+                                            <a href="#" class="btn">
+                                                <i class="icon-edit"></i>
+                                                Edit
+                                            </a>
+                                            <a href="#" class="btn btn-danger">
+                                                <i class="icon-remove icon-white"></i>
+                                                Delete
+                                            </a>
+                                        </p>
+                                        <span>@comment.Body</span>
+                                    </div>
+                                </li>
+                            }
+                        </ol>
+                        <p class="actions">
+                            <a href="@Url.Action("New", "Comments", new { changeId = Model.Id, line = line.Index })" class="btn btn-primary">
+                                <i class="icon-plus icon-white"></i>
+                                Add Comment
+                            </a>
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        }
     }
 </table>
 

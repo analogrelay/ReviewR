@@ -12,7 +12,7 @@ namespace ReviewR.Web.ViewModels
         public int Deletions { get; set; }
         public int Insertions { get; set; }
         public bool Binary { get; set; }
-        public ICollection<DiffLineViewModel> DiffLines { get; set; }
+        public IList<DiffLineViewModel> DiffLines { get; set; }
 
         public DiffFileViewModel()
         {

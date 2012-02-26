@@ -11,7 +11,7 @@ namespace ReviewR.Web.Services
     {
         public static ICollection<FolderChangeViewModel> MapFiles(ICollection<FileChange> collection)
         {
-            return collection.GroupBy(GetFolderName).Select(ProcessFolder).ToList();
+            return collection.GroupBy(GetFolderName).Select(ProcessFolder).OrderBy(f => f.Name).ToList();
         }
 
         private static FolderChangeViewModel ProcessFolder(IGrouping<string, FileChange> arg)
@@ -32,7 +32,7 @@ namespace ReviewR.Web.Services
                         ChangeType = chg.ChangeType,
                         FileName = name
                     };
-                }).ToList()
+                }).OrderBy(f => f.FileName).ToList()
             };
         }
 
