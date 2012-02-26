@@ -17,7 +17,7 @@ namespace ReviewR.Web.Facts.Controllers
         public class Index
         {
             [Fact]
-            public void ReturnsViewResultWithEmptyDashboardModel()
+            public void ReturnsViewResult()
             {
                 // Arrange
                 var ctl = new HomeController();
@@ -26,7 +26,7 @@ namespace ReviewR.Web.Facts.Controllers
                 var result = ctl.Index();
 
                 // Assert
-                ActionAssert.IsViewResult(result, new DashboardViewModel() { Reviews = new List<ReviewViewModel>() });
+                ActionAssert.IsViewResult(result);
             }
         }
     }

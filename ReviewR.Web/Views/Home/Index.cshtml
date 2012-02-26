@@ -1,32 +1,15 @@
-﻿@model ReviewR.Web.ViewModels.DashboardViewModel
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
 <h1>Home</h1>
-@if(Request.IsAuthenticated) {
-    <section id="created-reviews-list" class="review-list">
-        <h3>Your Reviews</h3>
-        @if (!Model.Reviews.Any())
-        {
-            <p><em>You haven't created any reviews</em></p>
-        } else {
-            <table>
-                @foreach (var review in Model.Reviews)
-                {
-                    <tr>
-                        <td><a href="@Url.Action("View", "Review", new { id = review.Id })">@review.Name</a></td>
-                    </tr>
-                }
-            </table>
-        }
-        <footer>
-            @Html.ActionLink("Submit a new review", "New", "Review", null, new { @class = "btn btn-primary" })
-        </footer>
-    </section>
-} else {
+@if(!Request.IsAuthenticated) {
     <p>
         You need to have an account before you can start submitting or participating in reviews. 
         Please @Html.ActionLink("Login", "Login", "Account") or @Html.ActionLink("Register for a new account", "Register", "Account")
+    </p>
+} else {
+    <p>
+        Welcome to ReviewR. Visit your @Html.ActionLink("Review Dashboard", "Index", "Reviews").
     </p>
 }

@@ -25,5 +25,6 @@ namespace ReviewR.Web.Models
         public virtual string DisplayName { get; set; }
 
         public virtual ICollection<Role> Roles { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace ReviewR.Web.Controllers
     {
         public ActionResult Index()
         {
-            return View(new DashboardViewModel() { Reviews = new List<ReviewViewModel>() });
+            return View();
         }
     }
 }

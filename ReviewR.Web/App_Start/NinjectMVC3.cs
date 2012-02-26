@@ -57,6 +57,7 @@ namespace ReviewR.Web.App_Start
         {
             kernel.Bind<IDataRepository>().To<DefaultDataRepository>();
             kernel.Bind<AuthenticationService>().ToSelf();
+            kernel.Bind<ReviewService>().ToSelf();
             kernel.Bind<DiffService>().ToSelf();
             kernel.Bind<DiffConverter>().ToSelf();
             kernel.Bind<DiffReader>().ToSelf();

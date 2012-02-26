@@ -162,7 +162,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="App_Start\AuthenticationModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="DynamicData\DynamicData\FieldTemplates\Code.ascx.cs">
       <DependentUpon>Code.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -197,6 +197,9 @@
     <Compile Include="Models\Review.cs" />
     <Compile Include="Services\DiffConverter.cs" />
     <Compile Include="Services\DiffService.cs" />
+    <Compile Include="Services\ReviewService.cs" />
+    <Compile Include="Models\FileChangeType.cs" />
+    <Compile Include="ViewModels\FileChangeViewModel.cs" />
     <Compile Include="ViewModels\NewReviewViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Content Include="DynamicData\Default.aspx" />
@@ -472,7 +475,7 @@
     <Compile Include="DynamicData\Site.master.designer.cs">
       <DependentUpon>Site.master</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\IQuery.cs" />
+    <Compile Include="Infrastructure\IEntitySet.cs" />
     <Compile Include="Infrastructure\RequestDataValueProviderFactory.cs" />
     <Compile Include="Infrastructure\ReviewRPrincipal.cs" />
     <Compile Include="Migrations\201202250000464_UsersAndRoles.cs" />
@@ -634,7 +637,13 @@
     <Content Include="DynamicData\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Review\New.cshtml" />
+    <Content Include="Views\Reviews\New.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Reviews\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Reviews\View.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

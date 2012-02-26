@@ -95,26 +95,70 @@ namespace ReviewR.Web.Facts.Controllers
                     UserId = 42,
                     Name = "123",
                     Files = changes.ToList()
-                }, ctl.Data.Reviews, new PropertyEqualityComparer());
+                }, ctl.Reviews.Data.Reviews, new PropertyEqualityComparer());
+            }
+        }
+
+        public class IndexGet
+        {
+            [Fact]
+            public void ReturnsViewResultWithEmptyDashboardViewModelIfNoReviewsForCurrentUser()
+            {
+                // Arrange
+                var ctl = CreateController();
+                ctl.MockAuth.Setup(s => s.GetCurrentUserId()).Returns(42);
+
+                // Act
+                var result = ctl.Index();
+
+                // Assert
+                ActionAssert.IsViewResult(result, new DashboardViewModel() { Reviews = new List<ReviewSummaryViewModel>() });
+            }
+
+            [Fact]
+            public void ReturnsViewResultWithReviewsCreatedByCurrentUser()
+            {
+                // Arrange
+                var ctl = CreateController();
+                Review r1 = ctl.Reviews.CreateReview("Review1", new List<FileChange>(), 42); // ownerId doesn't matter in test repo
+                Review r2 = ctl.Reviews.CreateReview("Review2", new List<FileChange>(), 42); // ownerId doesn't matter in test repo
+                User u = ctl.Reviews.Data.Users.Add(new User() { Reviews = new List<Review>() { r1, r2 } });
+                ctl.Reviews.Data.SaveChanges();
+                ctl.MockAuth.Setup(s => s.GetCurrentUserId()).Returns(u.Id);
+                
+                // Act
+                var result = ctl.Index();
+
+                // Assert
+                ActionAssert.IsViewResult(result,
+                    new DashboardViewModel()
+                    {
+                        Reviews = new List<ReviewSummaryViewModel>()
+                        {
+                            new ReviewSummaryViewModel() { Id = r1.Id, Name = r1.Name },
+                            new ReviewSummaryViewModel() { Id = r2.Id, Name = r2.Name }
+                        }
+                    });
             }
         }
 
         private static TestableReviewController CreateController()
         {
-            return new TestableReviewController(
+            TestableReviewController c = new TestableReviewController(
                 new Mock<DiffService>(),
                 new Mock<AuthenticationService>(),
                 new TestDataRepository());
+            return c;
         }
 
-        private class TestableReviewController : ReviewController
+        private class TestableReviewController : ReviewsController
         {
             public Mock<DiffService> MockDiff { get; set; }
             public Mock<AuthenticationService> MockAuth { get; set; }
             public TestDataRepository TestData { get; set; }
 
             public TestableReviewController(Mock<DiffService> mockDiff, Mock<AuthenticationService> mockAuth, TestDataRepository data)
-                : base(mockDiff.Object, mockAuth.Object, data)
+                : base(mockDiff.Object, mockAuth.Object, new ReviewService(data))
             {
                 MockDiff = mockDiff;
                 MockAuth = mockAuth;

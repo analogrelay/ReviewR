@@ -1,0 +1,52 @@
+﻿@model ReviewR.Web.ViewModels.ReviewDetailViewModel
+@using ReviewR.Web.Models
+
+@functions {
+    public string Trim(string str) {
+        if (str.Length > 30)
+        {
+            return "..." + str.Substring(Math.Max(0, str.Length - 30));
+        }
+        return str;
+    }
+}
+
+@{
+    ViewBag.Title = "View";
+}
+
+<h1>@Model.Name</h1>
+<div class="row">
+    <div class="well span4">
+        <ul class="nav nav-list">
+            @foreach (var grp in Model.Files.GroupBy(m => m.OldFileName.Substring(0, m.OldFileName.LastIndexOf('/'))))
+            {
+                <li class="nav-header">@grp.Key</li>
+                foreach(var file in grp) {
+                    string icon;
+                    switch (file.ChangeType)
+                    {
+                        case FileChangeType.Added:
+                            icon = "icon-plus";
+                            break;
+                        case FileChangeType.Removed:
+                            icon = "icon-minus";
+                            break;
+                        default:
+                            icon = "icon-pencil";
+                            break;
+                    }
+                    <li>
+                        <a href="@Url.Action("View", "Changes", new { id = 1, reviewId = Model.Id })" title="@file.OldFileName">
+                            <i class="@icon"></i>
+                            @file.OldFileName.Substring(grp.Key.Length + 1)
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+    <div class="span8">
+        The file!
+    </div>
+</div>
