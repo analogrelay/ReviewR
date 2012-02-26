@@ -32,17 +32,32 @@ namespace ReviewR.Diff
             return new DiffSet(files);
         }
 
+        public virtual IList<DiffHunk> ReadHunks(TextReader source)
+        {
+            if (source == null) { throw new ArgumentNullException("source"); }
+
+            LineReader reader = new LineReader(source);
+            reader.NextLine();
+
+            return ReadHunks(reader);
+        }
+
         private static FileDiff ReadFile(LineReader reader)
         {
             string original = ReadFileName(reader, "---");
             string modified = ReadFileName(reader, "+++");
-            FileDiff file = new FileDiff(original, modified);
+            return new FileDiff(original, modified, ReadHunks(reader));
+        }
+
+        private static IList<DiffHunk> ReadHunks(LineReader reader)
+        {
+            IList<DiffHunk> hunks = new List<DiffHunk>();
             DiffHunk hunk;
             while ((hunk = ReadHunk(reader)) != null)
             {
-                file.Hunks.Add(hunk);
+                hunks.Add(hunk);
             }
-            return file;
+            return hunks;
         }
 
         private static DiffHunk ReadHunk(LineReader reader)

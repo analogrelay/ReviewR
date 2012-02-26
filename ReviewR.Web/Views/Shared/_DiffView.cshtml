@@ -1,0 +1,31 @@
+﻿@model ReviewR.Web.ViewModels.DiffFileViewModel
+@using ReviewR.Diff;
+<table class="diff-view">
+    @foreach (var line in Model.DiffLines)
+    {
+        string cls = null;
+        switch (line.Type)
+        {
+            case LineDiffType.Added:
+                cls = "diff-added";
+                break;
+            case LineDiffType.Removed:
+                cls = "diff-removed";
+                break;
+            case LineDiffType.HunkHeader:
+                cls = "diff-hunk-header";
+                break;
+        }
+        <tr class="@cls">
+            <td class="diff-linenum">@line.LeftLine</td>
+            <td class="diff-linenum">@line.RightLine</td>
+            <td class="diff-line">
+                <a href="#">
+                    <i class="icon-comment diff-add-comment-button"></i>
+                </a>
+                <pre>@line.Text</pre>
+            </td>
+        </tr>
+    }
+</table>
+

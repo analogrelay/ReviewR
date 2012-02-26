@@ -1,13 +1,13 @@
 /* Header/Footer */
 body {
     padding-top: 40px;
-    font-family: 'Segoe UI', "Helvetica Neue", Helvetica, Arial, sans-serif
+    font-family: 'Segoe UI', "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
     body > header {
         width: 100%;
     }
-    
+
 /* Nav Bar */
 nav img {
     width: 16px;
@@ -53,3 +53,75 @@ h1 {
 p em {
     font-size: 12pt;
 }
+
+/* Diff Viewer */
+table.diff-view {
+    position: relative;
+    width: 100%;
+    border: 1px solid #CCC;
+}
+
+    table.diff-view td.diff-line {
+        font-family: Consolas, 'Courier New', monospace;
+    }
+
+        table.diff-view td.diff-line pre {
+            padding: 0;
+            margin: 0;
+            background: none;
+            border: none;
+        }
+
+    table.diff-view tr td.diff-linenum {
+        background-color: #ececec;
+        color: #aaa;
+        padding: 0 0.5em;
+        text-align: right;
+        width: 10px;
+    }
+
+    table.diff-view tr:hover td.diff-line {
+        background-color: #ffc; 
+    }
+
+    table.diff-view tr.diff-hunk-header td.diff-line {
+        background-color: #EAF2F5;
+    }
+
+        table.diff-view tr.diff-hunk-header td.diff-line pre {
+            color: #999;
+        }
+
+        table.diff-view tr.diff-hunk-header td.diff-line:hover {
+            background-color: #fafafa;
+        }
+
+    table.diff-view tr.diff-added td.diff-line {
+        background-color: #dfd;
+    }
+
+    table.diff-view tr.diff-added:hover td.diff-line {
+        background-color: #fafafa;
+    }
+
+    table.diff-view tr.diff-removed td.diff-line {
+        background-color: #fdd;
+    }
+
+    table.diff-view tr.diff-removed:hover td.diff-line {
+        background-color: #fafafa;
+    }
+
+    table.diff-view tr td.diff-line i.diff-add-comment-button {
+        position: absolute;
+        left: 0;
+        padding-right: 5px;
+        margin-left: -15px;
+        margin-top: 3px;
+        cursor: pointer;
+        display: none;
+    }
+    
+    table.diff-view tr:hover td.diff-line i.diff-add-comment-button {
+        display: inline-block;
+    }

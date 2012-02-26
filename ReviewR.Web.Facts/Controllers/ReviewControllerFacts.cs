@@ -13,6 +13,7 @@ using System.Web;
 using System.IO;
 using ReviewR.Web.Models;
 using ReviewR.Web.Facts.Authentication;
+using System.Net;
 
 namespace ReviewR.Web.Facts.Controllers
 {
@@ -89,7 +90,7 @@ namespace ReviewR.Web.Facts.Controllers
                 var result = ctl.New(model);
 
                 // Assert
-                ActionAssert.IsRedirectResult(result, new { controller = "Review", action = "View", id = ctl.TestData.LastId });
+                ActionAssert.IsRedirectResult(result, new { controller = "Reviews", action = "View", id = ctl.TestData.LastId });
                 Assert.Contains(new Review() {
                     Id = ctl.TestData.LastId,
                     UserId = 42,
@@ -106,8 +107,10 @@ namespace ReviewR.Web.Facts.Controllers
             {
                 // Arrange
                 var ctl = CreateController();
-                ctl.MockAuth.Setup(s => s.GetCurrentUserId()).Returns(42);
-
+                User u = ctl.Reviews.Data.Users.Add(new User() { Reviews = new List<Review>() });
+                ctl.Reviews.Data.SaveChanges();
+                ctl.MockAuth.Setup(s => s.GetCurrentUserId()).Returns(u.Id);
+                
                 // Act
                 var result = ctl.Index();
 
@@ -139,6 +142,84 @@ namespace ReviewR.Web.Facts.Controllers
                             new ReviewSummaryViewModel() { Id = r2.Id, Name = r2.Name }
                         }
                     });
+            }
+        }
+
+        public class ViewGet
+        {
+            [Fact]
+            public void Returns404IfNoReviewWithId()
+            {
+                // Arrange
+                var ctl = CreateController();
+
+                // Assume
+                Assert.DoesNotContain(42, ctl.Reviews.Data.Reviews.Select(r => r.Id));
+
+                // Act
+                var result = ctl.View(42);
+
+                // Assert
+                ActionAssert.IsHttpStatusResult(result, HttpStatusCode.NotFound);
+            }
+
+            [Fact]
+            public void Returns404IfUserDoesNotOwnReview()
+            {
+                // Arrange
+                var ctl = CreateController();
+                Review r = ctl.Reviews.CreateReview("Foo", new List<FileChange>(), 42);
+                User u = ctl.Reviews.Data.Users.Add(new User() { Reviews = new List<Review>() { r } });
+                ctl.Reviews.Data.SaveChanges();
+                ctl.MockAuth.Setup(s => s.GetCurrentUserId()).Returns(u.Id);
+                Assert.NotEqual(42, u.Id);
+
+                // Act
+                var result = ctl.View(r.Id);
+
+                // Assert
+                ActionAssert.IsHttpStatusResult(result, HttpStatusCode.NotFound);
+            }
+
+            [Fact]
+            public void ProcessesReviewIntoFileStructure()
+            {
+                // Arrange
+                var ctl = CreateController();
+                Review r = ctl.Reviews.CreateReview("Foo", new List<FileChange>()
+                {
+                    new FileAddition() { FileName = "/Foo/Bar/Baz" },
+                    new FileDeletion() { FileName = "/Foo/Bar/Biz" },
+                    new FileModification() { FileName = "/Foo/Boz", NewFileName = "/Foo/Baz" },
+                    new FileAddition() { FileName = "/Biz" }
+                }, 42);
+                User u = ctl.Reviews.Data.Users.Add(new User() { Reviews = new List<Review>() { r } });
+                ctl.Reviews.Data.SaveChanges();
+                ctl.MockAuth.Setup(s => s.GetCurrentUserId()).Returns(u.Id);
+                r.UserId = u.Id;
+                
+                // Act
+                var result = ctl.View(r.Id);
+
+                // Assert
+                ActionAssert.IsViewResult(result, new ReviewDetailViewModel()
+                {
+                    Id = r.Id,
+                    Name = "Foo",
+                    Folders = new List<FolderChangeViewModel>()
+                    {
+                        new FolderChangeViewModel() { Name = "/Foo/Bar", Files = new List<FileChangeViewModel>() {
+                            new FileChangeViewModel() { ChangeType = FileChangeType.Added, FileName = "Baz" },
+                            new FileChangeViewModel() { ChangeType = FileChangeType.Removed, FileName = "Biz" }
+                        } },
+                        new FolderChangeViewModel() { Name = "/Foo", Files = new List<FileChangeViewModel>() {
+                            new FileChangeViewModel() { ChangeType = FileChangeType.Modified, FileName = "Boz" }
+                        } },
+                        new FolderChangeViewModel() { Name = "/", Files = new List<FileChangeViewModel>() {
+                            new FileChangeViewModel() { ChangeType = FileChangeType.Added, FileName = "Biz" }
+                        } }
+                    }
+                });
             }
         }
 

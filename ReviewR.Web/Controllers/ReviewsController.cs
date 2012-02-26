@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web.Mvc;
 using ReviewR.Web.Models;
@@ -51,7 +52,7 @@ namespace ReviewR.Web.Controllers
                 {
                     // Create the review
                     Review created = Reviews.CreateReview(model.Name, changes.ToList(), Auth.GetCurrentUserId());
-                    return RedirectToAction("View", "Review", new { id = created.Id });
+                    return RedirectToAction("View", "Reviews", new { id = created.Id });
                 }
             }
             return View(model);
@@ -72,33 +73,14 @@ namespace ReviewR.Web.Controllers
             if (review == null || review.UserId != Auth.GetCurrentUserId())
             {
                 // No such review, or user not authorized
-                Response.StatusCode = 404;
-                return Content("Not Found");
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
             return View(new ReviewDetailViewModel()
             {
                 Id = review.Id,
                 Name = review.Name,
-                Files = review.Files.Select(f => new FileChangeViewModel()
-                {
-                    ChangeType = f.ChangeType,
-                    OldFileName = f.FileName,
-                    NewFileName = GetOldFileName(f)
-                }).ToList()
+                Folders = FileChangeViewModelMapper.MapFiles(review.Files)
             });
-        }
-
-        private string GetOldFileName(FileChange f)
-        {
-            FileModification mod = f as FileModification;
-            if (mod != null)
-            {
-                return mod.NewFileName;
-            }
-            else
-            {
-                return null;
-            }
         }
     }
 }

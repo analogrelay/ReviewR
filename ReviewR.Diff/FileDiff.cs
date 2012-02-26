@@ -13,7 +13,8 @@ namespace ReviewR.Diff
         public ICollection<DiffHunk> Hunks { get; private set; }
 
         public FileDiff(string originalFile, string modifiedFile) : this(originalFile, modifiedFile, null) { }
-        public FileDiff(string originalFile, string modifiedFile, params DiffHunk[] hunks)
+        public FileDiff(string originalFile, string modifiedFile, params DiffHunk[] hunks) : this(originalFile, modifiedFile, (IEnumerable<DiffHunk>)hunks) { }
+        public FileDiff(string originalFile, string modifiedFile, IEnumerable<DiffHunk> hunks)
         {
             OriginalFile = originalFile;
             ModifiedFile = modifiedFile;

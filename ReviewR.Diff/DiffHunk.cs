@@ -38,5 +38,16 @@ namespace ReviewR.Diff
                    ModifiedLocation.Equals(other.ModifiedLocation) &&
                    Enumerable.SequenceEqual(Lines, other.Lines);
         }
+
+        public override string ToString()
+        {
+            return String.Format(
+                "@@ -{0},{1} +{2},{3} @@{4}",
+                OriginalLocation.Line,
+                OriginalLocation.Column,
+                ModifiedLocation.Line,
+                ModifiedLocation.Column,
+                String.IsNullOrEmpty(Comment) ? String.Empty : (" " + Comment));
+        }
     }
 }

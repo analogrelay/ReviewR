@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ReviewR.Diff;
+using ReviewR.Web.Models;
 
 namespace ReviewR.Web.ViewModels
 {

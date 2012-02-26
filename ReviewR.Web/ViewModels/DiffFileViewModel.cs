@@ -7,15 +7,15 @@ namespace ReviewR.Web.ViewModels
 {
     public class DiffFileViewModel
     {
+        public int Id { get; set; }
+        public string FileName { get; set; }
         public int Deletions { get; set; }
         public int Insertions { get; set; }
         public bool Binary { get; set; }
-        public int Status { get; set; }
         public ICollection<DiffLineViewModel> DiffLines { get; set; }
 
         public DiffFileViewModel()
         {
-            Status = 3;
         }
     }
 }

@@ -13,6 +13,7 @@ namespace ReviewR.Web.ViewModels
 
     public class ReviewDetailViewModel : ReviewSummaryViewModel
     {
-        public IList<FileChangeViewModel> Files { get; set; }
+        public FileChangeViewModel Selected { get; set; }
+        public ICollection<FolderChangeViewModel> Folders { get; set; }
     }
 }

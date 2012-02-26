@@ -9,6 +9,7 @@ namespace ReviewR.Diff
     {
         Same,
         Added,
-        Removed
+        Removed,
+        HunkHeader
     }
 }

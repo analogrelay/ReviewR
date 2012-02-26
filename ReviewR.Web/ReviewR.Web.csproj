@@ -161,6 +161,7 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="App_Start\AuthenticationModule.cs" />
+    <Compile Include="Controllers\ChangesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="DynamicData\DynamicData\FieldTemplates\Code.ascx.cs">
@@ -199,7 +200,10 @@
     <Compile Include="Services\DiffService.cs" />
     <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Models\FileChangeType.cs" />
+    <Compile Include="Services\FileChangeViewModelMapper.cs" />
+    <Compile Include="ViewModels\ChangeDetailViewModel.cs" />
     <Compile Include="ViewModels\FileChangeViewModel.cs" />
+    <Compile Include="ViewModels\FolderChangeViewModel.cs" />
     <Compile Include="ViewModels\NewReviewViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Content Include="DynamicData\Default.aspx" />
@@ -495,7 +499,6 @@
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\DiffFileViewModel.cs" />
     <Compile Include="ViewModels\DiffLineViewModel.cs" />
-    <Compile Include="ViewModels\DiffViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -644,6 +647,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Reviews\View.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_FileList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Changes\View.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_DiffView.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -40,7 +40,9 @@ namespace ReviewR.Web.Services
 
         public virtual Review GetReview(int id)
         {
-            return Data.Reviews.Where(r => r.Id == id).FirstOrDefault();
+            return Data.Reviews
+                       .Where(r => r.Id == id)
+                       .FirstOrDefault();
         }
     }
 }

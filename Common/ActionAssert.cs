@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Xunit;
@@ -55,6 +56,12 @@ namespace VibrantUtils
         {
             JsonResult jsonResult = Assert.IsType<JsonResult>(result);
             Assert.Equal(data, jsonResult.Data, new PropertyEqualityComparer(typeEquality: false));
+        }
+
+        public static void IsHttpStatusResult(ActionResult result, HttpStatusCode code)
+        {
+            HttpStatusCodeResult statusResult = Assert.IsType<HttpStatusCodeResult>(result);
+            Assert.Equal((int)code, statusResult.StatusCode);
         }
 
         private static void VerifyViewResult(ViewResultBase viewResultBase, string viewName, object model)
