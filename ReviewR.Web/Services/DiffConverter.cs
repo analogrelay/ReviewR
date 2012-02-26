@@ -30,14 +30,19 @@ namespace ReviewR.Web.Services
             {
                 // Modification
                 chg = new Data.FileModification() {
-                    FileName = fileDiff.OriginalFile,
-                    NewFileName = fileDiff.ModifiedFile
+                    FileName = CleanPath(fileDiff.OriginalFile),
+                    NewFileName = CleanPath(fileDiff.ModifiedFile)
                 };
             }
 
             // Fill the lines
             chg.Diff = String.Join(Environment.NewLine, fileDiff.Hunks.Select(WriteHunk));
             return chg;
+        }
+
+        private string CleanPath(string path)
+        {
+            return path.TrimStart('a', 'b');
         }
 
         private string WriteHunk(DiffHunk arg)

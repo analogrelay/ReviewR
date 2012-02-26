@@ -93,6 +93,31 @@ namespace ReviewR.Web.Facts.Diff
  Baz"
                 }, actual, new PropertyEqualityComparer());
             }
+
+            [Fact]
+            public void RemovesPrefixesFromGitPaths()
+            {
+                // Arrange
+                var diff = new FileDiff("a/Foo/Bar", "b/Biz/Baz",
+                    new DiffHunk(new SourceCoordinate(0, 0), new SourceCoordinate(10, 0), String.Empty,
+                        new LineDiff(LineDiffType.Added, "Foo"),
+                        new LineDiff(LineDiffType.Removed, "Bar"),
+                        new LineDiff(LineDiffType.Same, "Baz")));
+
+                // Act
+                var actual = new DiffConverter().ConvertFile(diff);
+
+                // Assert
+                Assert.Equal(new Data.FileModification()
+                {
+                    FileName = "/Foo/Bar",
+                    NewFileName = "/Biz/Baz",
+                    Diff = @"@@ -0,0 +10,0 @@
++Foo
+-Bar
+ Baz"
+                }, actual, new PropertyEqualityComparer());
+            }
         }
     }
 }
