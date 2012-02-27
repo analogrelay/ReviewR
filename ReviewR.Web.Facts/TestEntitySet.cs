@@ -70,7 +70,7 @@ namespace ReviewR.Web.Facts
                 if (action.Item1)
                 {
                     int id = _repo.GetId();
-                    action.Item2.GetType().GetProperty("Id", BindingFlags.Public | BindingFlags.Instance).SetValue(action.Item2, id);
+                    action.Item2.GetType().GetProperty("Id", BindingFlags.Public | BindingFlags.Instance).SetValue(action.Item2, id, new object[0]);
                     _items.Add(action.Item2);
                 }
                 else

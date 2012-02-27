@@ -36,11 +36,11 @@ namespace VibrantUtils
             var xs = x.GetType()
                  .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                  .OrderBy(p => p.Name)
-                 .Select(p => Tuple.Create(p.Name, p.GetValue(x)));
+                 .Select(p => Tuple.Create(p.Name, p.GetValue(x, new object[0])));
             var ys = y.GetType()
                  .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                  .OrderBy(p => p.Name)
-                 .Select(p => Tuple.Create(p.Name, p.GetValue(y)));
+                 .Select(p => Tuple.Create(p.Name, p.GetValue(y, new object[0])));
 
             var xnames = xs.Select(t => t.Item1);
             var ynames = ys.Select(t => t.Item1);
