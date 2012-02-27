@@ -78,6 +78,7 @@ namespace ReviewR.Web.Facts
                     _items.Remove(action.Item2);
                 }
             }
+            _pending.Clear();
         }
     }
 }
