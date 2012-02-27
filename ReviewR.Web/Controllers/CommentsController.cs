@@ -65,5 +65,19 @@ namespace ReviewR.Web.Controllers
             Reviews.CreateComment(chg.Id, line, Auth.GetCurrentUserId(), model.Body);
             return RedirectToAction("View", "Changes", new { id = chg.Id });
         }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult Delete(int id)
+        {
+            // Get the comment
+            Comment c = Reviews.GetComment(id);
+            if (c == null || c.UserId != Auth.GetCurrentUserId())
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+            Reviews.DeleteComment(c);
+            return RedirectToAction("View", "Changes", new { id = c.FileId });
+        }
     }
 }

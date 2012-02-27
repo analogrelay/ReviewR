@@ -215,6 +215,53 @@ namespace ReviewR.Web.Facts.Controllers
             }
         }
 
+        public class DeletePost
+        {
+            [Fact]
+            public void Returns404IfCommentDoesNotExist()
+            {
+                // Arrange
+                var ctl = CreateController();
+
+                // Act
+                var result = ctl.Delete(42);
+
+                // Assert
+                ActionAssert.IsHttpStatusResult(result, HttpStatusCode.NotFound);
+            }
+
+            [Fact]
+            public void Returns404IfCommentNotCreatedByCurrentUser()
+            {
+                // Arrange
+                var ctl = CreateController();
+                Comment c = ctl.Reviews.CreateComment(changeId: 1, line: 1, userId: 42, body: "Foo");
+                ctl.MockAuth.Setup(a => a.GetCurrentUserId()).Returns(1);
+
+                // Act
+                var result = ctl.Delete(c.Id);
+
+                // Assert
+                ActionAssert.IsHttpStatusResult(result, HttpStatusCode.NotFound);
+            }
+
+            [Fact]
+            public void DeletesCommentAndRedirectsBackToChangeIfUserOwnsComment()
+            {
+                // Arrange
+                var ctl = CreateController();
+                Comment c = ctl.Reviews.CreateComment(changeId: 42, line: 1, userId: 1, body: "Foo");
+                ctl.MockAuth.Setup(a => a.GetCurrentUserId()).Returns(1);
+
+                // Act
+                var result = ctl.Delete(c.Id);
+
+                // Assert
+                ActionAssert.IsRedirectResult(result, new { controller = "Changes", action = "View", id = 42 });
+                Assert.False(ctl.Reviews.Data.Comments.Any());
+            }
+        }
+
         private static TestableCommentsController CreateController()
         {
             return new TestableCommentsController(new TestDataRepository(), new Mock<AuthenticationService>());

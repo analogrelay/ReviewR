@@ -11,21 +11,25 @@
         string cls = null;
         string leftLine = null;
         string rightLine = null;
+        string icon = null;
         switch (line.Type)
         {
             case LineDiffType.Added:
                 cls = "diff-added";
                 leftLine = "—";
                 rightLine = line.RightLine.ToString();
+                icon = "icon-plus";
                 break;
             case LineDiffType.Removed:
                 cls = "diff-removed";
                 leftLine = line.LeftLine.ToString();
                 rightLine = "—";
+                icon = "icon-minus";
                 break;
             case LineDiffType.HunkHeader:
                 cls = "diff-hunk-header";
                 leftLine = rightLine = "...";
+                icon = "icon-map-marker";
                 break;
             default:
                 leftLine = line.LeftLine.ToString();
@@ -35,6 +39,9 @@
         <tr class="@cls">
             <td class="diff-linenum">@leftLine</td>
             <td class="diff-linenum">@rightLine</td>
+            <td class="diff-linenum">
+                <i class="@icon"></i>
+            </td>
             <td class="diff-line">
                 <a href="@Url.Action("New", "Comments", new { id = Model.Id, line = line.Index })" class="diff-add-comment">
                     <i class="icon-comment diff-add-comment-button"></i>
@@ -46,6 +53,8 @@
         {
             <tr class="diff-comments">
                 <td class="diff-linenum" colspan="2"></td>
+                <td class="diff-linenum">
+                </td>
                 <td class="diff-comment-container">
                     <div class="well">
                         <ol>
@@ -61,16 +70,18 @@
                                         </p>
                                     </div>
                                     <div class="diff-comment-body">
-                                        <p class="diff-comment-actions pull-right">
-                                            <a href="#" class="btn">
-                                                <i class="icon-edit"></i>
-                                                Edit
-                                            </a>
-                                            <a href="#" class="btn btn-danger">
-                                                <i class="icon-remove icon-white"></i>
-                                                Delete
-                                            </a>
-                                        </p>
+                                        @if(Request.IsAuthenticated && User.Identity.Name.Equals(comment.AuthorEmail)) {
+                                            <p class="diff-comment-actions pull-right">
+                                                <a href="#" class="btn">
+                                                    <i class="icon-edit"></i>
+                                                    Edit
+                                                </a>
+                                                <a href="@Url.Action("Delete", "Comments", new { id = comment.Id })" class="btn btn-danger attach" data-confirm="Are you sure you want to delete this comment?" data-method="post">
+                                                    <i class="icon-trash icon-white"></i>
+                                                    Delete
+                                                </a>
+                                            </p>
+                                        }
                                         <span>@comment.Body</span>
                                     </div>
                                 </li>

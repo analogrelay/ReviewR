@@ -53,14 +53,14 @@ namespace ReviewR.Web.Services
                        .FirstOrDefault();
         }
 
-        public IEnumerable<Review> GetAllReviews()
+        public virtual IEnumerable<Review> GetAllReviews()
         {
             return Data.Reviews;
         }
 
-        public void CreateComment(int changeId, int? line, int userId, string body)
+        public virtual Comment CreateComment(int changeId, int? line, int userId, string body)
         {
-            Data.Comments.Add(new Comment()
+            Comment c = Data.Comments.Add(new Comment()
             {
                 FileId = changeId,
                 DiffLineIndex = line,
@@ -68,6 +68,18 @@ namespace ReviewR.Web.Services
                 Content = body,
                 PostedOn = DateTime.UtcNow
             });
+            Data.SaveChanges();
+            return c;
+        }
+
+        public Comment GetComment(int id)
+        {
+            return Data.Comments.Where(c => c.Id == id).FirstOrDefault();
+        }
+
+        public void DeleteComment(Comment c)
+        {
+            Data.Comments.Remove(c);
             Data.SaveChanges();
         }
     }

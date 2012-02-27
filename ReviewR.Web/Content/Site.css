@@ -99,7 +99,7 @@ table.diff-view {
         }
 
     table.diff-view tr.diff-added td.diff-line {
-        background-color: #6f6;
+        background-color: #dfd;
     }
 
     table.diff-view tr.diff-added:hover td.diff-line {
@@ -109,7 +109,7 @@ table.diff-view {
     }
 
     table.diff-view tr.diff-removed td.diff-line {
-        background-color: #f33;
+        background-color: #fdd;
     }
 
     table.diff-view tr.diff-removed:hover td.diff-line {
