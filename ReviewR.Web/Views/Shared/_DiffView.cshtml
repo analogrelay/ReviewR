@@ -53,7 +53,7 @@
                                 <li>
                                     <div class="diff-comment-meta">
                                         <p class="diff-comment-info pull-right">
-                                            <abbr class="timeago" title="@comment.PostedOn.ToString("O")">@comment.PostedOn.ToString("f")</abbr>
+                                            <abbr class="timeago" title="@comment.PostedOn.ToLocalTime().ToString("O")">@comment.PostedOn.ToLocalTime().ToString("f")</abbr>
                                         </p>
                                         <p class="diff-comment-author">
                                             @Gravatar.GetHtml(comment.AuthorEmail, imageSize: 20)
