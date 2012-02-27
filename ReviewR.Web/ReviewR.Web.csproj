@@ -147,6 +147,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="App_Start\AuthenticationModule.cs" />
     <Compile Include="Controllers\ChangesController.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="DynamicData\DynamicData\FieldTemplates\Code.ascx.cs">
@@ -183,6 +184,10 @@
     <Compile Include="Migrations\201202262250081_Comments.Designer.cs">
       <DependentUpon>201202262250081_Comments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201202270337036_MakeCommentLineIndexOptional.cs" />
+    <Compile Include="Migrations\201202270337036_MakeCommentLineIndexOptional.Designer.cs">
+      <DependentUpon>201202270337036_MakeCommentLineIndexOptional.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\FileChange.cs" />
     <Compile Include="Models\Review.cs" />
@@ -195,6 +200,7 @@
     <Compile Include="ViewModels\FileChangeViewModel.cs" />
     <Compile Include="ViewModels\FolderChangeViewModel.cs" />
     <Compile Include="ViewModels\LineCommentViewModel.cs" />
+    <Compile Include="ViewModels\NewCommentViewModel.cs" />
     <Compile Include="ViewModels\NewReviewViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Content Include="Client\ReviewR.Commenting.js" />
@@ -648,6 +654,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_DiffView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Comments\New.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

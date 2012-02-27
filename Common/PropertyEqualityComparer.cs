@@ -45,8 +45,9 @@ namespace VibrantUtils
             var xnames = xs.Select(t => t.Item1);
             var ynames = ys.Select(t => t.Item1);
 
-            return Enumerable.SequenceEqual(xnames, ynames) &&
-                   Enumerable.SequenceEqual(xs.Select(t => t.Item2), ys.Select(t => t.Item2), new PropertyEqualityComparer());
+            bool equal = Enumerable.SequenceEqual(xnames, ynames) &&
+                Enumerable.SequenceEqual(xs.Select(t => t.Item2), ys.Select(t => t.Item2), new PropertyEqualityComparer());
+            return equal;
         }
     }
 }

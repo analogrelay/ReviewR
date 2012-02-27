@@ -17,7 +17,7 @@ namespace ReviewR.Web.Facts.Controllers
 {
     public class ChangesControllerFacts
     {
-        public class ViewGet
+        public class ViewGet 
         {
             [Fact]
             public void Returns404IfNoChangeWithId()
