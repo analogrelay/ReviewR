@@ -1,0 +1,30 @@
+﻿@model ReviewR.Web.ViewModels.NewCommentViewModel
+
+@{
+    ViewBag.Title = "New";
+}
+
+<h1>Post a new comment</h1>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    <fieldset class="no-legend">
+        <legend>Post a new comment.</legend>
+        <ol>
+            <li class="control-group">
+                @Html.LabelFor(model => model.Body)
+                @Html.EditorFor(model => model.Body)
+                @Html.ValidationMessageFor(model => model.Body)
+            </li>
+        </ol>
+
+        <p>
+            <input type="submit" value="Create comment" class="btn-primary" />
+        </p>
+    </fieldset>
+}

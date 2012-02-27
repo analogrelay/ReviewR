@@ -76,8 +76,8 @@
                                 </li>
                             }
                         </ol>
-                        <p class="actions">
-                            <a href="@Url.Action("New", "Comments", new { changeId = Model.Id, line = line.Index })" class="btn btn-primary">
+                        <p>
+                            <a href="@Url.Action("New", "Comments", new { id = Model.Id, line = line.Index })" class="btn btn-primary">
                                 <i class="icon-plus icon-white"></i>
                                 Add Comment
                             </a>
