@@ -107,6 +107,7 @@
     <Compile Include="Authentication\AuthenticationServiceFacts.cs" />
     <Compile Include="Authentication\HashServiceFacts.cs" />
     <Compile Include="Authentication\TestHashService.cs" />
+    <Compile Include="Controllers\ChangesControllerFacts.cs" />
     <Compile Include="TestEntitySet.cs" />
     <Compile Include="Controllers\HomeControllerFacts.cs" />
     <Compile Include="Controllers\ReviewControllerFacts.cs" />

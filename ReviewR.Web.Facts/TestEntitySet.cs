@@ -9,7 +9,12 @@ using ReviewR.Web.Infrastructure;
 
 namespace ReviewR.Web.Facts
 {
-    public class TestEntitySet<T> : IEntitySet<T> where T : class
+    internal interface ITestEntitySet
+    {
+        void Save();
+    }
+
+    public class TestEntitySet<T> : ITestEntitySet, IEntitySet<T> where T : class
     {
         private IList<T> _items = new List<T>();
         private IList<Tuple<bool, T>> _pending = new List<Tuple<bool, T>>();
@@ -63,7 +68,7 @@ namespace ReviewR.Web.Facts
             get { return _items.AsQueryable().Provider; }
         }
 
-        internal void Save()
+        void ITestEntitySet.Save()
         {
             foreach (var action in _pending)
             {

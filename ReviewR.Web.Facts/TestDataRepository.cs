@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using ReviewR.Web.Infrastructure;
 using ReviewR.Web.Models;
@@ -37,9 +38,11 @@ namespace ReviewR.Web.Facts
 
         public int SaveChanges()
         {
-            _roles.Save();
-            _users.Save();
-            _reviews.Save();
+            foreach (var prop in GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where(p => typeof(ITestEntitySet).IsAssignableFrom(p.FieldType)))
+            {
+                ITestEntitySet set = (ITestEntitySet)prop.GetValue(this);
+                set.Save();
+            }
             return 0;
         }
 
