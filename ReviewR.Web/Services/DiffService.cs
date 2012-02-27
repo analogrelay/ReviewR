@@ -43,14 +43,38 @@ namespace ReviewR.Web.Services
             }
 
             // Flatten out to lines
-            IEnumerable<DiffLineViewModel> lines = hunks.SelectMany(h => 
-                Enumerable.Concat(
-                    new [] { new DiffLineViewModel() { Type = LineDiffType.HunkHeader, Text = h.ToString() } },
-                    ConvertLines(h)
-                ));
-
-            // Attach comments
-
+            IList<DiffLineViewModel> lines = new List<DiffLineViewModel>();
+            int lineIndex = 0;
+            foreach (var hunk in hunks)
+            {
+                int leftLine = hunk.OriginalLocation.Line;
+                int rightLine = hunk.ModifiedLocation.Line;
+                lines.Add(new DiffLineViewModel() { Index = lineIndex++, Type = LineDiffType.HunkHeader, Text = hunk.ToString() });
+                foreach (var line in hunk.Lines)
+                {
+                    DiffLineViewModel newLine = new DiffLineViewModel()
+                    {
+                        Index = lineIndex++,
+                        Type = line.Type,
+                        Text = line.Content
+                    };
+                    switch (line.Type)
+                    {
+                        case LineDiffType.Same:
+                            newLine.LeftLine = leftLine++;
+                            newLine.RightLine = rightLine++;
+                            break;
+                        case LineDiffType.Added:
+                            newLine.RightLine = rightLine++;
+                            break;
+                        case LineDiffType.Removed:
+                            newLine.LeftLine = leftLine++;
+                            break;
+                    }
+                    lines.Add(newLine);
+                }
+            }
+            
             return new DiffFileViewModel()
             {
                 FileName = fileName,
@@ -59,36 +83,6 @@ namespace ReviewR.Web.Services
                 Insertions = lines.Count(m => m.Type == LineDiffType.Added),
                 DiffLines = lines.ToList()
             };
-        }
-
-        private IEnumerable<DiffLineViewModel> ConvertLines(DiffHunk h)
-        {
-            int leftLine = h.OriginalLocation.Line;
-            int rightLine = h.ModifiedLocation.Line;
-            int index = 0;
-            foreach(var line in h.Lines)
-            {
-                DiffLineViewModel newLine = new DiffLineViewModel()
-                {
-                    Index = index++,
-                    Type = line.Type,
-                    Text = line.Content
-                };
-                switch (line.Type)
-                {
-                    case LineDiffType.Same:
-                        newLine.LeftLine = leftLine++;
-                        newLine.RightLine = rightLine++;
-                        break;
-                    case LineDiffType.Added:
-                        newLine.RightLine = rightLine++;
-                        break;
-                    case LineDiffType.Removed:
-                        newLine.LeftLine = leftLine++;
-                        break;
-                }
-                yield return newLine;
-            }
         }
     }
 }

@@ -44,9 +44,9 @@ namespace ReviewR.Web.Controllers
             diffModel.Id = chg.Id;
 
             // Attach comments
-            foreach (Comment c in chg.Comments.Where(c => c.DiffLineIndex > 0 && c.DiffLineIndex < diffModel.DiffLines.Count))
+            foreach (Comment c in chg.Comments.Where(c => c.DiffLineIndex.HasValue && c.DiffLineIndex >= 0 && c.DiffLineIndex < diffModel.DiffLines.Count))
             {
-                diffModel.DiffLines[c.DiffLineIndex]
+                diffModel.DiffLines[c.DiffLineIndex.Value]
                          .Comments
                          .Add(new LineCommentViewModel()
                 {

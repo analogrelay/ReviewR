@@ -144,6 +144,7 @@ tr.diff-comments td.diff-comment-container ol {
 
     tr.diff-comments td.diff-comment-container ol li {
         list-style-type: none;
+        padding-bottom: 10px;
     }
 
 div.diff-comment-meta {
@@ -175,4 +176,8 @@ p.actions {
 
 p.diff-comment-actions {
     display: none;
+}
+
+abbr.timeago {
+    text-transform: none;    
 }

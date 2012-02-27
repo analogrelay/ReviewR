@@ -57,5 +57,18 @@ namespace ReviewR.Web.Services
         {
             return Data.Reviews;
         }
+
+        public void CreateComment(int changeId, int? line, int userId, string body)
+        {
+            Data.Comments.Add(new Comment()
+            {
+                FileId = changeId,
+                DiffLineIndex = line,
+                UserId = userId,
+                Content = body,
+                PostedOn = DateTime.UtcNow
+            });
+            Data.SaveChanges();
+        }
     }
 }

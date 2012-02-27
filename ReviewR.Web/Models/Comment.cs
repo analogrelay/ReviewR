@@ -10,7 +10,7 @@ namespace ReviewR.Web.Models
         public int Id { get; set; }
         public int FileId { get; set; }
         public int UserId { get; set; }
-        public int DiffLineIndex { get; set; }
+        public int? DiffLineIndex { get; set; }
         public string Content { get; set; }
         public DateTime PostedOn { get; set; }
 
