@@ -15,5 +15,10 @@ namespace ReviewR.Web.Models
         public virtual string RoleName { get; set; }
 
         public virtual ICollection<User> Users { get; set; }
+
+        public Role()
+        {
+            Users = new List<User>();
+        }
     }
 }
