@@ -26,5 +26,6 @@ namespace ReviewR.Web.Models
 
         public virtual ICollection<Role> Roles { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<Participant> Participants { get; set; }
     }
 }

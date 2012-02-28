@@ -18,12 +18,14 @@ namespace ReviewR.Web.Facts
         private TestEntitySet<Review> _reviews;
         private TestEntitySet<FileChange> _changes;
         private TestEntitySet<Comment> _comments;
+        private TestEntitySet<Participant> _participants;
 
         public IEntitySet<Role> Roles { get { return _roles; } }
         public IEntitySet<User> Users { get { return _users; } }
         public IEntitySet<Review> Reviews { get { return _reviews; } }
         public IEntitySet<FileChange> Changes { get { return _changes; } }
         public IEntitySet<Comment> Comments { get { return _comments; } }
+        public IEntitySet<Participant> Participants { get { return _participants; } }
 
         public int LastId { get { return _nextId - 1; } }
 
@@ -34,6 +36,7 @@ namespace ReviewR.Web.Facts
             _reviews = new TestEntitySet<Review>(this);
             _changes = new TestEntitySet<FileChange>(this);
             _comments = new TestEntitySet<Comment>(this);
+            _participants = new TestEntitySet<Participant>(this);
         }
 
         public int SaveChanges()

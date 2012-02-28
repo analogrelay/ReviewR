@@ -11,6 +11,7 @@ using ReviewR.Web.ViewModels;
 
 namespace ReviewR.Web.Controllers
 {
+    [Authorize]
     public class ReviewsController : Controller
     {
         public DiffService Diff { get; set; }
@@ -25,14 +26,12 @@ namespace ReviewR.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public ActionResult New()
         {
             return View(new NewReviewViewModel());
         }
 
         [HttpPost]
-        [Authorize]
         public ActionResult New(NewReviewViewModel model)
         {
             if (ModelState.IsValid)
@@ -62,9 +61,14 @@ namespace ReviewR.Web.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            // Get the users reviews
-            IEnumerable<Review> reviews = Reviews.GetAllReviews();
-            return View(new DashboardViewModel() { Reviews = reviews.Select(r => new ReviewSummaryViewModel() { Id = r.Id, Name = r.Name }).ToList() });
+            IEnumerable<Review> created = Reviews.GetReviewsCreatedBy(Auth.GetCurrentUserId());
+            IEnumerable<Review> assigned = Reviews.GetParticipatingReviews(Auth.GetCurrentUserId());
+
+            return View(new DashboardViewModel()
+            {
+                CreatedReviews = created.Select(r => new ReviewSummaryViewModel() { Id = r.Id, Name = r.Name }).ToList(),
+                AssignedReviews = assigned.Select(r => new ReviewSummaryViewModel() { Id = r.Id, Name = r.Name }).ToList()
+            });
         }
 
         [HttpGet]

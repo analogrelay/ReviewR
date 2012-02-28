@@ -31,9 +31,11 @@
                     ReviewR
                 </a>
                 <nav id="master-nav">
-                    <ul class="nav">
-                        @Html.MenuLink("Dashboard", "Index", "Reviews")
-                    </ul>
+                    @if(Request.IsAuthenticated) {
+                        <ul class="nav">
+                            @Html.MenuLink("Dashboard", "Index", "Reviews")
+                        </ul>
+                    }
                 </nav>
                 <nav id="login-nav">
                     <ul class="nav pull-right">

@@ -13,5 +13,6 @@ namespace ReviewR.Web.Models
 
         public virtual User Creator { get; set; }
         public virtual ICollection<FileChange> Files { get; set; }
+        public virtual ICollection<Participant> Participants { get; set; }
     }
 }

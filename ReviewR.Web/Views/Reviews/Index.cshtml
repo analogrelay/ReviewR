@@ -8,19 +8,44 @@
 
 <div class="well">
     <ul id="reviews" class="nav nav-list">
-        <li class="nav-header">All Reviews</li>
-        @foreach (var item in Model.Reviews) {
-            <li>
-                <a href="@Url.Action("View", "Reviews", new { id = item.Id })">
-                    <i class="icon-th-list"></i>
-                    @item.Name
-                </a>
-            </li>
+        <li class="nav-header">Reviews created by you.</li>
+        @if (Model.CreatedReviews.Any())
+        {
+            foreach (var item in Model.CreatedReviews) 
+            {
+                <li>
+                    <a href="@Url.Action("View", "Reviews", new { id = item.Id })">
+                        <i class="icon-th-list"></i>
+                        @item.Name
+                    </a>
+                </li>
+            }
+        } 
+        else 
+        {
+            <li>You haven't submitted any reviews!</li>
         }
     </ul>
-    @if(Request.IsAuthenticated) {
-        <p class="actions">
-            @Html.ActionLink("Submit a new Review", "New", "Reviews", null, new { @class = "btn btn-primary" })
-        </p>
-    }
+    <p class="actions">
+        @Html.ActionLink("Submit a new Review", "New", "Reviews", null, new { @class = "btn btn-primary" })
+    </p>
+    <ul id="reviews" class="nav nav-list">
+        <li class="nav-header">Reviews assigned to you.</li>
+        @if(Model.AssignedReviews.Any()) 
+        {
+            foreach (var item in Model.AssignedReviews) 
+            {
+                <li>
+                    <a href="@Url.Action("View", "Reviews", new { id = item.Id })">
+                        <i class="icon-th-list"></i>
+                        @item.Name
+                    </a>
+                </li>
+            }
+        } 
+        else 
+        {
+            <li>You don't have any reviews to do!</li>
+        }
+    </ul>
 </div>

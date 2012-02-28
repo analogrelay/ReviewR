@@ -31,11 +31,8 @@ namespace ReviewR.Web.Services
 
         public virtual IEnumerable<Review> GetReviewsCreatedBy(int userId)
         {
-            return Data.Users
-                       .Include("Reviews")
-                       .Where(u => u.Id == userId)
-                       .Single()
-                       .Reviews;
+            return Data.Reviews
+                       .Where(r => r.UserId == userId);
         }
 
         public virtual Review GetReview(int id)
@@ -81,6 +78,13 @@ namespace ReviewR.Web.Services
         {
             Data.Comments.Remove(c);
             Data.SaveChanges();
+        }
+
+        public IEnumerable<Review> GetParticipatingReviews(int userId)
+        {
+            return Data.Participants
+                       .Where(p => p.UserId == userId)
+                       .Select(p => p.Review);
         }
     }
 }

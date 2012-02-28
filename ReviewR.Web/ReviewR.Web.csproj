@@ -188,8 +188,13 @@
     <Compile Include="Migrations\201202270337036_MakeCommentLineIndexOptional.Designer.cs">
       <DependentUpon>201202270337036_MakeCommentLineIndexOptional.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201202272233562_Participants.cs" />
+    <Compile Include="Migrations\201202272233562_Participants.Designer.cs">
+      <DependentUpon>201202272233562_Participants.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\FileChange.cs" />
+    <Compile Include="Models\Participant.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Services\DiffConverter.cs" />
     <Compile Include="Services\DiffService.cs" />

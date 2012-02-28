@@ -92,14 +92,31 @@ namespace ReviewR.Web.Services
                        .Single();
         }
 
+        public virtual User GetCurrentUser()
+        {
+            var tup = GetCurrentUserInfo();
+            if (tup.Item2 == null)
+            {
+                return Data.Users.Where(u => u.Id == tup.Item1).FirstOrDefault();
+            }
+            else
+            {
+                return tup.Item2;
+            }
+        }
+
         public virtual int GetCurrentUserId()
         {
+            return GetCurrentUserInfo().Item1;
+        }
+
+        private Tuple<int, User> GetCurrentUserInfo() {
             // Check Session Cookie
             string cached = Context.Session[SessionIdKey] as string;
             int id;
             if (!String.IsNullOrEmpty(cached) && Int32.TryParse(cached, out id))
             {
-                return id;
+                return Tuple.Create(id, (User)null);
             }
             else if (Context.Request.IsAuthenticated)
             {
@@ -111,7 +128,7 @@ namespace ReviewR.Web.Services
                 {
                     id = user.Id;
                     Context.Session[SessionIdKey] = id.ToString();
-                    return id;
+                    return Tuple.Create(id, user);
                 }
             }
             throw new SecurityException("This action requires a currently logged in user");

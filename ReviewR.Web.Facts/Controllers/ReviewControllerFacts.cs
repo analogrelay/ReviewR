@@ -115,16 +115,21 @@ namespace ReviewR.Web.Facts.Controllers
                 var result = ctl.Index();
 
                 // Assert
-                ActionAssert.IsViewResult(result, new DashboardViewModel() { Reviews = new List<ReviewSummaryViewModel>() });
+                ActionAssert.IsViewResult(result, new DashboardViewModel() { CreatedReviews = new List<ReviewSummaryViewModel>(), AssignedReviews = new List<ReviewSummaryViewModel>() });
             }
 
             [Fact]
-            public void ReturnsViewResultWithAllReviews()
+            public void ReturnsViewResultWithCreatedAndAssignedReviews()
             {
                 // Arrange
                 var ctl = CreateController();
-                Review r1 = ctl.Reviews.CreateReview("Review1", new List<FileChange>(), 42); // ownerId doesn't matter in test repo
-                Review r2 = ctl.Reviews.CreateReview("Review2", new List<FileChange>(), 42); // ownerId doesn't matter in test repo
+                Review r1 = ctl.Reviews.CreateReview("Review1", new List<FileChange>(), 42);
+                Review r2 = ctl.Reviews.CreateReview("Review2", new List<FileChange>(), 42);
+                Review r3 = ctl.Reviews.CreateReview("Review3", new List<FileChange>(), 12);
+                Participant p = new Participant() { Review = r3, UserId = 42 };
+                ctl.Reviews.Data.Participants.Add(p);
+                ctl.Reviews.Data.SaveChanges();
+                ctl.MockAuth.Setup(a => a.GetCurrentUserId()).Returns(42);
                 
                 // Act
                 var result = ctl.Index();
@@ -133,10 +138,14 @@ namespace ReviewR.Web.Facts.Controllers
                 ActionAssert.IsViewResult(result,
                     new DashboardViewModel()
                     {
-                        Reviews = new List<ReviewSummaryViewModel>()
+                        CreatedReviews = new List<ReviewSummaryViewModel>()
                         {
                             new ReviewSummaryViewModel() { Id = r1.Id, Name = r1.Name },
                             new ReviewSummaryViewModel() { Id = r2.Id, Name = r2.Name }
+                        },
+                        AssignedReviews = new List<ReviewSummaryViewModel>()
+                        {
+                            new ReviewSummaryViewModel() { Id = r3.Id, Name = r3.Name }
                         }
                     });
             }
