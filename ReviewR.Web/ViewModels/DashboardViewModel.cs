@@ -8,6 +8,5 @@ namespace ReviewR.Web.ViewModels
     public class DashboardViewModel
     {
         public ICollection<ReviewSummaryViewModel> CreatedReviews { get; set; }
-        public ICollection<ReviewSummaryViewModel> AssignedReviews { get; set; }
     }
 }

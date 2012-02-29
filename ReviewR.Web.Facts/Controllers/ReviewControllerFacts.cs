@@ -14,6 +14,7 @@ using System.IO;
 using ReviewR.Web.Models;
 using ReviewR.Web.Facts.Authentication;
 using System.Net;
+using System.Web.Mvc;
 
 namespace ReviewR.Web.Facts.Controllers
 {
@@ -115,7 +116,7 @@ namespace ReviewR.Web.Facts.Controllers
                 var result = ctl.Index();
 
                 // Assert
-                ActionAssert.IsViewResult(result, new DashboardViewModel() { CreatedReviews = new List<ReviewSummaryViewModel>(), AssignedReviews = new List<ReviewSummaryViewModel>() });
+                ActionAssert.IsViewResult(result, new DashboardViewModel() { CreatedReviews = new List<ReviewSummaryViewModel>() });
             }
 
             [Fact]
@@ -125,10 +126,6 @@ namespace ReviewR.Web.Facts.Controllers
                 var ctl = CreateController();
                 Review r1 = ctl.Reviews.CreateReview("Review1", new List<FileChange>(), 42);
                 Review r2 = ctl.Reviews.CreateReview("Review2", new List<FileChange>(), 42);
-                Review r3 = ctl.Reviews.CreateReview("Review3", new List<FileChange>(), 12);
-                Participant p = new Participant() { Review = r3, UserId = 42 };
-                ctl.Reviews.Data.Participants.Add(p);
-                ctl.Reviews.Data.SaveChanges();
                 ctl.MockAuth.Setup(a => a.GetCurrentUserId()).Returns(42);
                 
                 // Act
@@ -142,10 +139,6 @@ namespace ReviewR.Web.Facts.Controllers
                         {
                             new ReviewSummaryViewModel() { Id = r1.Id, Name = r1.Name },
                             new ReviewSummaryViewModel() { Id = r2.Id, Name = r2.Name }
-                        },
-                        AssignedReviews = new List<ReviewSummaryViewModel>()
-                        {
-                            new ReviewSummaryViewModel() { Id = r3.Id, Name = r3.Name }
                         }
                     });
             }
@@ -167,6 +160,55 @@ namespace ReviewR.Web.Facts.Controllers
 
                 // Assert
                 ActionAssert.IsHttpStatusResult(result, HttpStatusCode.NotFound);
+            }
+
+            [Fact]
+            public void Returns404IfUserNotCreatorOrParticipantInReview()
+            {
+                // Arrange
+                var ctl = CreateController();
+                Review r = ctl.Reviews.CreateReview("Foo", new List<FileChange>(), 42);
+                ctl.MockAuth.Setup(a => a.GetCurrentUserId()).Returns(24);
+
+                // Act
+                var result = ctl.View(r.Id);
+
+                // Assert
+                ActionAssert.IsHttpStatusResult(result, HttpStatusCode.NotFound);
+            }
+
+            [Fact]
+            public void SetsIsAuthorIfCurrentUserCreatedReview()
+            {
+                // Arrange
+                var ctl = CreateController();
+                Review r = ctl.Reviews.CreateReview("Foo", new List<FileChange>(), 42);
+                ctl.MockAuth.Setup(a => a.GetCurrentUserId()).Returns(42);
+
+                // Act
+                var result = ctl.View(r.Id);
+
+                // Assert
+                ViewResult viewResult = Assert.IsType<ViewResult>(result);
+                ReviewDetailViewModel model = Assert.IsType<ReviewDetailViewModel>(viewResult.Model);
+                Assert.True(model.IsAuthor);
+            }
+
+            [Fact]
+            public void DoesNotSetIsAuthorIfCurrentUserDidNotCreateReview()
+            {
+                // Arrange
+                var ctl = CreateController();
+                Review r = ctl.Reviews.CreateReview("Foo", new List<FileChange>(), 24);
+                ctl.MockAuth.Setup(a => a.GetCurrentUserId()).Returns(42);
+
+                // Act
+                var result = ctl.View(r.Id);
+
+                // Assert
+                ViewResult viewResult = Assert.IsType<ViewResult>(result);
+                ReviewDetailViewModel model = Assert.IsType<ReviewDetailViewModel>(viewResult.Model);
+                Assert.False(model.IsAuthor);
             }
 
             [Fact]
@@ -208,6 +250,56 @@ namespace ReviewR.Web.Facts.Controllers
                         } }
                     }
                 });
+            }
+        }
+
+        public class DeletePost
+        {
+            [Fact]
+            public void Returns404IfNoReviewWithId()
+            {
+                // Arrange
+                var ctl = CreateController();
+
+                // Assume
+                Assert.DoesNotContain(42, ctl.Reviews.Data.Reviews.Select(r => r.Id));
+
+                // Act
+                var result = ctl.Delete(42);
+
+                // Assert
+                ActionAssert.IsHttpStatusResult(result, HttpStatusCode.NotFound);
+            }
+
+            [Fact]
+            public void Returns404IfUserIsNotAuthorOfReview()
+            {
+                // Arrange
+                var ctl = CreateController();
+                Review r = ctl.Reviews.CreateReview("Foo", new List<FileChange>(), 42);
+                ctl.MockAuth.Setup(a => a.GetCurrentUserId()).Returns(24);
+
+                // Act
+                var result = ctl.Delete(42);
+
+                // Assert
+                ActionAssert.IsHttpStatusResult(result, HttpStatusCode.NotFound);
+            }
+
+            [Fact]
+            public void ReturnsRedirectToIndexViewAndRemovesReviewIfReviewExistsAndUserIsAuthor()
+            {
+                // Arrange
+                var ctl = CreateController();
+                Review r = ctl.Reviews.CreateReview("Foo", new List<FileChange>(), 42);
+                ctl.MockAuth.Setup(a => a.GetCurrentUserId()).Returns(42);
+
+                // Act
+                var result = ctl.Delete(r.Id);
+
+                // Assert
+                ActionAssert.IsRedirectResult(result, new { action = "Index" });
+                Assert.DoesNotContain(r, ctl.Reviews.Data.Reviews);
             }
         }
 

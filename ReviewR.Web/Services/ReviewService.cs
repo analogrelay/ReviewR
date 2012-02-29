@@ -80,11 +80,10 @@ namespace ReviewR.Web.Services
             Data.SaveChanges();
         }
 
-        public IEnumerable<Review> GetParticipatingReviews(int userId)
+        public void DeleteReview(Review r)
         {
-            return Data.Participants
-                       .Where(p => p.UserId == userId)
-                       .Select(p => p.Review);
+            Data.Reviews.Remove(r);
+            Data.SaveChanges();
         }
     }
 }

@@ -29,23 +29,4 @@
     <p class="actions">
         @Html.ActionLink("Submit a new Review", "New", "Reviews", null, new { @class = "btn btn-primary" })
     </p>
-    <ul id="reviews" class="nav nav-list">
-        <li class="nav-header">Reviews assigned to you.</li>
-        @if(Model.AssignedReviews.Any()) 
-        {
-            foreach (var item in Model.AssignedReviews) 
-            {
-                <li>
-                    <a href="@Url.Action("View", "Reviews", new { id = item.Id })">
-                        <i class="icon-th-list"></i>
-                        @item.Name
-                    </a>
-                </li>
-            }
-        } 
-        else 
-        {
-            <li>You don't have any reviews to do!</li>
-        }
-    </ul>
 </div>

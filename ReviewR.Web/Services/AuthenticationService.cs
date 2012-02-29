@@ -58,7 +58,7 @@ namespace ReviewR.Web.Services
             }
         }
 
-        public virtual CreateUserResult CreateUser(string email, string displayName, string password)
+        public virtual Tuple<User, CreateUserResult> CreateUser(string email, string displayName, string password)
         {
             Requires.NotNullOrEmpty(email, "email");
             Requires.NotNullOrEmpty(displayName, "displayName");
@@ -68,7 +68,7 @@ namespace ReviewR.Web.Services
             // TODO: Transactions?
             if (Data.Users.Where(u => u.Email == email).Any())
             {
-                return CreateUserResult.EmailTaken;
+                return Tuple.Create((User)null, CreateUserResult.EmailTaken);
             }
 
             string salt = Hasher.GenerateSalt();
@@ -81,7 +81,7 @@ namespace ReviewR.Web.Services
             };
             Data.Users.Add(user);
             Data.SaveChanges();
-            return CreateUserResult.Success;
+            return Tuple.Create(user, CreateUserResult.Success);
         }
 
         public virtual User GetUser(string email)

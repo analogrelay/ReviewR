@@ -7,11 +7,24 @@ using ReviewR.Web.ViewModels;
 
 namespace ReviewR.Web.Services
 {
-    public static class FileChangeViewModelMapper
+    public static class ReviewHelpers
     {
-        public static ICollection<FolderChangeViewModel> MapFiles(ICollection<FileChange> collection)
+        public static ReviewDetailViewModel Map(Review r, int currentUserId)
         {
-            return collection.GroupBy(GetFolderName).Select(ProcessFolder).OrderBy(f => f.Name).ToList();
+            return Map(r, currentUserId, selectedFileId: null);
+        }
+
+        public static ReviewDetailViewModel Map(Review r, int currentUserId, int? selectedFileId)
+        {
+            var folders = r.Files.GroupBy(GetFolderName).Select(ProcessFolder).OrderBy(f => f.Name).ToList();
+            return new ReviewDetailViewModel()
+            {
+                Id = r.Id,
+                Name = r.Name,
+                IsAuthor = r.UserId == currentUserId,
+                Folders = folders,
+                Selected = selectedFileId == null ? null : folders.SelectMany(folder => folder.Files).Where(file => file.Id == selectedFileId.Value).FirstOrDefault()
+            };
         }
 
         private static FolderChangeViewModel ProcessFolder(IGrouping<string, FileChange> arg)

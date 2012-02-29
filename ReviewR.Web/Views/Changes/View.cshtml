@@ -1,15 +1,7 @@
 ﻿@model ReviewR.Web.ViewModels.ChangeDetailViewModel
 
 @{
-    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_ReviewLayout.cshtml";
 }
 
-<h1>@Model.Review.Name</h1>
-<div class="row-fluid">
-    <div class="well span2">
-        @Html.Partial("_FileList", Model.Review)
-    </div>
-    <div class="span8">
-        @Html.Partial("_DiffView", Model.Diff)
-    </div>
-</div>
+@Html.Partial("_DiffView", Model.Diff)

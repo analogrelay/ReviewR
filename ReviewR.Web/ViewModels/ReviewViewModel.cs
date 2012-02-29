@@ -11,9 +11,15 @@ namespace ReviewR.Web.ViewModels
         public string Name { get; set; }
     }
 
-    public class ReviewDetailViewModel : ReviewSummaryViewModel
+    public class ReviewDetailViewModel : ReviewSummaryViewModel, IReviewLayoutViewModel
     {
+        public bool IsAuthor { get; set; }
         public FileChangeViewModel Selected { get; set; }
         public ICollection<FolderChangeViewModel> Folders { get; set; }
+
+        ReviewDetailViewModel IReviewLayoutViewModel.Review
+        {
+            get { return this; }
+        }
     }
 }

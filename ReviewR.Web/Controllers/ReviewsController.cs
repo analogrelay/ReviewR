@@ -62,12 +62,10 @@ namespace ReviewR.Web.Controllers
         public ActionResult Index()
         {
             IEnumerable<Review> created = Reviews.GetReviewsCreatedBy(Auth.GetCurrentUserId());
-            IEnumerable<Review> assigned = Reviews.GetParticipatingReviews(Auth.GetCurrentUserId());
-
+            
             return View(new DashboardViewModel()
             {
                 CreatedReviews = created.Select(r => new ReviewSummaryViewModel() { Id = r.Id, Name = r.Name }).ToList(),
-                AssignedReviews = assigned.Select(r => new ReviewSummaryViewModel() { Id = r.Id, Name = r.Name }).ToList()
             });
         }
 
@@ -75,17 +73,25 @@ namespace ReviewR.Web.Controllers
         public ActionResult View(int id)
         {
             Review review = Reviews.GetReview(id);
+            int userId = Auth.GetCurrentUserId();
             if (review == null)
             {
                 // No such review, or user not authorized
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-            return View(new ReviewDetailViewModel()
+            return View(ReviewHelpers.Map(review, userId));
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            Review r = Reviews.GetReview(id);
+            if (r == null || r.UserId != Auth.GetCurrentUserId())
             {
-                Id = review.Id,
-                Name = review.Name,
-                Folders = FileChangeViewModelMapper.MapFiles(review.Files)
-            });
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+            Reviews.DeleteReview(r);
+            return RedirectToAction("Index");
         }
     }
 }

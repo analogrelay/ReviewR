@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ReviewR.Web.Infrastructure;
 using ReviewR.Web.Services;
 
 namespace ReviewR.Web.Facts.Controllers
@@ -10,13 +11,13 @@ namespace ReviewR.Web.Facts.Controllers
     {
         public string UserName { get; set; }
         public bool Persistent { get; set; }
-        public IEnumerable<string> Roles { get; set; }
+        public AuthTicket Ticket { get; set; }
 
-        public override void SetAuthCookie(string userName, bool createPersistentCookie, IEnumerable<string> roles)
+        public override void SetAuthCookie(string userName, bool createPersistentCookie, AuthTicket ticket)
         {
             UserName = userName;
             Persistent = createPersistentCookie;
-            Roles = roles;
+            Ticket = ticket;
         }
     }
 }

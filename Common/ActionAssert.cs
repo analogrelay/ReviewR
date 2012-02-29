@@ -47,7 +47,7 @@ namespace VibrantUtils
             RouteValueDictionary dict = new RouteValueDictionary(routeValues);
             foreach (var pair in dict)
             {
-                Assert.True(redirectResult.RouteValues.ContainsKey(pair.Key));
+                Assert.True(redirectResult.RouteValues.ContainsKey(pair.Key), String.Format("Actual route values does not contain expected key: '{0}'", pair.Key));
                 Assert.Equal(pair.Value, redirectResult.RouteValues[pair.Key]);
             }
         }

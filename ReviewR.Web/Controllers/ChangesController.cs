@@ -10,6 +10,7 @@ using ReviewR.Web.ViewModels;
 
 namespace ReviewR.Web.Controllers
 {
+    [Authorize]
     public class ChangesController : Controller
     {
         public ReviewService Reviews { get; set; }
@@ -27,6 +28,7 @@ namespace ReviewR.Web.Controllers
         {
             // Get the change
             FileChange chg = Reviews.GetChange(id);
+            int userId = Auth.GetCurrentUserId();
             if (chg == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
@@ -59,17 +61,11 @@ namespace ReviewR.Web.Controllers
             }
 
             // Return a view based on it
-            ICollection<FolderChangeViewModel> folders = FileChangeViewModelMapper.MapFiles(r.Files);
-
+            ReviewDetailViewModel review = ReviewHelpers.Map(r, userId, selectedFileId: id);
+            
             return View(new ChangeDetailViewModel()
             {
-                Review = new ReviewDetailViewModel()
-                {
-                    Id = r.Id,
-                    Name = r.Name,
-                    Folders = folders,
-                    Selected = folders.SelectMany(folder => folder.Files).Where(file => file.Id == id).FirstOrDefault()
-                },
+                Review = review,
                 Diff = diffModel
             });     
         }

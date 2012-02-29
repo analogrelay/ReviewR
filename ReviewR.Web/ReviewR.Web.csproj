@@ -164,6 +164,7 @@
     <Compile Include="DynamicData\DynamicData\FieldTemplates\Code_Edit.ascx.designer.cs">
       <DependentUpon>Code_Edit.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\AuthTicket.cs" />
     <Compile Include="Migrations\201202251925120_Reviews.cs" />
     <Compile Include="Migrations\201202251925120_Reviews.Designer.cs">
       <DependentUpon>201202251925120_Reviews.cs</DependentUpon>
@@ -192,23 +193,27 @@
     <Compile Include="Migrations\201202272233562_Participants.Designer.cs">
       <DependentUpon>201202272233562_Participants.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201202290134082_RemoveParticipant.cs" />
+    <Compile Include="Migrations\201202290134082_RemoveParticipant.Designer.cs">
+      <DependentUpon>201202290134082_RemoveParticipant.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\FileChange.cs" />
-    <Compile Include="Models\Participant.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Services\DiffConverter.cs" />
     <Compile Include="Services\DiffService.cs" />
     <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Models\FileChangeType.cs" />
-    <Compile Include="Services\FileChangeViewModelMapper.cs" />
+    <Compile Include="Services\ReviewHelpers.cs" />
     <Compile Include="ViewModels\ChangeDetailViewModel.cs" />
     <Compile Include="ViewModels\FileChangeViewModel.cs" />
     <Compile Include="ViewModels\FolderChangeViewModel.cs" />
+    <Compile Include="ViewModels\IReviewLayoutViewModel.cs" />
     <Compile Include="ViewModels\LineCommentViewModel.cs" />
     <Compile Include="ViewModels\NewCommentViewModel.cs" />
     <Compile Include="ViewModels\NewReviewViewModel.cs" />
+    <Compile Include="ViewModels\ParticipantViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
-    <Content Include="Client\ReviewR.Commenting.js" />
     <Content Include="DynamicData\Default.aspx" />
     <Content Include="DynamicData\DynamicData\Content\GridViewPager.ascx" />
     <Content Include="DynamicData\DynamicData\Content\Images\Back.gif" />
@@ -662,6 +667,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Comments\New.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_ReviewLayout.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

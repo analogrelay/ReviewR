@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Security;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using ReviewR.Web.Infrastructure;
@@ -15,6 +16,8 @@ namespace ReviewR.Web
 {
     public class AuthenticationModule : IHttpModule
     {
+        private JavaScriptSerializer _serializer = new JavaScriptSerializer();
+
         public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(AuthenticationModule));
@@ -35,8 +38,11 @@ namespace ReviewR.Web
                 if (authCookie != null)
                 {
                     FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-                    var roles = authTicket.UserData.Split('|');
-                    var user = new ReviewRPrincipal(context.User.Identity, new HashSet<string>(roles));
+                    
+                    // Auth ticket contains json-serialized AuthTicket object
+                    AuthTicket ticket = _serializer.Deserialize<AuthTicket>(authTicket.UserData);
+
+                    var user = new ReviewRPrincipal(context.User.Identity, ticket);
                     context.User = Thread.CurrentPrincipal = user;
                 }
             }

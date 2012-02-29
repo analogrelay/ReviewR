@@ -101,11 +101,11 @@ namespace ReviewR.Web.Facts.Authentication
                 var svc = CreateService();
 
                 // Act
-                CreateUserResult result = svc.CreateUser(email: "new@user.com", displayName: "New User", password: "password");
+                var result = svc.CreateUser(email: "new@user.com", displayName: "New User", password: "password");
 
                 // Assert
-                Assert.Equal(CreateUserResult.Success, result);
-                User user = svc.Data.Users.SingleOrDefault();
+                Assert.Equal(CreateUserResult.Success, result.Item2);
+                User user = result.Item1;
                 Assert.NotNull(user);
                 Assert.Equal("new@user.com", user.Email);
                 Assert.Equal("New User", user.DisplayName);
@@ -122,10 +122,11 @@ namespace ReviewR.Web.Facts.Authentication
                 svc.Data.SaveChanges();
 
                 // Act
-                CreateUserResult result = svc.CreateUser(email: "new@user.com", displayName: "New User", password: "password");
+                var result = svc.CreateUser(email: "new@user.com", displayName: "New User", password: "password");
 
                 // Assert
-                Assert.Equal(CreateUserResult.EmailTaken, result);
+                Assert.Equal(CreateUserResult.EmailTaken, result.Item2);
+                Assert.Null(result.Item1);
                 Assert.Equal(1, svc.Data.Users.Count());
             }
         }

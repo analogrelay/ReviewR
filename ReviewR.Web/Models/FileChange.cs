@@ -23,11 +23,6 @@ namespace ReviewR.Web.Models
 
         [NotMapped]
         public abstract FileChangeType ChangeType { get; }
-
-        public FileChange()
-        {
-            Comments = new List<Comment>();
-        }
     }
 
     // EF doesn't like Enums, so we use sub-classes and EF's default Table-per-Hierarchy inheritance style

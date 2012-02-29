@@ -2,14 +2,7 @@
 
 @{
     ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_ReviewLayout.cshtml";
 }
 
-<h1>@Model.Name</h1>
-<div class="row-fluid">
-    <div class="well span2">
-        @Html.Partial("_FileList", Model)
-    </div>
-    <div class="span8">
-        Select a file to view the change.
-    </div>
-</div>
+Select a file to view the changes to it.

@@ -9,6 +9,7 @@ using System.Web.Routing;
 using Moq;
 using ReviewR.Web.Controllers;
 using ReviewR.Web.Facts.Authentication;
+using ReviewR.Web.Infrastructure;
 using ReviewR.Web.Models;
 using ReviewR.Web.Services;
 using ReviewR.Web.ViewModels;
@@ -103,7 +104,13 @@ namespace ReviewR.Web.Facts.Controllers
                 ActionAssert.IsRedirectResult(result, "/app/Home/Index");
                 Assert.Equal("real@user.com", c.TestTokenService.UserName);
                 Assert.False(c.TestTokenService.Persistent);
-                Assert.Equal(new[] { "Role1", "Role2", "Role3" }, c.TestTokenService.Roles.ToArray());
+                Assert.Equal(new AuthTicket()
+                {
+                    UserId = user.Id,
+                    DisplayName = "Real User",
+                    Email = "real@user.com",
+                    Roles = new[] { "Role1", "Role2", "Role3" }
+                }, c.TestTokenService.Ticket, new PropertyEqualityComparer());
             }
 
             [Fact]

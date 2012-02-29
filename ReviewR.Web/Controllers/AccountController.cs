@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using ReviewR.Web.Infrastructure;
 using ReviewR.Web.Models;
 using ReviewR.Web.Services;
 using ReviewR.Web.ViewModels;
@@ -70,7 +71,7 @@ namespace ReviewR.Web.Controllers
                 if (user != null)
                 {
                     IEnumerable<Role> roles = user.Roles ?? Enumerable.Empty<Role>();
-                    TokenService.SetAuthCookie(model.Email, createPersistentCookie: model.RememberMe, roles: roles.Select(r => r.RoleName));
+                    TokenService.SetAuthCookie(model.Email, createPersistentCookie: model.RememberMe, authTicket: AuthTicket.FromUser(user));
                     return CreateSuccessResult(returnUrl, isAjaxRequest);
                 }
                 else
@@ -100,10 +101,10 @@ namespace ReviewR.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                CreateUserResult status = AuthService.CreateUser(model.Email, model.DisplayName, model.Password);
-                if (status == CreateUserResult.Success)
+                var result= AuthService.CreateUser(model.Email, model.DisplayName, model.Password);
+                if (result.Item2 == CreateUserResult.Success)
                 {
-                    TokenService.SetAuthCookie(model.Email, createPersistentCookie: false, roles: Enumerable.Empty<string>());
+                    TokenService.SetAuthCookie(model.Email, createPersistentCookie: false, authTicket: AuthTicket.FromUser(result.Item1));
                     return CreateSuccessResult(returnUrl, isAjaxRequest);
                 }
                 else
