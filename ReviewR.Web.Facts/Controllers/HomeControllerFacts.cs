@@ -20,7 +20,7 @@ namespace ReviewR.Web.Facts.Controllers
             public void ReturnsViewResult()
             {
                 // Arrange
-                var ctl = new HomeController();
+                var ctl = new MainController();
 
                 // Act
                 var result = ctl.Index();

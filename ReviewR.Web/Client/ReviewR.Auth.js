@@ -9,11 +9,11 @@ if (!window.rR.auth) {
 (function () {
     "use strict";
 
-    function startLogin() {
-        alert('startLogin!');
+    function login() {
+        alert('login!');
     }
 
     $.extend(rR.auth, {
-        startLogin: startLogin
+        login: login
     });
 })();

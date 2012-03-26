@@ -9,9 +9,6 @@
     <h3>Enter your email address and password.</h3>
 </hgroup>
 
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
-
 @using (Html.BeginForm()) 
 {
     @Html.CustomValidationSummary(errorMessage: null)
@@ -37,7 +34,7 @@
             </li>
         </ol>
     </fieldset>
-    <div class="modal-bar">
+    <footer class="-rR-modal-footer">
         <input type="submit" value="Log In" class="btn-primary btn-large" />
-    </div>
+    </footer>
 }

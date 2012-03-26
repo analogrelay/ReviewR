@@ -13,6 +13,9 @@ namespace ReviewR.Web.App_Start
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.IgnoreRoute("Content/{*rest}");
+            routes.IgnoreRoute("Scripts/{*rest}");
+            routes.IgnoreRoute("Client/{*rest}");
 
             routes.MapHttpRoute(
                 name: "DefaultApi",
@@ -22,16 +25,16 @@ namespace ReviewR.Web.App_Start
             );
 
             routes.MapRoute(
-                name: "View",
-                url: "{controller}/{id}/{action}",
-                defaults: new { action = "View" },
-                constraints: new { controller = @"[A-Za-z]*", id = @"\d+" }
+                name: "Template",
+                url: "Templates/{*template}",
+                defaults: new { controller = "Main", action = "Template" },
+                constraints: new { controller = @"[A-Za-z]*", action = @"[A-Za-z]*" }
             );
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}",
-                defaults: new { controller = "Home", action = "Index" },
+                url: "{*all}",
+                defaults: new { controller = "Main", action = "Index" },
                 constraints: new { controller = @"[A-Za-z]*", action = @"[A-Za-z]*" }
             );
 

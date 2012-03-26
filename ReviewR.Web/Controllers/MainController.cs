@@ -11,11 +11,16 @@ using ReviewR.Web.ViewModels;
 
 namespace ReviewR.Web.Controllers
 {
-    public class HomeController : Controller
+    public class MainController : Controller
     {
         public ActionResult Index()
         {
             return View();
+        }
+
+        public ActionResult Template(string template)
+        {
+            return View(template);
         }
     }
 }

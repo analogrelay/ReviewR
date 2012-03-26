@@ -1,11 +1,11 @@
-@using ReviewR.Web.Infrastructure
+﻿@using ReviewR.Web.Infrastructure
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <title>ReviewR</title>
     <link rel="stylesheet" type="text/css" href="~/Content/themes/base/jquery.ui.all.css" />
     <link rel="stylesheet" type="text/css" href="~/Content/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
@@ -47,9 +47,18 @@
         </div>
     </header>
     <p class="alert alert-error">This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped WITHOUT notification and ALL data will be removed.</p>
+    <h1>Home</h1>
+    @*
     <div class="container-fluid">
-        @RenderBody()
-    </div>
+        <h1>Home</h1>
+        <p data-bind="ifnot: currentUser().loggedIn">
+            You need to have an account before you can start submitting or participating in reviews. 
+            Please @Html.ActionLink("Login", "Login", "Account", null, new { data_dialog_key = "login", @class="dialog" }) or @Html.ActionLink("Register for a new account", "Register", "Account", null, new { data_dialog_key = "register", @class="dialog" })
+        </p>
+        <p data-bind="if: currentUser().loggedIn">
+            Welcome to ReviewR. Visit your @Html.ActionLink("Review Dashboard", "Index", "Reviews").
+        </p>
+    </div>*@
 
     <!-- Load scripts and initialize code -->
     <script type="text/javascript" src="~/Scripts/LAB.js"></script>
@@ -58,12 +67,14 @@
     <script type="text/javascript" src="~/Scripts/jquery.timeago.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.17.js"></script>
     <script type="text/javascript" src="~/Scripts/underscore.js"></script>
+    <script type="text/javascript" src="~/Scripts/backbone.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
     <script type="text/javascript" src="~/Scripts/knockout-2.0.0.js"></script>
+    <script type="text/javascript" src="~/Scripts/modernizr-2.0.6-development-only.js"></script>
     <script type="text/javascript" src="~/Client/reviewR.js"></script>
     @Assets.GetScripts()
     <script type="text/javascript">
-        rR.init();
+        rR.init('@Url.Content("~/")');
     </script>
 </body>
 </html>

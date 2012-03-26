@@ -6,3 +6,5 @@
 /// <reference path="jquery.cookie.js" />
 /// <reference path="underscore.js" />
 /// <reference path="LAB.js" />
+/// <reference path="backbone.js" />
+/// <reference path="modernizr-2.0.6-development-only.js" />
