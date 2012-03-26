@@ -20,7 +20,7 @@ namespace ReviewR.Web.Infrastructure
                 UserId = u.Id,
                 DisplayName = u.DisplayName,
                 Email = u.Email,
-                Roles = u.Roles.Select(r => r.RoleName).ToArray()
+                Roles = u.Roles == null ? new string[0] : u.Roles.Select(r => r.RoleName).ToArray()
             };
         }
     }

@@ -1,55 +1,65 @@
-﻿/// <reference path="../Scripts/jquery-1.7.1.js" />
-/// <reference path="../Scripts/jquery.timeago.js" />
-/// <reference path="../Scripts/bootstrap.js" />
-/// <reference path="../Scripts/Kudu.DiffViewer.js" />
+﻿if (!window.rR) {
+    window.rR = {};
+}
 
-var reviewR = {};
+(function () {
+    "use strict";
 
-(function ($, reviewR) {
-    var attachers = {
-        'confirm': function(val) {
-            $(this).on('click', function(evt) {
-                if (!evt.isDefaultPrevented()) {
-                    if (!confirm(val)) {
-                        evt.preventDefault();
-                    }
-                }
-            });
-        },
-        'method': function(val) {
-            $(this).on('click', function (evt) {
-                if (!evt.isDefaultPrevented()) {
-                    var $form = $('<form />');
-                    $form.attr('action', $(this).attr('href'))
-                    $form.attr('method', val)
-                    $form.appendTo('body')
-                    $form[0].submit();
-                    evt.preventDefault();
-                }
-            });
+    // Restore data from storage
+    var authCookie = $.cookie('ReviewRAuth');
+
+    // Parse cookie
+    var authTicket = JSON.parse(authCookie);
+
+    var currentUser = {
+        id: ko.observable(0),
+        name: ko.observable(''),
+        roles: ko.observableArray([]),
+        loggedIn: ko.observable(false)
+    }
+    currentUser.isAdmin = ko.computed(function () { return _.indexOf(currentUser.roles(), 'admin') > -1; });
+
+    if (authTicket) {
+        currentUser.id(authTicket.id);
+        currentUser.name(authTicket.name);
+        currentUser.roles(authTicket.roles);
+        currentUser.loggedIn(true);
+    }
+
+    var viewModel = {
+        currentUser: ko.observable(currentUser),
+    };
+
+    viewModel.startLogin = function () {
+        rR.ensureModule('auth')
+          .then(function () {
+              rR.auth.startLogin();
+          });
+    }
+
+
+    // Public methods
+    function init() {
+        ko.applyBindings(viewModel, document.body);
+    }
+
+    function loadModule(name) {
+        var def = $.Deferred();
+        $LAB.script('Client/reviewR.' + name + '.js').wait(function () { def.resolve(); });
+        return def;
+    }
+
+    function ensureModule(name) {
+        if (!rR[name]) {
+            return loadModule(name);
         }
-    };
+        // Nothing to do, just resolve the deferred before even sending it to the caller
+        return $.Deferred().resolve().promise();
+    }
 
-    $(function () {
-        reviewR.diffViewer = $('#viewer').diffViewer({
-            templates: { diff: $('#diffViewer_files') },
-            readonly: false
-        });
-
-        $('abbr.timeago').timeago();
-        $('.attach').each(function () {
-            var $elem = $(this);
-            $.each(attachers, function (key, value) {
-                var dval = $elem.data(key);
-                if (dval) {
-                    value.apply($elem, [ dval ]);
-                }
-            });
-        });
+    $.extend(rR, {
+        init: init,
+        ensureModule: ensureModule,
+        loadModule: loadModule
     });
-
-    reviewR.receiveDiffData = function (data) {
-        var diff = $.parseJSON(data);
-        reviewR.diffViewer.refresh(diff);
-    };
-})(jQuery, reviewR);
+})();

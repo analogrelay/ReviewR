@@ -9,18 +9,6 @@
     <link rel="stylesheet" type="text/css" href="~/Content/themes/base/jquery.ui.all.css" />
     <link rel="stylesheet" type="text/css" href="~/Content/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
-    
-    <script type="text/javascript" src="~/Scripts/jquery-1.7.1.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery.timeago.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.17.js"></script>
-    <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery.render.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/Kudu.DiffViewer.js"></script>
-    <script type="text/javascript" src="~/Client/ReviewR.js"></script>
-    @if(!Request.IsAuthenticated) {
-        <script type="text/javascript" src="~/Client/ReviewR.Auth.js"></script>
-    }
-    @Assets.GetScripts()
 </head>
 <body>
     <a href="http://github.com/anurse/reviewr" target="_blank">
@@ -33,36 +21,26 @@
                     ReviewR
                 </a>
                 <nav id="master-nav">
-                    @if(Request.IsAuthenticated) {
-                        <ul class="nav">
-                            @Html.MenuLink("Dashboard", "Index", "Reviews", new { id = (object)null })
-                        </ul>
-                    }
+                    <ul class="nav" data-bind="if: currentUser().loggedIn">
+                        @Html.MenuLink("Dashboard", "Index", "Reviews", new { id = (object)null })
+                    </ul>
                 </nav>
                 <nav id="login-nav">
                     <ul class="nav pull-right">
-                        @if (Request.IsAuthenticated)
-                        {
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    @Gravatar.GetHtml(User.Email(), imageSize: 24)
-                                    <span>@User.DisplayName() @if (User.IsInRole("Admin")) { <text>(Admin)</text> }</span>
-                                    <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    @if (User.IsInRole("Admin"))
-                                    {
-                                        <li><a href="~/_dbadmin">Database Admin</a></li>
-                                        <li class="divider" />
-                                    }
-                                    <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
-                                </ul>
-                            </li>
-                        } 
-                        else {
-                            <li>@Html.ActionLink("Register", "Register", "Account", null, new { title = "Create a ReviewR Account", @class="dialog", data_dialog_key = "register" })</li>
-                            <li>@Html.ActionLink("Login", "Login", "Account", null, new { title = "Login to ReviewR", @class="dialog", data_dialog_key = "login" })</li>
-                        }
+                        <li class="dropdown" data-bind="if: currentUser().loggedIn">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                @Gravatar.GetHtml(User.Email(), imageSize: 24)
+                                <span>@User.DisplayName() @if (User.IsInRole("Admin")) { <text>(Admin)</text> }</span>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li data-bind="if: currentUser().isAdmin"><a href="~/_dbadmin">Database Admin</a></li>
+                                <li data-bind="if: currentUser().isAdmin" class="divider" />
+                                <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
+                            </ul>
+                        </li>
+                        <li data-bind="ifnot: currentUser().loggedIn">@Html.ActionLink("Register", "Register", "Account", null, new { title = "Create a ReviewR Account", @class="dialog", data_dialog_key = "register" })</li>
+                        <li data-bind="ifnot: currentUser().loggedIn, click: startLogin">@Html.ActionLink("Login", "Login", "Account", null, new { title = "Login to ReviewR", @class="dialog", data_dialog_key = "login" })</li>
                     </ul>
                 </nav>
             </div>
@@ -72,5 +50,20 @@
     <div class="container-fluid">
         @RenderBody()
     </div>
+
+    <!-- Load scripts and initialize code -->
+    <script type="text/javascript" src="~/Scripts/LAB.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.timeago.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.17.js"></script>
+    <script type="text/javascript" src="~/Scripts/underscore.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
+    <script type="text/javascript" src="~/Scripts/knockout-2.0.0.js"></script>
+    <script type="text/javascript" src="~/Client/reviewR.js"></script>
+    @Assets.GetScripts()
+    <script type="text/javascript">
+        rR.init();
+    </script>
 </body>
 </html>
