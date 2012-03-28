@@ -142,14 +142,7 @@
       <Link>Common\Requires.cs</Link>
     </Compile>
     <Compile Include="App_Start\Routes.cs" />
-    <Compile Include="App_Start\NinjectMVC3.cs" />
     <Compile Include="App_Start\Startup.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="App_Start\AuthenticationModule.cs" />
-    <Compile Include="Controllers\ChangesController.cs" />
-    <Compile Include="Controllers\CommentsController.cs" />
-    <Compile Include="Controllers\MainController.cs" />
-    <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="DynamicData\DynamicData\FieldTemplates\Code.ascx.cs">
       <DependentUpon>Code.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -164,7 +157,7 @@
     <Compile Include="DynamicData\DynamicData\FieldTemplates\Code_Edit.ascx.designer.cs">
       <DependentUpon>Code_Edit.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\AuthTicket.cs" />
+    <Compile Include="Infrastructure\IEntitySet.cs" />
     <Compile Include="Migrations\201202251925120_Reviews.cs" />
     <Compile Include="Migrations\201202251925120_Reviews.Designer.cs">
       <DependentUpon>201202251925120_Reviews.cs</DependentUpon>
@@ -200,20 +193,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\FileChange.cs" />
     <Compile Include="Models\Review.cs" />
-    <Compile Include="Services\DiffConverter.cs" />
-    <Compile Include="Services\DiffService.cs" />
-    <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Models\FileChangeType.cs" />
-    <Compile Include="Services\ReviewHelpers.cs" />
-    <Compile Include="ViewModels\ChangeDetailViewModel.cs" />
-    <Compile Include="ViewModels\FileChangeViewModel.cs" />
-    <Compile Include="ViewModels\FolderChangeViewModel.cs" />
-    <Compile Include="ViewModels\IReviewLayoutViewModel.cs" />
-    <Compile Include="ViewModels\LineCommentViewModel.cs" />
-    <Compile Include="ViewModels\NewCommentViewModel.cs" />
-    <Compile Include="ViewModels\NewReviewViewModel.cs" />
-    <Compile Include="ViewModels\ParticipantViewModel.cs" />
-    <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Content Include="Client\reviewR.auth.js" />
     <Content Include="DynamicData\Default.aspx" />
     <Content Include="DynamicData\DynamicData\Content\GridViewPager.ascx" />
@@ -488,9 +468,6 @@
     <Compile Include="DynamicData\Site.master.designer.cs">
       <DependentUpon>Site.master</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\IEntitySet.cs" />
-    <Compile Include="Infrastructure\RequestDataValueProviderFactory.cs" />
-    <Compile Include="Infrastructure\ReviewRPrincipal.cs" />
     <Compile Include="Migrations\201202250000464_UsersAndRoles.cs" />
     <Compile Include="Migrations\201202250000464_UsersAndRoles.Designer.cs">
       <DependentUpon>201202250000464_UsersAndRoles.cs</DependentUpon>
@@ -498,18 +475,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Models\DefaultDataRepository.cs" />
-    <Compile Include="Services\AuthenticationService.cs" />
-    <Compile Include="Services\AuthTokenService.cs" />
-    <Compile Include="Services\CreateUserResult.cs" />
-    <Compile Include="Services\HashService.cs" />
-    <Compile Include="Services\UrlService.cs" />
-    <Compile Include="ViewModels\DashboardViewModel.cs" />
-    <Compile Include="ViewModels\DiffFileViewModel.cs" />
-    <Compile Include="ViewModels\DiffLineViewModel.cs" />
-    <Compile Include="ViewModels\LoginViewModel.cs" />
-    <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -618,12 +584,13 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="DynamicData\DynamicData\CustomPages\" />
+    <Folder Include="Views\Main\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Main\Index.cshtml" />
+    <Content Include="Index.html" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ReviewR.Diff\ReviewR.Diff.csproj">
@@ -673,9 +640,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_ReviewLayout.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App_Readme\LABjs_README.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

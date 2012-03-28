@@ -1,6 +1,4 @@
-﻿@using ReviewR.Web.Infrastructure
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -22,43 +20,41 @@
                 </a>
                 <nav id="master-nav">
                     <ul class="nav" data-bind="if: currentUser().loggedIn">
-                        @Html.MenuLink("Dashboard", "Index", "Reviews", new { id = (object)null })
+                        <a href="/">Dashboard</a>
                     </ul>
                 </nav>
                 <nav id="login-nav">
                     <ul class="nav pull-right">
                         <li class="dropdown" data-bind="if: currentUser().loggedIn">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                @Gravatar.GetHtml(User.Email(), imageSize: 24)
-                                <span>@User.DisplayName() @if (User.IsInRole("Admin")) { <text>(Admin)</text> }</span>
+                                <img data-bind="attr: { src: currentUser().gravatarHash, alt: currentUser().email }" />
+                                <span data-bind="text: currentUser().displayName"></span>
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
                                 <li data-bind="if: currentUser().isAdmin"><a href="~/_dbadmin">Database Admin</a></li>
                                 <li data-bind="if: currentUser().isAdmin" class="divider" />
-                                <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
+                                <li><a href="/auth/logout">Logout</a></li>
                             </ul>
                         </li>
-                        <li data-bind="ifnot: currentUser().loggedIn">@Html.ActionLink("Register", "Register", "Account", null, new { title = "Create a ReviewR Account", @class="dialog", data_dialog_key = "register" })</li>
-                        <li data-bind="ifnot: currentUser().loggedIn, click: startLogin">@Html.ActionLink("Login", "Login", "Account", null, new { title = "Login to ReviewR", @class="dialog", data_dialog_key = "login" })</li>
+                        <li data-bind="ifnot: currentUser().loggedIn"><a href="/auth/register">Register</a></li>
+                        <li data-bind="ifnot: currentUser().loggedIn"><a href="/auth/login">Login</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
     </header>
     <p class="alert alert-error">This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped WITHOUT notification and ALL data will be removed.</p>
-    <h1>Home</h1>
-    @*
     <div class="container-fluid">
         <h1>Home</h1>
         <p data-bind="ifnot: currentUser().loggedIn">
             You need to have an account before you can start submitting or participating in reviews. 
-            Please @Html.ActionLink("Login", "Login", "Account", null, new { data_dialog_key = "login", @class="dialog" }) or @Html.ActionLink("Register for a new account", "Register", "Account", null, new { data_dialog_key = "register", @class="dialog" })
+            Please <a href="/auth/login">Login</a> or <a href="/auth/register">Register for a new account</a>
         </p>
         <p data-bind="if: currentUser().loggedIn">
-            Welcome to ReviewR. Visit your @Html.ActionLink("Review Dashboard", "Index", "Reviews").
+            Welcome to ReviewR!
         </p>
-    </div>*@
+    </div>
 
     <!-- Load scripts and initialize code -->
     <script type="text/javascript" src="~/Scripts/LAB.js"></script>
@@ -74,7 +70,7 @@
     <script type="text/javascript" src="~/Client/reviewR.js"></script>
     @Assets.GetScripts()
     <script type="text/javascript">
-        rR.init('@Url.Content("~/")');
+        rR.init('/');
     </script>
 </body>
 </html>

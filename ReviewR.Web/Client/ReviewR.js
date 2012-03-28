@@ -35,7 +35,8 @@ if (!window.rR) {
 
     var currentUser = {
         id: ko.observable(0),
-        name: ko.observable(''),
+        email: ko.observable(''),
+        displayName: ko.observable(''),
         roles: ko.observableArray([]),
         loggedIn: ko.observable(false)
     }

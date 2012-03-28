@@ -13,10 +13,7 @@ namespace ReviewR.Web.App_Start
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.IgnoreRoute("Content/{*rest}");
-            routes.IgnoreRoute("Scripts/{*rest}");
-            routes.IgnoreRoute("Client/{*rest}");
-
+            
             routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
@@ -24,22 +21,7 @@ namespace ReviewR.Web.App_Start
                 constraints: new { controller = @"[A-Za-z]*" }
             );
 
-            routes.MapRoute(
-                name: "Template",
-                url: "Templates/{*template}",
-                defaults: new { controller = "Main", action = "Template" },
-                constraints: new { controller = @"[A-Za-z]*", action = @"[A-Za-z]*" }
-            );
-
-            routes.MapRoute(
-                name: "Default",
-                url: "{*all}",
-                defaults: new { controller = "Main", action = "Index" },
-                constraints: new { controller = @"[A-Za-z]*", action = @"[A-Za-z]*" }
-            );
-
             DynamicData.Registration.Register(routes);
-            
         }
     }
 }
