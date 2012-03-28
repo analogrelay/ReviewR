@@ -1,4 +1,4 @@
-﻿/// <reference path="reviewR.router.js" />
+﻿/// <reference path="reviewR.views.js" />
 
 if (!window.rR) {
     window.rR = {};
@@ -8,18 +8,18 @@ if (!window.rR) {
     "use strict";
 
     // To avoid users being able to call methods using url hacking, we have a list of known controllers:
-    var controllers = ['auth'];
     var _root = '/';
+    var _host = $();
 
     // Routes
     function mainRouter(ctl, act, args) {
-        if(controllers.indexOf(ctl) === -1) {
-            throw 'No such controller: ' + ctl + ', make sure you add it to the known controllers list in reviewR.js';
-        }
-        rR.ensureModule(ctl)
+        ctl = ctl || 'home';
+        act = act || 'index';
+
+        rR.ensureController(ctl)
           .then(function () {
-              if (rR[ctl].hasOwnProperty(act)) {
-                  rR[ctl][act].call(this, args);
+              if (rR.c[ctl].hasOwnProperty(act)) {
+                  rR.c[ctl][act].call(this, args);
               }
               else {
                   fallback();
@@ -40,7 +40,13 @@ if (!window.rR) {
         roles: ko.observableArray([]),
         loggedIn: ko.observable(false)
     }
-    currentUser.isAdmin = ko.computed(function () { return _.indexOf(currentUser.roles(), 'admin') > -1; });
+    currentUser.isAdmin = ko.computed(function () {
+        return _.indexOf(currentUser.roles(), 'admin') > -1;
+    });
+
+    var system = {
+        devMode: ko.observable(true)
+    };
 
     //if (authTicket) {
     //    currentUser.id(authTicket.id);
@@ -51,6 +57,7 @@ if (!window.rR) {
 
     var viewModel = {
         currentUser: ko.observable(currentUser),
+        system: ko.observable(system)
     };
 
     viewModel.startLogin = function () {
@@ -58,39 +65,118 @@ if (!window.rR) {
     }
 
     // Public methods
-    function init(root) {
+    function init(root, $host) {
         _root = root;
+        _host = $host;
         ko.applyBindings(viewModel, document.body);
+        rR.views.init($('#host'));
         Backbone.history.start({ pushState: Modernizr.history, root: root });
+
+        $(document).on('click', 'a', function () {
+            var href = $(this).attr('href');
+            if (href[0] == '/') {
+                rR.router.navigate(href, { trigger: true });
+                return false;
+            }
+        });
     }
 
-    function loadModule(name) {
+    function loadObject(path) {
         var def = $.Deferred();
-        $LAB.script(_root + 'Client/reviewR.' + name + '.js').wait(function () { def.resolve(); });
+        $LAB.script(_root + path).wait(function () {
+            def.resolve();
+        });
         return def;
     }
 
     function ensureModule(name) {
-        if (!rR[name]) {
-            return loadModule(name);
+        return ensureObject(rR[name], 'Client/reviewR.' + name + '.js');
+    }
+
+    function ensureController(name) {
+        return ensureObject(rR.c[name], 'Controllers/' + name + '.js');
+    }
+
+    function ensureObject(expr, path) {
+        if (!expr) {
+            return loadObject(path);
         }
         // Nothing to do, just resolve the deferred before even sending it to the caller
         return $.Deferred().resolve().promise();
     }
+    
+    function injectTemplate(path, model) {
+        rR.views.insert(path, function () {
+            return fetchHtml(path);
+        })
+            .then(function($t) {
+                if(model) {
+                    ko.applyBindings(model, $t);
+                }
+            });
+    }
+
+    function fetchHtml(path) {
+        var def = $.Deferred();
+        $.ajax({
+            url: _root + path,
+            type: 'get',
+            dataType: 'html',
+            success: function (html, textStatus, xhr) {
+                var $container = $('<div></div>');
+                $container.html(html);
+                def.resolve($container.find('#root'));
+            }
+        });
+        return def.promise();
+    }
+
+    // Routing
+    var router = new (Backbone.Router.extend({
+        routes: {
+            '': 'home',
+            ':ctl/:act': 'main',
+            ':ctl/:act/*args': 'mainWithArgs',
+        },
+        home: mainRouter,
+        main: mainRouter,
+        mainWithArgs: mainRouter
+    }));
+
+    // Controllers
+    function ControllerBuilder(name, obj) {
+        var exports = this;
+        var _controllerName = name;
+        var _actionName = '';
+        var _obj = obj;
+
+        exports.view = function (viewName, model) {
+            viewName = viewName || _actionName;
+            if(typeof(name) === 'object') {
+                model = viewName;
+                viewName = _actionName;
+            }
+
+            return rR.injectTemplate('Views/' + _controllerName + '/' + viewName, model);
+        }
+
+        exports.action = function(actionName, impl) {
+            _obj[actionName] = function() {
+                var old = _actionName;
+                _actionName = actionName;
+                impl.apply(obj, arguments);
+                _actionName = old;
+            }
+        }
+    };
 
     $.extend(rR, {
         init: init,
         ensureModule: ensureModule,
-        loadModule: loadModule
+        ensureObject: ensureObject,
+        ensureController: ensureController,
+        injectTemplate: injectTemplate,
+        c: {},
+        ControllerBuilder: ControllerBuilder
     });
-
-    // Routing
-    rR.router = new (Backbone.Router.extend({
-        routes: {
-            ':ctl/:act': 'main',
-            ':ctl/:act/*args': 'mainWithArgs',
-        },
-        main: mainRouter,
-        mainWithArgs: mainRouter
-    }));
 })();

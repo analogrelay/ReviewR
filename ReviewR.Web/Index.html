@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>ReviewR</title>
-    <link rel="stylesheet" type="text/css" href="~/Content/themes/base/jquery.ui.all.css" />
-    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap/css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/themes/base/jquery.ui.all.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/Site.css" />
 </head>
 <body>
     <a href="http://github.com/anurse/reviewr" target="_blank">
@@ -15,7 +15,7 @@
     <header class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
-                <a class="brand" href="~/">
+                <a class="brand" href="/">
                     ReviewR
                 </a>
                 <nav id="master-nav">
@@ -25,9 +25,9 @@
                 </nav>
                 <nav id="login-nav">
                     <ul class="nav pull-right">
-                        <li class="dropdown" data-bind="if: currentUser().loggedIn">
+                        <li class="dropdown" data-bind="if: currentUser().loggedIn" style="display: none">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img data-bind="attr: { src: currentUser().gravatarHash, alt: currentUser().email }" />
+                                <img data-bind="attr: { src: currentUser().gravatarHash, alt: currentUser().email }" src="" alt="" />
                                 <span data-bind="text: currentUser().displayName"></span>
                                 <b class="caret"></b>
                             </a>
@@ -44,33 +44,25 @@
             </div>
         </div>
     </header>
-    <p class="alert alert-error">This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped WITHOUT notification and ALL data will be removed.</p>
-    <div class="container-fluid">
-        <h1>Home</h1>
-        <p data-bind="ifnot: currentUser().loggedIn">
-            You need to have an account before you can start submitting or participating in reviews. 
-            Please <a href="/auth/login">Login</a> or <a href="/auth/register">Register for a new account</a>
-        </p>
-        <p data-bind="if: currentUser().loggedIn">
-            Welcome to ReviewR!
-        </p>
+    <p class="alert alert-error" data-bind="if: system().devMode">This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped WITHOUT notification and ALL data will be removed.</p>
+    <div id="host" class="container-fluid">
     </div>
 
     <!-- Load scripts and initialize code -->
-    <script type="text/javascript" src="~/Scripts/LAB.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery-1.7.1.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery.cookie.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery.timeago.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.17.js"></script>
-    <script type="text/javascript" src="~/Scripts/underscore.js"></script>
-    <script type="text/javascript" src="~/Scripts/backbone.js"></script>
-    <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
-    <script type="text/javascript" src="~/Scripts/knockout-2.0.0.js"></script>
-    <script type="text/javascript" src="~/Scripts/modernizr-2.0.6-development-only.js"></script>
-    <script type="text/javascript" src="~/Client/reviewR.js"></script>
-    @Assets.GetScripts()
+    <script type="text/javascript" src="/Scripts/LAB.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.timeago.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery-ui-1.8.17.js"></script>
+    <script type="text/javascript" src="/Scripts/underscore.js"></script>
+    <script type="text/javascript" src="/Scripts/backbone.js"></script>
+    <script type="text/javascript" src="/Scripts/bootstrap.js"></script>
+    <script type="text/javascript" src="/Scripts/knockout-2.0.0.js"></script>
+    <script type="text/javascript" src="/Scripts/modernizr-2.0.6-development-only.js"></script>
+    <script type="text/javascript" src="/Client/reviewR.js"></script>
+    <script type="text/javascript" src="/Client/reviewR.views.js"></script>
     <script type="text/javascript">
-        rR.init('/');
+        rR.init('/', $('#host'));
     </script>
 </body>
 </html>
