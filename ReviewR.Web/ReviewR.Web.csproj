@@ -169,7 +169,6 @@
     <Compile Include="Models\FileChange.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\FileChangeType.cs" />
-    <Content Include="Client\reviewR.views.js" />
     <Content Include="Controllers\auth.js" />
     <Content Include="Controllers\home.js" />
     <Content Include="DynamicData\Default.aspx" />
@@ -456,7 +455,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Client\reviewR.js" />
+    <Content Include="js\reviewR.js" />
+    <Content Include="js\reviewR.boot.js" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
@@ -521,8 +521,6 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Compile Include="DynamicData\Registration.cs" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\backbone.js" />
-    <Content Include="Scripts\backbone.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
@@ -530,8 +528,6 @@
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.17.js" />
     <Content Include="Scripts\jquery-ui-1.8.17.min.js" />
-    <Content Include="Scripts\jquery.cookie.js" />
-    <Content Include="Scripts\jquery.timeago.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
@@ -541,15 +537,10 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-2.0.0.debug.js" />
     <Content Include="Scripts\knockout-2.0.0.js" />
-    <Content Include="Scripts\LAB-debug.min.js" />
-    <Content Include="Scripts\LAB.js" />
-    <Content Include="Scripts\LAB.min.js" />
     <Content Include="Scripts\modernizr-2.0.6-development-only.js" />
-    <Content Include="Scripts\underscore.js" />
-    <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Views\Auth\Login.html" />
-    <Content Include="Views\Home\Index.html" />
+    <None Include="Views\Auth\_Login.cshtml" />
+    <None Include="Views\Home\_Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -567,7 +558,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Index.html" />
+    <None Include="Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ReviewR.Diff\ReviewR.Diff.csproj">

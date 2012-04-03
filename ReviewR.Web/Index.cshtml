@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var root = Href("~/");
+    var env = System.Web.Configuration.WebConfigurationManager.AppSettings["Environment"];
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -32,37 +37,42 @@
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li data-bind="if: currentUser().isAdmin"><a href="~/_dbadmin">Database Admin</a></li>
+                                <li data-bind="if: currentUser().isAdmin"><a href="#">Database Admin</a></li>
                                 <li data-bind="if: currentUser().isAdmin" class="divider" />
-                                <li><a href="/auth/logout">Logout</a></li>
+                                <li><a href="#">Logout</a></li>
                             </ul>
                         </li>
-                        <li data-bind="ifnot: currentUser().loggedIn"><a href="/auth/register">Register</a></li>
-                        <li data-bind="ifnot: currentUser().loggedIn"><a href="/auth/login">Login</a></li>
+                        <li data-bind="ifnot: currentUser().loggedIn"><a href="#" data-bind="click: startRegister">Register</a></li>
+                        <li data-bind="ifnot: currentUser().loggedIn"><a href="#" data-bind="click: startLogin">Login</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
     </header>
-    <p class="alert alert-error" data-bind="if: system().devMode">This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped WITHOUT notification and ALL data will be removed.</p>
-    <div id="host" class="container-fluid">
+    <p class="alert alert-error" data-bind="ifnot: isProd">This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped WITHOUT notification and ALL data will be removed.</p>
+    <div class="container-fluid" data-bind="template: { name: activePage().templateId(), data: activePage().model() }">
     </div>
 
-    <!-- Load scripts and initialize code -->
-    <script type="text/javascript" src="/Scripts/LAB.js"></script>
+    <!-- Load scripts -->
     <script type="text/javascript" src="/Scripts/jquery-1.7.1.js"></script>
-    <script type="text/javascript" src="/Scripts/jquery.cookie.js"></script>
-    <script type="text/javascript" src="/Scripts/jquery.timeago.js"></script>
     <script type="text/javascript" src="/Scripts/jquery-ui-1.8.17.js"></script>
-    <script type="text/javascript" src="/Scripts/underscore.js"></script>
-    <script type="text/javascript" src="/Scripts/backbone.js"></script>
     <script type="text/javascript" src="/Scripts/bootstrap.js"></script>
-    <script type="text/javascript" src="/Scripts/knockout-2.0.0.js"></script>
+    <script type="text/javascript" src="/Scripts/knockout-2.0.0.debug.js"></script>
     <script type="text/javascript" src="/Scripts/modernizr-2.0.6-development-only.js"></script>
-    <script type="text/javascript" src="/Client/reviewR.js"></script>
-    <script type="text/javascript" src="/Client/reviewR.views.js"></script>
+    <script type="text/javascript" src="/js/reviewR.js"></script>
+    <script type="text/javascript" src="/js/reviewR.boot.js"></script>
+
+    <!-- Templates -->
+    <div id="t:Auth.Login" class="sys-tmpl">
+        @RenderPage("Views/Auth/_Login.cshtml")
+    </div>
+    <div id="t:Home.Index" class="sys-tmpl">
+        @RenderPage("Views/Home/_Index.cshtml")
+    </div>
+
+    <!-- Start! -->
     <script type="text/javascript">
-        rR.init('/', $('#host'));
+        rR.start('@root', '@env');
     </script>
 </body>
 </html>

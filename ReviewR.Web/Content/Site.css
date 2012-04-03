@@ -1,3 +1,8 @@
+/* System styles */
+.sys-tmpl {
+    display: none
+}
+
 /* Header/Footer */
 body {
     padding-top: 40px;
