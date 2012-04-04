@@ -5,7 +5,6 @@
 if (!window.rR) {
     window.rR = {}
 }
-
 (function (rR) {
     "use strict";
 
@@ -30,7 +29,8 @@ if (!window.rR) {
         return $.extend(self || {}, {
             // Use "_" to separate core methods from actual model methods
             '_': {
-                update: update
+                update: update,
+                reset: reset
             }
         });
     }
@@ -64,7 +64,7 @@ if (!window.rR) {
         self.model = ko.observable(init.model || {});
         self.open = ko.observable(init.open);
         self.close = ko.observable(init.close);
-        self.templateId = ko.computed(function () { return 'p:' + self.view(); });
+        self.templateId = ko.computed(function () { return rR.utils.getViewId(self.view()); });
 
         return self;
     }
@@ -128,28 +128,34 @@ if (!window.rR) {
             return ko.bindingHandlers.template.init(element, function () { return { name: 'm:' + ko.utils.unwrapObservable(valueAccessor()) } });
         },
         update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            var $element = $(element);
             // How are we being updated?
             var val = ko.utils.unwrapObservable(valueAccessor());
-            var model = rR.utils.getModal(val);
             if (val === '') {
                 // Just hide the modal
-                model.reset();
-                $(element).modal('hide');
+                var model = $element.data('model');
+                if (model && model._ && model._.reset) {
+                    model._.reset();
+                }
+                $element.modal('hide');
             } else {
+                var model = rR.utils.getModel(val);
                 rR.utils.assert(model, "Modal model not found: '" + val + "'");
-                rR.utils.assert(document.getElementById('m:' + val), "Modal view not found: '" + val + "'");
+                rR.utils.assert(rR.utils.getView(val), "Modal view not found: '" + val + "'");
+
+                $element.data('model', model);
 
                 // Set up the template binding
                 var templateValueAccessor = function () {
                     return {
-                        name: 'm:' + val,
+                        name: rR.utils.getViewId(val),
                         data: model
                     };
                 }
 
                 // Bind the template and show the modal
                 ko.bindingHandlers.template.update(element, templateValueAccessor, allBindingsAccessor, viewModel, bindingContext);
-                $(element).modal('show');
+                $element.modal('show');
             }
         }
     };

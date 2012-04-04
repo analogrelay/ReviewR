@@ -11,9 +11,6 @@ if (!window.rR) {
 (function (rR) {
     "use strict";
 
-    // To avoid users being able to call methods using url hacking, we have a list of known controllers:
-    var _root = '/';
-
     // Modals
     var login = (function () {
         var self = rR.models.modal({});

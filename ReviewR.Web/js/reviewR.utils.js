@@ -22,8 +22,16 @@ if (!window.rR) {
         return cur;
     }
 
-    function getModal(modalId) {
-        return resolveNestedName(rR, 'm.' + modalId);
+    function getModel(id) {
+        return resolveNestedName(rR, 'm.' + id);
+    }
+
+    function getView(id) {
+        return document.getElementById(getViewId(id));
+    }
+
+    function getViewId(id) {
+        return 'v:' + id;
     }
 
     function signalModal(modalId, signal) {
@@ -60,11 +68,13 @@ if (!window.rR) {
     $.extend(rR, {
         utils: {
             resolveNestedName: resolveNestedName,
-            getModal: getModal,
+            getModel: getModel,
             signalModal: signalModal,
             fail: fail,
             assert: assert,
-            activateDevMode: activateDevMode
+            activateDevMode: activateDevMode,
+            getView: getView,
+            getViewId: getViewId
         }
     });
 })(window.rR);
