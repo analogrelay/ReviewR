@@ -4,7 +4,7 @@ namespace ReviewR.Web.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
-    using ReviewR.Web.Models;
+    using ReviewR.Web.Models.Data;
 
     internal sealed class Configuration : DbMigrationsConfiguration<ReviewRDbContext>
     {

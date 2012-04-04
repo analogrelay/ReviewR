@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 
-namespace ReviewR.Web.Models
+namespace ReviewR.Web.Models.Data
 {
     public class User
     {

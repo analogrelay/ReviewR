@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using ReviewR.Web.Infrastructure;
-using ReviewR.Web.Models;
+using ReviewR.Web.Models.Data;
 
 namespace ReviewR.Web.Facts
 {

@@ -37,7 +37,7 @@ if (!window.rR) {
 
         // Operations
         self.register = function () {
-            alert('registering ' + self.displayName());
+            
         }
         return self;
     })();

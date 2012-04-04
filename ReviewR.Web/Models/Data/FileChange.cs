@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
-namespace ReviewR.Web.Models
+namespace ReviewR.Web.Models.Data
 {
     public abstract class FileChange
     {

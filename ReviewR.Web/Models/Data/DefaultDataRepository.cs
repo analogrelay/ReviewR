@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using ReviewR.Web.Infrastructure;
 
-namespace ReviewR.Web.Models
+namespace ReviewR.Web.Models.Data
 {
     public interface IDataRepository
     {

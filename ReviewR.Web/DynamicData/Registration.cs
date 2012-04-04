@@ -1,7 +1,7 @@
 ﻿using System.Web.DynamicData;
 using System.Web.Routing;
 using DynamicData.EFCodeFirstProvider;
-using ReviewR.Web.Models;
+using ReviewR.Web.Models.Data;
 
 namespace DynamicData
 {

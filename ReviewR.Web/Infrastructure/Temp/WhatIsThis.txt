@@ -1,0 +1,1 @@
+﻿A place for me to stash WebAPI code I copied from CodePlex because I'm too lazy to figure out how to update to latest source. It WILL be removed when the next WebAPI build is released.
