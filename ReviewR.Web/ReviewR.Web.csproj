@@ -455,8 +455,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="js\reviewR.m.auth.js" />
+    <Content Include="js\reviewR.utils.js" />
     <Content Include="js\reviewR.js" />
-    <Content Include="js\reviewR.boot.js" />
+    <Content Include="js\reviewR.app.js" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
@@ -539,6 +541,7 @@
     <Content Include="Scripts\knockout-2.0.0.js" />
     <Content Include="Scripts\modernizr-2.0.6-development-only.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Views\Auth\_Register.cshtml" />
     <None Include="Views\Auth\_Login.cshtml" />
     <None Include="Views\Home\_Index.cshtml" />
     <Content Include="Web.config" />

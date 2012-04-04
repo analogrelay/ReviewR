@@ -9,70 +9,78 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>ReviewR</title>
-    <link rel="stylesheet" type="text/css" href="/Content/themes/base/jquery.ui.all.css" />
-    <link rel="stylesheet" type="text/css" href="/Content/bootstrap/css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="/Content/Site.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/themes/base/jquery.ui.all.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
 </head>
 <body>
-    <a href="http://github.com/anurse/reviewr" target="_blank">
-        <img style="position: absolute; top: 40px; right: 0; border: 0; z-index: 1000" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub">
-    </a>
-    <header class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container-fluid">
-                <a class="brand" href="/">
-                    ReviewR
-                </a>
-                <nav id="master-nav">
-                    <ul class="nav" data-bind="if: currentUser().loggedIn">
-                        <a href="/">Dashboard</a>
-                    </ul>
-                </nav>
-                <nav id="login-nav">
-                    <ul class="nav pull-right">
-                        <li class="dropdown" data-bind="if: currentUser().loggedIn" style="display: none">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img data-bind="attr: { src: currentUser().gravatarHash, alt: currentUser().email }" src="" alt="" />
-                                <span data-bind="text: currentUser().displayName"></span>
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li data-bind="if: currentUser().isAdmin"><a href="#">Database Admin</a></li>
-                                <li data-bind="if: currentUser().isAdmin" class="divider" />
-                                <li><a href="#">Logout</a></li>
-                            </ul>
-                        </li>
-                        <li data-bind="ifnot: currentUser().loggedIn"><a href="#" data-bind="click: startRegister">Register</a></li>
-                        <li data-bind="ifnot: currentUser().loggedIn"><a href="#" data-bind="click: startLogin">Login</a></li>
-                    </ul>
-                </nav>
+    <div id="root">
+        <a href="http://github.com/anurse/reviewr" target="_blank">
+            <img style="position: absolute; top: 40px; right: 0; border: 0; z-index: 1000" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub">
+        </a>
+        <header class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="brand" href="#">
+                        ReviewR
+                    </a>
+                    <nav id="master-nav">
+                        <ul class="nav" data-bind="if: currentUser().loggedIn">
+                            <a href="#">Dashboard</a>
+                        </ul>
+                    </nav>
+                    <nav id="login-nav">
+                        <ul class="nav pull-right">
+                            <li class="dropdown" data-bind="if: currentUser().loggedIn" style="display: none">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img data-bind="attr: { src: currentUser().gravatarHash, alt: currentUser().email }" src="" alt="" />
+                                    <span data-bind="text: currentUser().displayName"></span>
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li data-bind="if: currentUser().isAdmin"><a href="#">Database Admin</a></li>
+                                    <li data-bind="if: currentUser().isAdmin" class="divider" />
+                                    <li><a href="#">Logout</a></li>
+                                </ul>
+                            </li>
+                            <li data-bind="ifnot: currentUser().loggedIn"><a href="#" data-bind="click: showRegister">Register</a></li>
+                            <li data-bind="ifnot: currentUser().loggedIn"><a href="#" data-bind="click: showLogin">Login</a></li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
+        </header>
+        <p class="alert alert-error" data-bind="ifnot: isProd">This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped WITHOUT notification and ALL data will be removed.</p>
+        <div class="container-fluid" data-bind="template: { name: activePage().templateId(), data: activePage().model() }">
         </div>
-    </header>
-    <p class="alert alert-error" data-bind="ifnot: isProd">This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped WITHOUT notification and ALL data will be removed.</p>
-    <div class="container-fluid" data-bind="template: { name: activePage().templateId(), data: activePage().model() }">
+        <div data-bind="modal: activeModal" class="modal fade"></div>
     </div>
 
     <!-- Load scripts -->
-    <script type="text/javascript" src="/Scripts/jquery-1.7.1.js"></script>
-    <script type="text/javascript" src="/Scripts/jquery-ui-1.8.17.js"></script>
-    <script type="text/javascript" src="/Scripts/bootstrap.js"></script>
-    <script type="text/javascript" src="/Scripts/knockout-2.0.0.debug.js"></script>
-    <script type="text/javascript" src="/Scripts/modernizr-2.0.6-development-only.js"></script>
-    <script type="text/javascript" src="/js/reviewR.js"></script>
-    <script type="text/javascript" src="/js/reviewR.boot.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.17.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
+    <script type="text/javascript" src="~/Scripts/knockout-2.0.0.debug.js"></script>
+    <script type="text/javascript" src="~/Scripts/modernizr-2.0.6-development-only.js"></script>
+    <script type="text/javascript" src="~/js/reviewR.utils.js"></script>
+    <script type="text/javascript" src="~/js/reviewR.js"></script>
+    <script type="text/javascript" src="~/js/reviewR.app.js"></script>
+    <script type="text/javascript" src="~/js/reviewR.m.auth.js"></script>
 
     <!-- Templates -->
-    <div id="t:Auth.Login" class="sys-tmpl">
+    <script id="m:auth.login" type="text/html">
         @RenderPage("Views/Auth/_Login.cshtml")
-    </div>
-    <div id="t:Home.Index" class="sys-tmpl">
+    </script>
+    <script id="m:auth.register" type="text/html">
+        @RenderPage("Views/Auth/_Register.cshtml")
+    </script>
+    <script id="p:home.index" type="text/html">
         @RenderPage("Views/Home/_Index.cshtml")
-    </div>
+    </script>
 
     <!-- Start! -->
     <script type="text/javascript">
-        rR.start('@root', '@env');
+        rR.app.start('@root', '@env');
     </script>
 </body>
 </html>

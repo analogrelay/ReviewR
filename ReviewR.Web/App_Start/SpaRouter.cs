@@ -17,7 +17,6 @@ namespace ReviewR.Web.App_Start
 
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
 
         public void Init(HttpApplication app)

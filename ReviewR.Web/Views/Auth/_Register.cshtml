@@ -1,6 +1,6 @@
 ﻿<hgroup class="modal-header">
-    <h1>Login.</h1>
-    <h2>Who are you?</h2>
+    <h1>Register.</h1>
+    <h2>Sign up so you can start reviewing some code.</h2>
 </hgroup>
 <div class="modal-body">
     <div class="form form-horizontal">
@@ -12,9 +12,21 @@
                 </div>
             </li>
             <li class="control-group">
+                <label class="control-label" for="displayName">Display name:</label>
+                <div class="controls">
+                    <input type="text" id="displayName" data-bind="value: displayName" />
+                </div>
+            </li>
+            <li class="control-group">
                 <label class="control-label" for="password">Password:</label>
                 <div class="controls">
                     <input type="password" id="password" data-bind="value: password" />
+                </div>
+            </li>
+            <li class="control-group">
+                <label class="control-label" for="confirmPassword">Confirm password:</label>
+                <div class="controls">
+                    <input type="password" id="confirmPassword" data-bind="value: confirmPassword" />
                 </div>
             </li>
         </ol>
@@ -22,5 +34,5 @@
 </div>
 <footer class="modal-footer">
     <button class="btn pull-right" data-bind="click: close">Close</button>
-    <button class="btn btn-primary pull-right" data-bind="click: login">Login</button>
+    <button class="btn btn-primary pull-right" data-bind="click: register">Register</button>
 </footer>

@@ -1,5 +1,5 @@
 /* System styles */
-.sys-tmpl {
+.sys {
     display: none
 }
 
@@ -26,29 +26,16 @@ fieldset.no-legend legend {
     display: none;
 }
 
-form fieldset ol {
+.form ol {
     margin: 0;
     padding: 0;
 }
 
-    form fieldset ol li {
+    .form ol li {
         list-style-type: none;
         margin: 0;
         padding: 0;
     }
-
-.validation-summary-errors ul {
-    margin: 0;
-    padding: 0;
-}
-
-    .validation-summary-errors ul li {
-        list-style-type: none;
-    }
-
-.modal form {
-    margin: 0;
-}
 
 /* General */
 h1 {
