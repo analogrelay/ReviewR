@@ -17,6 +17,16 @@ if (!window.rR) {
                 }
             }
         }
+        function reset() {
+            for (var key in self) {
+                if (self.hasOwnProperty(key)) {
+                    var val = self[key];
+                    if (ko.isObservable(val)) {
+                        val(null);
+                    }
+                }
+            }
+        }
         return $.extend(self || {}, {
             // Use "_" to separate core methods from actual model methods
             '_': {
@@ -28,7 +38,8 @@ if (!window.rR) {
     // User View model
     function user(init) {
         init = init || {};
-        var self = model(init);
+        var self = {};
+        model({});
         
         // Fields
         self.id = ko.observable(init.id || 0);
@@ -119,19 +130,20 @@ if (!window.rR) {
         update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
             // How are we being updated?
             var val = ko.utils.unwrapObservable(valueAccessor());
+            var model = rR.utils.getModal(val);
             if (val === '') {
                 // Just hide the modal
+                model.reset();
                 $(element).modal('hide');
             } else {
-                var modal = rR.utils.getModal(val);
-                rR.utils.assert(modal, "Modal object not found: '" + val + "'");
+                rR.utils.assert(model, "Modal model not found: '" + val + "'");
                 rR.utils.assert(document.getElementById('m:' + val), "Modal view not found: '" + val + "'");
 
                 // Set up the template binding
                 var templateValueAccessor = function () {
                     return {
                         name: 'm:' + val,
-                        data: modal.model
+                        data: model
                     };
                 }
 
