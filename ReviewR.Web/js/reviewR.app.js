@@ -1,10 +1,10 @@
 ﻿/// <reference path="reviewR.js" />
 
-// reviewR.boot.js
-// Startup code
+// reviewR.app.js
+// Core application code
 
 if (!window.rR) {
-    throw 'reviewR.js must be imported before reviewR.boot.js';
+    throw 'reviewR.js must be imported before reviewR.app.js';
 }
 
 (function (rR) {
@@ -32,6 +32,11 @@ if (!window.rR) {
         ko.applyBindings(_viewModel, document.getElementById('root'));
     }
 
+    function login(user) {
+        _viewModel.activeModal('');
+        _viewModel.currentUser()._.update(user);
+    }
+
     function dismissModal() {
         _viewModel.activeModal('');
     }
@@ -39,7 +44,8 @@ if (!window.rR) {
     $.extend(rR, {
         app: {
             start: start,
-            dismissModal: dismissModal
+            dismissModal: dismissModal,
+            login: login
         }
     });
 })(window.rR);

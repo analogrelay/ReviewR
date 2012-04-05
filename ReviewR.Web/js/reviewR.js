@@ -38,8 +38,7 @@ if (!window.rR) {
     // User View model
     function user(init) {
         init = init || {};
-        var self = {};
-        model({});
+        var self = model();
         
         // Fields
         self.id = ko.observable(init.id || 0);
@@ -72,7 +71,7 @@ if (!window.rR) {
     // System view model
     function application(init) {
         init = init || {};
-        var self = model(init);
+        var self = model();
 
         if (!init.loginModal) {
             throw 'Must provide loginModal property in parameter object to system';
@@ -101,14 +100,13 @@ if (!window.rR) {
         self.showRegister = function () {
             self.activeModal(init.registerModal);
         }
-
         return self;
     }
 
     // Modal model (confused?)
     function modal(init) {
         init = init || {};
-        var self = model(init);
+        var self = model();
 
         self.close = function () {
             rR.app.dismissModal();
@@ -159,6 +157,15 @@ if (!window.rR) {
             }
         }
     };
+
+    // Tweak jQuery ajax:
+    var oldjQAjax = $.ajax;
+    $.ajax = function () {
+        if (arguments[0] && arguments[0].url) {
+            arguments[0].url = rR.utils.resolveUrl(arguments[0].url);
+        }
+        oldjQAjax.apply(this, Array.prototype.slice.call(arguments, 0));
+    }
 
     $.extend(rR, {
         models: {

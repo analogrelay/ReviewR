@@ -549,6 +549,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Compile Include="DynamicData\Registration.cs" />
     <Content Include="Content\Site.css" />
+    <Content Include="js\reviewR.comms.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />

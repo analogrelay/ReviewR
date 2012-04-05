@@ -1,14 +1,10 @@
 ﻿// reviewR.utils.js
 // Utilities
-
-if (!window.rR) {
-    window.rR = {}
-}
-
-(function (rR) {
+(function (window, undefined) {
     "use strict";
 
     var _devMode = false;
+    var _root = '/';
 
     function resolveNestedName(root, name) {
         /// <param name="root" type="Object" />
@@ -45,6 +41,10 @@ if (!window.rR) {
         _devMode = true;
     }
 
+    function setRoot(root) {
+        _root = root;
+    }
+
     function fail(msg) {
         if (_devMode) {
             if (confirm('Assert failed: ' + msg + '\nPress OK to throw, Cancel to abort')) {
@@ -65,7 +65,15 @@ if (!window.rR) {
         }
     }
 
-    $.extend(rR, {
+    function resolveUrl(url) {
+        /// <param name="url" type="String" />
+        if (url[0] === '~' && url[1] === '/') {
+            return _root + url.substr(2);
+        }
+        return _root + url;
+    }
+
+    window.rR = $.extend(window.rR || {}, {
         utils: {
             resolveNestedName: resolveNestedName,
             getModel: getModel,
@@ -74,7 +82,9 @@ if (!window.rR) {
             assert: assert,
             activateDevMode: activateDevMode,
             getView: getView,
-            getViewId: getViewId
+            getViewId: getViewId,
+            setRoot: setRoot,
+            resolveUrl: resolveUrl
         }
     });
-})(window.rR);
+})(window);
