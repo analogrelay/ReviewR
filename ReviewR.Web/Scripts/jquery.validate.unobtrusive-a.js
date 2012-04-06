@@ -40,14 +40,17 @@
 
     function onError(error, inputElement) {  // 'this' is the form element
         var container = $(this).find("[data-valmsg-for='" + escapeAttributeValue(inputElement[0].name) + "']"),
+            clsOnly = $(this).find("[data-valclass-for='" + escapeAttributeValue(inputElement[0].name) + "']"),
             replace = $.parseJSON(container.attr("data-valmsg-replace")) !== false;
 
-        container.removeClass("field-validation-valid").addClass("field-validation-error");
+        container.removeClass("valid").addClass("error");
+        clsOnly.removeClass("valid").addClass("error");
         error.data("unobtrusiveContainer", container);
+        error.data("unobtrusiveClassSubscribers", clsOnly);
 
         if (replace) {
             container.empty();
-            error.removeClass("input-validation-error").appendTo(container);
+            error.removeClass("error").appendTo(container);
         }
         else {
             error.hide();
@@ -60,7 +63,7 @@
 
         if (list && list.length && validator.errorList.length) {
             list.empty();
-            container.addClass("validation-summary-errors").removeClass("validation-summary-valid");
+            container.addClass("error").removeClass("valid");
 
             $.each(validator.errorList, function () {
                 $("<li />").html(this.message).appendTo(list);
@@ -70,27 +73,31 @@
 
     function onSuccess(error) {  // 'this' is the form element
         var container = error.data("unobtrusiveContainer"),
+            clsOnly = error.data("unobtrusiveClassSubscribers"),
             replace = $.parseJSON(container.attr("data-valmsg-replace"));
 
         if (container) {
-            container.addClass("field-validation-valid").removeClass("field-validation-error");
+            container.addClass("valid").removeClass("error");
             error.removeData("unobtrusiveContainer");
 
             if (replace) {
                 container.empty();
             }
         }
+        if (clsOnly) {
+            clsOnly.addClass("valid").removeClass("error");
+        }
     }
 
     function onReset(event) {  // 'this' is the form element
         var $form = $(this);
         $form.data("validator").resetForm();
-        $form.find(".validation-summary-errors")
-            .addClass("validation-summary-valid")
-            .removeClass("validation-summary-errors");
-        $form.find(".field-validation-error")
-            .addClass("field-validation-valid")
-            .removeClass("field-validation-error")
+        $form.find(".error")
+            .addClass("valid")
+            .removeClass("error");
+        $form.find(".error")
+            .addClass("valid")
+            .removeClass("error")
             .removeData("unobtrusiveContainer")
             .find(">*")  // If we were using valmsg-replace, get the underlying error
                 .removeData("unobtrusiveContainer");
@@ -104,7 +111,7 @@
         if (!result) {
             result = {
                 options: {  // options structure passed to jQuery Validate's validate() method
-                    errorClass: "input-validation-error",
+                    errorClass: "error",
                     errorElement: "span",
                     errorPlacement: $.proxy(onError, form),
                     invalidHandler: $.proxy(onErrors, form),

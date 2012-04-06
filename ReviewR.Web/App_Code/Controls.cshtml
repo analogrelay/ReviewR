@@ -9,11 +9,11 @@
 }
 
 @helper Control(string title, string name, Func<object, HelperResult> template) {
-    <li class="control-group">
+    <li class="control-group" data-valclass-for="@name">
         <label class="control-label" for="@name">@title</label>
         <div class="controls">
             @template(null)
-            @Html.ValidationMessage(name)
+            <p class="help-block valmsg" data-valmsg-for="@name" data-valmsg-replace="true"></p>
         </div>
     </li>
 }
