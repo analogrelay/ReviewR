@@ -220,8 +220,6 @@
     <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Controllers\auth.js" />
-    <Content Include="Controllers\home.js" />
     <Content Include="DynamicData\Default.aspx" />
     <Content Include="DynamicData\DynamicData\Content\GridViewPager.ascx" />
     <Content Include="DynamicData\DynamicData\Content\Images\Back.gif" />
@@ -574,6 +572,7 @@
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Auth\_Register.cshtml" />
+    <Content Include="App_Code\Controls.cshtml" />
     <None Include="Views\Auth\_Login.cshtml" />
     <None Include="Views\Home\_Index.cshtml" />
     <Content Include="Web.config" />

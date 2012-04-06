@@ -1,4 +1,6 @@
-﻿/// <reference path="reviewR.utils.js" />
+﻿/// <reference path="../Scripts/jquery.validate.js" />
+/// <reference path="../Scripts/jquery.validate.unobtrusive.js" />
+/// <reference path="reviewR.utils.js" />
 // reviewR.js
 // Top-level view models
 
@@ -153,6 +155,7 @@ if (!window.rR) {
 
                 // Bind the template and show the modal
                 ko.bindingHandlers.template.update(element, templateValueAccessor, allBindingsAccessor, viewModel, bindingContext);
+                $.validator.unobtrusive.parse(element);
                 $element.modal('show');
             }
         }

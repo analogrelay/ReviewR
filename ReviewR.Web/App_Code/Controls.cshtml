@@ -1,0 +1,28 @@
+﻿@using IValidator = System.Web.WebPages.IValidator;
+@functions {
+    public static ValidationHelper Validation {
+        get {
+            WebPage page = CurrentPage as WebPage;
+            return page == null ? null : page.Validation;
+        }
+    }
+}
+
+@helper Control(string title, string name, Func<object, HelperResult> template) {
+    <li class="control-group">
+        <label class="control-label" for="@name">@title</label>
+        <div class="controls">
+            @template(null)
+            @Html.ValidationMessage(name)
+        </div>
+    </li>
+}
+
+@helper Input(string title, string name, string type, params IValidator[] validators) {
+    Validation.Add(name, validators);
+    @Control(title, name, @<input type="@type" name="@name" data-bind="value: @name" @Validation.For(name) />)
+}
+
+@helper Text(string title, string name, params IValidator[] validators) { @Input(title, name, "text", validators) }
+@helper Email(string title, string name, params IValidator[] validators) { @Input(title, name, "email", validators) }
+@helper Password(string title, string name, params IValidator[] validators) { @Input(title, name, "password", validators) }

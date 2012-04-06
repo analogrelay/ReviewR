@@ -178,3 +178,8 @@ abbr.timeago {
 div.fixed-list {
     
 }
+
+div.field-validation-valid {
+    display: none;
+    margin: 0;
+}

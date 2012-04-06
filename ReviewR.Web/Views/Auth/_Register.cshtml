@@ -1,38 +1,20 @@
-﻿<hgroup class="modal-header">
-    <h1>Register.</h1>
-    <h2>Sign up so you can start reviewing some code.</h2>
-</hgroup>
-<div class="modal-body">
-    <div class="form form-horizontal">
-        <ol>
-            <li class="control-group">
-                <label class="control-label" for="email">Email address:</label>
-                <div class="controls">
-                    <input type="text" id="email" data-bind="value: email" />
-                </div>
-            </li>
-            <li class="control-group">
-                <label class="control-label" for="displayName">Display name:</label>
-                <div class="controls">
-                    <input type="text" id="displayName" data-bind="value: displayName" />
-                </div>
-            </li>
-            <li class="control-group">
-                <label class="control-label" for="password">Password:</label>
-                <div class="controls">
-                    <input type="password" id="password" data-bind="value: password" />
-                </div>
-            </li>
-            <li class="control-group">
-                <label class="control-label" for="confirmPassword">Confirm password:</label>
-                <div class="controls">
-                    <input type="password" id="confirmPassword" data-bind="value: confirmPassword" />
-                </div>
-            </li>
-        </ol>
+﻿<form data-bind="submit: register">
+    <hgroup class="modal-header">
+        <h1>Register.</h1>
+        <h2>Sign up so you can start reviewing some code.</h2>
+    </hgroup>
+    <div class="modal-body">
+        <div class="form form-horizontal">
+            <ol>
+                @Controls.Email("Email address:", "email", Validator.Required("You must provide an email address"))
+                @Controls.Text("Display name:", "displayName", Validator.Required("You must provide a display name"))
+                @Controls.Password("Password:", "password", Validator.Required("You must provide a password"))
+                @Controls.Password("Confirm password:", "confirmPassword", Validator.Required("Please confirm your password"), Validator.EqualsTo("password", "Confirmation must match password"))
+            </ol>
+        </div>
     </div>
-</div>
-<footer class="modal-footer">
-    <button class="btn pull-right" data-bind="click: close">Close</button>
-    <button class="btn btn-primary pull-right" data-bind="click: register">Register</button>
-</footer>
+    <footer class="modal-footer">
+        <button class="btn pull-right" data-bind="click: close">Close</button>
+        <button class="btn btn-primary pull-right" type="submit">Register</button>
+    </footer>
+</form>
