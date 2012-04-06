@@ -22,7 +22,7 @@ namespace ReviewR.Web.Api
             Auth = auth;
         }
 
-        // POST /api/<controller>
+        // POST /api/users
         [AllowAnonymous]
         public HttpResponseMessage Post(CreateUserRequestModel model)
         {

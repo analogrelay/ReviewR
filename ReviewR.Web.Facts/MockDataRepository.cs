@@ -9,15 +9,15 @@ using ReviewR.Web.Models.Data;
 
 namespace ReviewR.Web.Facts
 {
-    public class TestDataRepository : IDataRepository
+    public class MockDataRepository : IDataRepository
     {
         private int _nextId = 0;
 
-        private TestEntitySet<Role> _roles;
-        private TestEntitySet<User> _users;
-        private TestEntitySet<Review> _reviews;
-        private TestEntitySet<FileChange> _changes;
-        private TestEntitySet<Comment> _comments;
+        private MockEntitySet<Role> _roles;
+        private MockEntitySet<User> _users;
+        private MockEntitySet<Review> _reviews;
+        private MockEntitySet<FileChange> _changes;
+        private MockEntitySet<Comment> _comments;
 
         public IEntitySet<Role> Roles { get { return _roles; } }
         public IEntitySet<User> Users { get { return _users; } }
@@ -27,20 +27,20 @@ namespace ReviewR.Web.Facts
 
         public int LastId { get { return _nextId - 1; } }
 
-        public TestDataRepository()
+        public MockDataRepository()
         {
-            _roles = new TestEntitySet<Role>(this);
-            _users = new TestEntitySet<User>(this);
-            _reviews = new TestEntitySet<Review>(this);
-            _changes = new TestEntitySet<FileChange>(this);
-            _comments = new TestEntitySet<Comment>(this);
+            _roles = new MockEntitySet<Role>(this);
+            _users = new MockEntitySet<User>(this);
+            _reviews = new MockEntitySet<Review>(this);
+            _changes = new MockEntitySet<FileChange>(this);
+            _comments = new MockEntitySet<Comment>(this);
         }
 
         public int SaveChanges()
         {
-            foreach (var prop in GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where(p => typeof(ITestEntitySet).IsAssignableFrom(p.FieldType)))
+            foreach (var prop in GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where(p => typeof(IMockEntitySet).IsAssignableFrom(p.FieldType)))
             {
-                ITestEntitySet set = (ITestEntitySet)prop.GetValue(this);
+                IMockEntitySet set = (IMockEntitySet)prop.GetValue(this);
                 set.Save();
             }
             return 0;

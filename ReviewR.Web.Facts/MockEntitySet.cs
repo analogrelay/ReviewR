@@ -9,18 +9,18 @@ using ReviewR.Web.Infrastructure;
 
 namespace ReviewR.Web.Facts
 {
-    internal interface ITestEntitySet
+    internal interface IMockEntitySet
     {
         void Save();
     }
 
-    public class TestEntitySet<T> : ITestEntitySet, IEntitySet<T> where T : class
+    public class MockEntitySet<T> : IMockEntitySet, IEntitySet<T> where T : class
     {
         private IList<T> _items = new List<T>();
         private IList<Tuple<bool, T>> _pending = new List<Tuple<bool, T>>();
-        private TestDataRepository _repo;
+        private MockDataRepository _repo;
 
-        public TestEntitySet(TestDataRepository repo)
+        public MockEntitySet(MockDataRepository repo)
         {
             _repo = repo;
         }
@@ -68,7 +68,7 @@ namespace ReviewR.Web.Facts
             get { return _items.AsQueryable().Provider; }
         }
 
-        void ITestEntitySet.Save()
+        void IMockEntitySet.Save()
         {
             foreach (var action in _pending)
             {

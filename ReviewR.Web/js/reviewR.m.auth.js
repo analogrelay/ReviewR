@@ -47,19 +47,19 @@ if (!window.rR) {
                 url: '~/api/users',
                 data: { email: self.email(), displayName: self.displayName(), password: self.password(), confirmPassword: self.confirmPassword() },
                 statusCode: {
-                    409 : function() {
+                    409: function () {
                         self.error('There is already a user with that email address!');
                     },
-                    400 : function() {
+                    400: function () {
                         self.error('There were missing or invalid fields!');
                     },
-                    200 : function(data) {
+                    200: function (data) {
                         // data contains a token
                         rR.app.login(data);
                     }
                 },
-                complete : function() { self.loading(false); }
-            }
+                complete: function () { self.loading(false); }
+            });
         }
         return self;
     })();
