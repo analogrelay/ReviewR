@@ -1,26 +1,20 @@
-﻿<hgroup class="modal-header">
-    <h1>Login.</h1>
-    <h2>Who are you?</h2>
-</hgroup>
-<div class="modal-body">
-    <div class="form form-horizontal">
-        <ol>
-            <li class="control-group">
-                <label class="control-label" for="email">Email address:</label>
-                <div class="controls">
-                    <input type="text" id="email" data-bind="value: email" />
-                </div>
-            </li>
-            <li class="control-group">
-                <label class="control-label" for="password">Password:</label>
-                <div class="controls">
-                    <input type="password" id="password" data-bind="value: password" />
-                </div>
-            </li>
-        </ol>
+﻿<form data-bind="submit: login">
+    <hgroup class="modal-header">
+        <h1>Login.</h1>
+        <h2>Who are you?</h2>
+    </hgroup>
+    <div class="modal-body">
+        <div class="alert alert-error" data-bind="visible: hasMessage, text: errorMessage"></div>
+        <div class="form form-horizontal">
+            <ol>
+                @Controls.Email("Email address:", "email")
+                @Controls.Password("Password:", "password")
+                @Controls.Checkbox("Remember me:", "rememberMe", validation: false)
+            </ol>
+        </div>
     </div>
-</div>
-<footer class="modal-footer">
-    <button class="btn pull-right" data-bind="click: close">Close</button>
-    <button class="btn btn-primary pull-right" data-bind="click: login">Login</button>
-</footer>
+    <footer class="modal-footer">
+        <button class="btn pull-right" data-bind="click: close, disabled: loading" type="button">Close</button>
+        <button class="btn btn-primary pull-right" data-bind="disabled: loading">Login</button>
+    </footer>
+</form>

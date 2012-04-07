@@ -40,10 +40,10 @@ namespace ReviewR.Web.Api
                 }
                 else
                 {
-                    return new HttpResponseMessage<string>("This email address is already taken", HttpStatusCode.Conflict);
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
                 }
             }
-            return new HttpResponseMessage<string>("Input validation failed", HttpStatusCode.BadRequest);
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
         }
     }
 }

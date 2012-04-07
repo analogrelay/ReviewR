@@ -1,4 +1,5 @@
-﻿@{
+﻿@using ReviewR.Web.Models;
+@{
     var root = Href("~/");
     var env = System.Web.Configuration.WebConfigurationManager.AppSettings["Environment"];
 }
@@ -25,26 +26,26 @@
                         ReviewR
                     </a>
                     <nav id="master-nav">
-                        <ul class="nav" data-bind="if: currentUser().loggedIn">
+                        <ul class="nav" data-bind="visible: currentUser().loggedIn">
                             <a href="#">Dashboard</a>
                         </ul>
                     </nav>
                     <nav id="login-nav">
                         <ul class="nav pull-right">
-                            <li class="dropdown" data-bind="if: currentUser().loggedIn" style="display: none">
+                            <li class="dropdown" data-bind="visible: currentUser().loggedIn" style="display: none">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img data-bind="attr: { src: currentUser().gravatarHash, alt: currentUser().email }" src="" alt="" />
+                                    <img data-bind="attr: { src: currentUser().gravatarUrl, alt: currentUser().email }" src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=16" alt="Not logged in" />
                                     <span data-bind="text: currentUser().displayName"></span>
                                     <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li data-bind="if: currentUser().isAdmin"><a href="#">Database Admin</a></li>
-                                    <li data-bind="if: currentUser().isAdmin" class="divider" />
+                                    <li data-bind="visible: currentUser().isAdmin"><a href="#">Database Admin</a></li>
+                                    <li data-bind="visible: currentUser().isAdmin" class="divider"></li>
                                     <li><a href="#">Logout</a></li>
                                 </ul>
                             </li>
-                            <li data-bind="ifnot: currentUser().loggedIn"><a href="#" data-bind="click: showRegister">Register</a></li>
-                            <li data-bind="ifnot: currentUser().loggedIn"><a href="#" data-bind="click: showLogin">Login</a></li>
+                            <li data-bind="visible: !currentUser().loggedIn()"><a href="#" data-bind="click: showRegister">Register</a></li>
+                            <li data-bind="visible: !currentUser().loggedIn()"><a href="#" data-bind="click: showLogin">Login</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -58,12 +59,13 @@
 
     <!-- Load scripts -->
     <script type="text/javascript" src="~/Scripts/jquery-1.7.1.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.17.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.18.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive-a.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
-    <script type="text/javascript" src="~/Scripts/knockout-2.0.0.debug.js"></script>
-    <script type="text/javascript" src="~/Scripts/modernizr-2.0.6-development-only.js"></script>
+    <script type="text/javascript" src="~/Scripts/knockout.debug.js"></script>
+    <script type="text/javascript" src="~/Scripts/modernizr-2.5.3.js"></script>
+    <script type="text/javascript" src="~/js/knockout.validation.js"></script>
     <script type="text/javascript" src="~/js/reviewR.utils.js"></script>
     <script type="text/javascript" src="~/js/reviewR.js"></script>
     <script type="text/javascript" src="~/js/reviewR.app.js"></script>
@@ -82,7 +84,10 @@
 
     <!-- Start! -->
     <script type="text/javascript">
-        rR.app.start('@root', '@env');
+    rR.app.start({
+        root: '@root',
+        env: '@env'
+    });
     </script>
 </body>
 </html>

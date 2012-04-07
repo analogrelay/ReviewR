@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Principal;
+using System.Text;
 using System.Web;
 using Microsoft.Internal.Web.Utils;
 using ReviewR.Web.Models;
@@ -28,11 +30,31 @@ namespace ReviewR.Web.Models
 
     public class ReviewRIdentity : IIdentity
     {
+        private string _hash;
+        private string _emailWhenHashGenerated;
+
         public int UserId { get; set; }
         public bool RememberMe { get; set; }
         public string DisplayName { get; set; }
         public string Email { get; set; }
         public HashSet<string> Roles { get; set; }
+        public string EmailHash
+        {
+            get
+            {
+                if (!String.Equals(_emailWhenHashGenerated, Email, StringComparison.Ordinal))
+                {
+                    MD5 m = new MD5Cng();
+                    _hash =
+                        BitConverter.ToString(
+                            m.ComputeHash(Encoding.UTF8.GetBytes(Email.Trim().ToLower())))
+                            .Replace("-", "")
+                            .ToLower();
+                    _emailWhenHashGenerated = Email;
+                }
+                return _hash;
+            }
+        }
 
         public static ReviewRIdentity FromUser(User u)
         {
@@ -41,9 +63,9 @@ namespace ReviewR.Web.Models
                 UserId = u.Id,
                 DisplayName = u.DisplayName,
                 Email = u.Email,
-                Roles = u.Roles == null ? 
-                    new HashSet<string>() : 
-                    new HashSet<string>(u.Roles.Select(r => r.RoleName), StringComparer.OrdinalIgnoreCase)
+                Roles = u.Roles == null ?
+                    new HashSet<string>() :
+                    new HashSet<string>(u.Roles.Select(r => r.RoleName))
             };
         }
 

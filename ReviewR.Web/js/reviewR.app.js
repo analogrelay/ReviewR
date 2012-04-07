@@ -35,6 +35,7 @@ if (!window.rR) {
     function login(user) {
         _viewModel.activeModal('');
         _viewModel.currentUser()._.update(user);
+        _viewModel.currentUser().loggedIn(true);
     }
 
     function dismissModal() {
@@ -45,7 +46,9 @@ if (!window.rR) {
         app: {
             start: start,
             dismissModal: dismissModal,
-            login: login
+            login: login,
+            viewModel: _viewModel
         }
     });
+    
 })(window.rR);

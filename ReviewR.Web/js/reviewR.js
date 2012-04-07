@@ -11,6 +11,8 @@ if (!window.rR) {
     "use strict";
 
     function model(self) {
+        self = self || {};
+
         function update(obj) {
             for (var key in obj) {
                 if (self.hasOwnProperty(key)) {
@@ -22,13 +24,16 @@ if (!window.rR) {
             for (var key in self) {
                 if (self.hasOwnProperty(key)) {
                     var val = self[key];
-                    if (ko.isObservable(val)) {
+                    if (ko.isWriteableObservable(val)) {
                         val(null);
+                    }
+                    if (ko.isObservable(val) && val.validating) {
+                        val.validating(false);
                     }
                 }
             }
         }
-        return $.extend(self || {}, {
+        return $.extend(self, {
             // Use "_" to separate core methods from actual model methods
             '_': {
                 update: update,
@@ -45,11 +50,15 @@ if (!window.rR) {
         // Fields
         self.id = ko.observable(init.id || 0);
         self.email = ko.observable(init.email || '');
+        self.emailHash = ko.observable(init.emailHash || '');
         self.displayName = ko.observable(init.displayName || '');
         self.roles = ko.observableArray(init.roles || []);
         self.loggedIn = ko.observable(init.loggedIn || false);
         self.isAdmin = ko.computed(function () {
-            return _.indexOf(currentUser.roles(), 'admin') > -1;
+            return $.inArray('admin', self.roles()) > -1;
+        });
+        self.gravatarUrl = ko.computed(function () {
+            return 'http://www.gravatar.com/avatar/' + self.emailHash() + '?s=16';
         });
 
         return self;
@@ -84,7 +93,7 @@ if (!window.rR) {
 
         // Fields
         self.environment = ko.observable(init.environment || '');
-        self.currentUser = ko.observable(init.currentUser || {});
+        self.currentUser = ko.observable(init.currentUser || user());
         self.activePage = ko.observable(init.activePage);
         self.activeModal = ko.observable(init.activeModal || '');
         
@@ -155,7 +164,6 @@ if (!window.rR) {
 
                 // Bind the template and show the modal
                 ko.bindingHandlers.template.update(element, templateValueAccessor, allBindingsAccessor, viewModel, bindingContext);
-                $.validator.unobtrusive.parse(element);
                 $element.modal('show');
             }
         }

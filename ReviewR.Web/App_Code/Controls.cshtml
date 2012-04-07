@@ -8,21 +8,28 @@
     }
 }
 
-@helper Control(string title, string name, Func<object, HelperResult> template) {
-    <li class="control-group" data-valclass-for="@name">
+@helper Control(string title, string name, bool validation, Func<object, HelperResult> template) {
+    string binding = validation ? " data-bind=\"css: { error: !" + name + ".isValid() }\"" : String.Empty;
+    <li class="control-group"@Html.Raw(binding)>
         <label class="control-label" for="@name">@title</label>
         <div class="controls">
             @template(null)
-            <p class="help-block valmsg" data-valmsg-for="@name" data-valmsg-replace="true"></p>
+            @if(validation) {
+                <p class="help-block" data-bind="ifnot: @(name).isValid, text: @(name).errorMessage"></p>
+            }
         </div>
     </li>
 }
 
-@helper Input(string title, string name, string type, params IValidator[] validators) {
-    Validation.Add(name, validators);
-    @Control(title, name, @<input type="@type" name="@name" data-bind="value: @name" @Validation.For(name) />)
+@helper Input(string title, string name, string type, bool validation) {
+    @Input(title, name, type, "value", validation)
 }
 
-@helper Text(string title, string name, params IValidator[] validators) { @Input(title, name, "text", validators) }
-@helper Email(string title, string name, params IValidator[] validators) { @Input(title, name, "email", validators) }
-@helper Password(string title, string name, params IValidator[] validators) { @Input(title, name, "password", validators) }
+@helper Input(string title, string name, string type, string valueBinding, bool validation) {
+    @Control(title, name, validation, @<input type="@type" name="@name" data-bind="@valueBinding: @name" />)
+}
+
+@helper Text(string title, string name, bool validation = true) { @Input(title, name, "text", validation) }
+@helper Email(string title, string name, bool validation = true) { @Input(title, name, "email", validation) }
+@helper Password(string title, string name, bool validation = true) { @Input(title, name, "password", validation) }
+@helper Checkbox(string title, string name, bool validation = true) { @Input(title, name, "checkbox", "checked", validation) }

@@ -23,32 +23,32 @@ namespace ReviewR.Web.Services
             Hasher = hasher;
         }
 
-        //public virtual User LogIn(string email, string password)
-        //{
-        //    Requires.NotNullOrEmpty(email, "email");
-        //    Requires.NotNullOrEmpty(password, "password");
+        public virtual User LogIn(string email, string password)
+        {
+            Requires.NotNullOrEmpty(email, "email");
+            Requires.NotNullOrEmpty(password, "password");
 
-        //    // Get the user from the repository
-        //    User user = Data.Users.Where(u => u.Email == email).FirstOrDefault();
-        //    if (user == null)
-        //    {
-        //        // No such user!
-        //        return null;
-        //    }
+            // Get the user from the repository
+            User user = Data.Users.Where(u => u.Email == email).FirstOrDefault();
+            if (user == null)
+            {
+                // No such user!
+                return null;
+            }
 
-        //    // Generate the hashed version of the inputted password using the user's salt
-        //    string inputtedHash = Hasher.GenerateHash(password, user.PasswordSalt);
+            // Generate the hashed version of the inputted password using the user's salt
+            string inputtedHash = Hasher.GenerateHash(password, user.PasswordSalt);
 
-        //    // Compare it
-        //    if (String.Equals(inputtedHash, user.Password, StringComparison.Ordinal))
-        //    {
-        //        return user;
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
+            // Compare it
+            if (String.Equals(inputtedHash, user.Password, StringComparison.Ordinal))
+            {
+                return user;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public virtual Tuple<User, CreateUserResult> CreateUser(string email, string displayName, string password)
         {

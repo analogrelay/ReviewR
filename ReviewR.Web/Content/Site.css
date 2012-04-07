@@ -172,7 +172,7 @@ p.diff-comment-actions {
 }
 
 abbr.timeago {
-    text-transform: none;    
+    text-transform: none;
 }
 
 div.fixed-list {
@@ -181,4 +181,9 @@ div.fixed-list {
 
 .valmsg.valid {
     display: none;
+}
+
+.modal {
+    width: auto;
+    overflow: visible;
 }

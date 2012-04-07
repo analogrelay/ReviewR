@@ -4,17 +4,18 @@
         <h2>Sign up so you can start reviewing some code.</h2>
     </hgroup>
     <div class="modal-body">
+        <div class="alert alert-error" data-bind="visible: hasMessage, text: errorMessage"></div>
         <div class="form form-horizontal">
             <ol>
-                @Controls.Email("Email address:", "email", Validator.Required("You must provide an email address"))
-                @Controls.Text("Display name:", "displayName", Validator.Required("You must provide a display name"))
-                @Controls.Password("Password:", "password", Validator.Required("You must provide a password"))
-                @Controls.Password("Confirm password:", "confirmPassword", Validator.Required("Please confirm your password"), Validator.EqualsTo("password", "Confirmation must match password"))
+                @Controls.Email("Email address:", "email")
+                @Controls.Text("Display name:", "displayName")
+                @Controls.Password("Password:", "password")
+                @Controls.Password("Confirm password:", "confirmPassword")
             </ol>
         </div>
     </div>
     <footer class="modal-footer">
-        <button class="btn pull-right" data-bind="click: close">Close</button>
-        <button class="btn btn-primary pull-right" type="submit">Register</button>
+        <button class="btn pull-right" data-bind="click: close, disabled: loading" type="button">Close</button>
+        <button class="btn btn-primary pull-right" data-bind="disabled: loading">Register</button>
     </footer>
 </form>

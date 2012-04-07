@@ -59,6 +59,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Ninject.3.0.0.15\lib\net40\Ninject.dll</HintPath>
@@ -128,6 +131,7 @@
     <Compile Include="..\Common\Requires.cs">
       <Link>Common\Requires.cs</Link>
     </Compile>
+    <Compile Include="Api\SessionsController.cs" />
     <Compile Include="Api\UsersController.cs" />
     <Compile Include="App_Start\NinjectWeb.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
@@ -152,6 +156,10 @@
     </Compile>
     <Compile Include="Infrastructure\AuthenticationHandler.cs" />
     <Compile Include="Infrastructure\ReviewRApiController.cs" />
+    <Compile Include="Infrastructure\Temp\JsonContractResolver.cs" />
+    <Compile Include="Infrastructure\Temp\BetterJsonMediaTypeFormatter.cs" />
+    <Compile Include="Infrastructure\Temp\XHRRequestHeaderMapping.cs" />
+    <Compile Include="Models\Request\CreateSessionRequestModel.cs" />
     <Compile Include="Models\Response\FormResponseModel.cs" />
     <Compile Include="Models\ReviewRPrincipal.cs" />
     <Compile Include="Infrastructure\CompareAttribute.cs" />
@@ -220,6 +228,8 @@
     <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Controllers\auth.js" />
+    <Content Include="Controllers\home.js" />
     <Content Include="DynamicData\Default.aspx" />
     <Content Include="DynamicData\DynamicData\Content\GridViewPager.ascx" />
     <Content Include="DynamicData\DynamicData\Content\Images\Back.gif" />
@@ -506,6 +516,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
+    <Content Include="js\knockout.validation.js" />
     <Content Include="js\reviewR.m.auth.js" />
     <Content Include="js\reviewR.utils.js" />
     <Content Include="js\reviewR.js" />
@@ -553,21 +564,10 @@
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
-    <Content Include="Scripts\jquery-ui-1.8.17.js" />
-    <Content Include="Scripts\jquery-ui-1.8.17.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.18.js" />
     <Content Include="Scripts\jquery-ui-1.8.18.min.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive-a.js" />
-    <Content Include="Scripts\knockout-2.0.0.debug.js" />
-    <Content Include="Scripts\knockout-2.0.0.js" />
     <Content Include="Scripts\knockout.debug.js" />
     <Content Include="Scripts\knockout.js" />
-    <Content Include="Scripts\modernizr-2.0.6-development-only.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Auth\_Register.cshtml" />
