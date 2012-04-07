@@ -135,7 +135,6 @@
     <Compile Include="Api\UsersController.cs" />
     <Compile Include="App_Start\NinjectWeb.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
-    <Compile Include="App_Start\ReviewRModule.cs" />
     <Compile Include="App_Start\Routes.cs" />
     <Compile Include="App_Start\SpaRouter.cs" />
     <Compile Include="App_Start\Startup.cs" />
@@ -155,6 +154,7 @@
       <DependentUpon>Code_Edit.ascx</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\AuthenticationHandler.cs" />
+    <Compile Include="Infrastructure\AuthenticationModule.cs" />
     <Compile Include="Infrastructure\ReviewRApiController.cs" />
     <Compile Include="Infrastructure\Temp\JsonContractResolver.cs" />
     <Compile Include="Infrastructure\Temp\BetterJsonMediaTypeFormatter.cs" />

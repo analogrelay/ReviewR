@@ -21,12 +21,16 @@ if (!window.rR) {
     });
 
     // Public methods
-    function start(root, env) {
-        _root = root;
-        _viewModel.environment(env);
+    function start(init) {
+        _root = init.root;
+        _viewModel.environment(init.env);
 
-        if (env === 'Development') {
+        if (init.env === 'Development') {
             rR.utils.activateDevMode();
+        }
+        if (init.user) {
+            _viewModel.currentUser()._.update(init.user);
+            _viewModel.currentUser().loggedIn(true);
         }
 
         ko.applyBindings(_viewModel, document.getElementById('root'));

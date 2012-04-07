@@ -1,5 +1,10 @@
 ﻿@using ReviewR.Web.Models;
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Serialization;
 @{
+    RolePrincipal user = User as RolePrincipal;
+    ReviewRIdentity id = user.Identity as ReviewRIdentity;
+    var userString = id == null ? "null" : JsonConvert.SerializeObject(id, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() });
     var root = Href("~/");
     var env = System.Web.Configuration.WebConfigurationManager.AppSettings["Environment"];
 }
@@ -27,7 +32,7 @@
                     </a>
                     <nav id="master-nav">
                         <ul class="nav" data-bind="visible: currentUser().loggedIn">
-                            <a href="#">Dashboard</a>
+                            <li><a href="#">Dashboard</a></li>
                         </ul>
                     </nav>
                     <nav id="login-nav">
@@ -60,8 +65,6 @@
     <!-- Load scripts -->
     <script type="text/javascript" src="~/Scripts/jquery-1.7.1.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.18.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive-a.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
     <script type="text/javascript" src="~/Scripts/knockout.debug.js"></script>
     <script type="text/javascript" src="~/Scripts/modernizr-2.5.3.js"></script>
@@ -86,7 +89,8 @@
     <script type="text/javascript">
     rR.app.start({
         root: '@root',
-        env: '@env'
+        env: '@env',
+        user: @Html.Raw(userString)
     });
     </script>
 </body>

@@ -43,9 +43,21 @@ namespace ReviewR.Web.Services
 
         public virtual ReviewRIdentity ReadAuthCookie(CookieHeaderValue currentCookie)
         {
-            string encoded = currentCookie.Cookies.Single().Value;
-            string data = Encoding.UTF8.GetString(MachineKey.Decode(encoded, MachineKeyProtection.All));
-            return JsonConvert.DeserializeObject<ReviewRIdentity>(data);
+            return ReadAuthCookie(currentCookie.Cookies.Single().Value);
+        }
+
+        public virtual ReviewRIdentity ReadAuthCookie(string encodedCookieValue)
+        {
+            try
+            {
+                string encoded = encodedCookieValue;
+                string data = Encoding.UTF8.GetString(MachineKey.Decode(encoded, MachineKeyProtection.All));
+                return JsonConvert.DeserializeObject<ReviewRIdentity>(data);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public virtual CookieHeaderValue CreateSignoutCookie()

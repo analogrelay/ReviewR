@@ -35,10 +35,5 @@ namespace ReviewR.Web.App_Start
 
             Routes.RegisterRoutes(RouteTable.Routes);
         }
-
-        private static IEnumerable<INinjectModule> GetModules()
-        {
-            yield return new ReviewRModule();
-        }
     }
 }
