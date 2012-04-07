@@ -101,6 +101,7 @@
       <Link>Common\Requires.cs</Link>
     </Compile>
     <Compile Include="Common\HashCodeCombiner.cs" />
+    <Compile Include="Controllers\SessionsControllerFacts.cs" />
     <Compile Include="Controllers\UsersControllerFacts.cs" />
     <Compile Include="MockHashService.cs" />
     <Compile Include="MockEntitySet.cs" />

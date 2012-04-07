@@ -1,20 +1,17 @@
-﻿/// <reference path="reviewR.app.js" />
-/// <reference path="reviewR.utils.js" />
-/// <reference path="reviewR.js" />
+﻿/// <reference path="rR.js" />
+/// <reference path="rR.app.js" />
+/// <reference path="rR.models.js" />
+/// <reference path="rR.utils.js" />
 
-// reviewR.m.auth.js
+// rR.vm.auth.js
 // Authentication and login code
-
-if (!window.rR) {
-    throw 'reviewR.js must be imported before reviewR.m.auth.js';
-}
 
 (function (window) {
     "use strict";
 
     // Modals
     var login = (function () {
-        var self = rR.models.modal({});
+        var self = rR.models.dialog({});
 
         // Fields
         self.email = ko.observable('').required('Email address is required');
@@ -68,7 +65,7 @@ if (!window.rR) {
     })();
 
     var register = (function () {
-        var self = rR.models.modal({});
+        var self = rR.models.dialog({});
 
         // Fields
         self.email =
@@ -131,13 +128,8 @@ if (!window.rR) {
         return self;
     })();
 
-
-    $.extend(rR, {
-        m: {
-            auth: {
-                login: login,
-                register: register
-            }
-        }
+    rR.publish('vm.auth', {
+        login: login,
+        register: register
     });
-})(window.rR);
+})(window);

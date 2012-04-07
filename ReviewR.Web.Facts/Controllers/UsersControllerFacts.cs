@@ -58,15 +58,17 @@ namespace ReviewR.Web.Facts.Controllers
                 var result = c.Post(model);
 
                 // Assert
-                Assert.Equal(HttpStatusCode.Created, result.StatusCode);
-                Assert.Equal(new ReviewRIdentity()
+                var expectedId = new ReviewRIdentity()
                 {
                     DisplayName = "Real User",
                     Email = "real@user.com",
                     RememberMe = false,
                     Roles = new HashSet<string>(),
                     UserId = c.Auth.Data.GetLastId()
-                }, result.GetObjectContent());
+                };
+                Assert.Equal(HttpStatusCode.Created, result.StatusCode);
+                Assert.Equal(expectedId, c.User.Identity);
+                Assert.Equal(expectedId, result.GetObjectContent());
             }
         }
 

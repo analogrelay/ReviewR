@@ -57,22 +57,26 @@
             </div>
         </header>
         <p class="alert alert-error" data-bind="ifnot: isProd">This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped WITHOUT notification and ALL data will be removed.</p>
-        <div class="container-fluid" data-bind="template: { name: activePage().templateId(), data: activePage().model() }">
+        <div class="container-fluid" data-bind="page: activePage">
         </div>
-        <div data-bind="modal: activeModal" class="modal fade"></div>
+        <div data-bind="dialog: activeDialog" class="modal fade"></div>
     </div>
 
     <!-- Load scripts -->
+    <script type="text/javascript" src="~/Scripts/signals.js"></script>
+    <script type="text/javascript" src="~/Scripts/crossroads.js"></script>
+    <script type="text/javascript" src="~/Scripts/hasher.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery-1.7.1.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.18.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
     <script type="text/javascript" src="~/Scripts/knockout.debug.js"></script>
     <script type="text/javascript" src="~/Scripts/modernizr-2.5.3.js"></script>
     <script type="text/javascript" src="~/js/knockout.validation.js"></script>
-    <script type="text/javascript" src="~/js/reviewR.utils.js"></script>
-    <script type="text/javascript" src="~/js/reviewR.js"></script>
-    <script type="text/javascript" src="~/js/reviewR.app.js"></script>
-    <script type="text/javascript" src="~/js/reviewR.m.auth.js"></script>
+    <script type="text/javascript" src="~/js/rR.js"></script>
+    <script type="text/javascript" src="~/js/rR.models.js"></script>
+    <script type="text/javascript" src="~/js/rR.app.js"></script>
+    <script type="text/javascript" src="~/js/rR.vm.auth.js"></script>
+    <script type="text/javascript" src="~/js/rR.vm.home.js"></script>
 
     <!-- Templates -->
     <script id="v:auth.login" type="text/html">

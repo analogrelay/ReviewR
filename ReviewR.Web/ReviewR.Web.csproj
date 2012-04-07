@@ -514,11 +514,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
+    <Content Include="js\rR.vm.home.js" />
     <Content Include="js\knockout.validation.js" />
-    <Content Include="js\reviewR.m.auth.js" />
-    <Content Include="js\reviewR.utils.js" />
-    <Content Include="js\reviewR.js" />
-    <Content Include="js\reviewR.app.js" />
+    <Content Include="js\rR.vm.auth.js" />
+    <Content Include="js\rR.js" />
+    <Content Include="js\rR.models.js" />
+    <Content Include="js\rR.app.js" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
@@ -559,6 +560,10 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\crossroads.js" />
+    <Content Include="Scripts\crossroads.min.js" />
+    <Content Include="Scripts\hasher.js" />
+    <Content Include="Scripts\hasher.min.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -567,6 +572,8 @@
     <Content Include="Scripts\knockout.debug.js" />
     <Content Include="Scripts\knockout.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\signals.js" />
+    <Content Include="Scripts\signals.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Auth\_Register.cshtml" />
     <Content Include="App_Code\Controls.cshtml" />

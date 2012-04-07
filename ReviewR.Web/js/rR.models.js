@@ -1,13 +1,8 @@
-﻿/// <reference path="../Scripts/jquery.validate.js" />
-/// <reference path="../Scripts/jquery.validate.unobtrusive.js" />
-/// <reference path="reviewR.utils.js" />
-// reviewR.js
+﻿/// <reference path="rR.js" />
+/// <reference path="rR.app.js" />
+// rR.models.js
 // Top-level view models
-
-if (!window.rR) {
-    window.rR = {}
-}
-(function (rR) {
+(function (window) {
     "use strict";
 
     function model(self) {
@@ -64,38 +59,23 @@ if (!window.rR) {
         return self;
     }
 
-    // Page view model
-    function page(init) {
-        init = init || {};
-        var self = model(init);
-        
-        // Fields
-        self.view = ko.observable(init.view || '');
-        self.model = ko.observable(init.model || {});
-        self.open = ko.observable(init.open);
-        self.close = ko.observable(init.close);
-        self.templateId = ko.computed(function () { return rR.utils.getViewId(self.view()); });
-
-        return self;
-    }
-
     // System view model
     function application(init) {
         init = init || {};
         var self = model();
 
-        if (!init.loginModal) {
-            throw 'Must provide loginModal property in parameter object to system';
+        if (!init.loginDialog) {
+            throw 'Must provide loginDialog property in parameter object to system';
         }
-        if (!init.registerModal) {
-            throw 'Must provide registerModal property in parameter object to system';
+        if (!init.registerDialog) {
+            throw 'Must provide registerDialog property in parameter object to system';
         }
 
         // Fields
         self.environment = ko.observable(init.environment || '');
         self.currentUser = ko.observable(init.currentUser || user());
         self.activePage = ko.observable(init.activePage);
-        self.activeModal = ko.observable(init.activeModal || '');
+        self.activeDialog = ko.observable(init.activeDialog || '');
         
         // Computed Properties
         self.isDev = ko.computed(function () { self.environment() === 'Development'; });
@@ -105,52 +85,51 @@ if (!window.rR) {
 
         // Actions
         self.showLogin = function () {
-            self.activeModal(init.loginModal);
+            self.activeDialog(init.loginDialog);
         };
 
         self.showRegister = function () {
-            self.activeModal(init.registerModal);
+            self.activeDialog(init.registerDialog);
         }
         return self;
     }
 
-    // Modal model (confused?)
-    function modal(init) {
+    // Page model
+    function page(init) {
         init = init || {};
-        var self = model();
+        var self = model(init);
+
+        self.root = ko.observable(rR.app.viewModel);
+        return self;
+    }
+
+    // Dialog model
+    function dialog(init) {
+        init = init || {};
+        var self = page(init);
 
         self.close = function () {
-            rR.app.dismissModal();
+            rR.app.dismissDialog();
         }
         return self;
     }
 
-    ko.bindingHandlers.modal = {
-        init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-            /// <param name="element" type="HTMLElement" />
-            $(element).modal({ show: false });
-            $(element).on('hidden', function () {
-                // Update the bound value and dump the DOM contents
-                valueAccessor()('');
-                ko.utils.emptyDomNode(element);
-            });
-            return ko.bindingHandlers.template.init(element, function () { return { name: 'm:' + ko.utils.unwrapObservable(valueAccessor()) } });
+    ko.bindingHandlers.page = {
+        init: function (element, valueAccessor) {
+            return ko.bindingHandlers.template.init(element, function () { return { name: rR.utils.getViewId(ko.utils.unwrapObservable(valueAccessor())) }; });
         },
         update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
             var $element = $(element);
-            // How are we being updated?
             var val = ko.utils.unwrapObservable(valueAccessor());
-            if (val === '') {
-                // Just hide the modal
+            if (!val || val === '') {
                 var model = $element.data('model');
                 if (model && model._ && model._.reset) {
                     model._.reset();
                 }
-                $element.modal('hide');
             } else {
                 var model = rR.utils.getModel(val);
-                rR.utils.assert(model, "Modal model not found: '" + val + "'");
-                rR.utils.assert(rR.utils.getView(val), "Modal view not found: '" + val + "'");
+                rR.utils.assert(model, "Model not found: '" + val + "'");
+                rR.utils.assert(rR.utils.getView(val), "View not found: '" + val + "'");
 
                 $element.data('model', model);
 
@@ -162,8 +141,32 @@ if (!window.rR) {
                     };
                 }
 
-                // Bind the template and show the modal
+                // Bind the template and show the dialog
                 ko.bindingHandlers.template.update(element, templateValueAccessor, allBindingsAccessor, viewModel, bindingContext);
+            }
+        }
+    };
+
+    ko.bindingHandlers.dialog = {
+        init: function (element, valueAccessor) {
+            /// <param name="element" type="HTMLElement" />
+            $(element).modal({ show: false });
+            $(element).on('hidden', function () {
+                // Update the bound value and dump the DOM contents
+                valueAccessor()('');
+                ko.utils.emptyDomNode(element);
+            });
+            return ko.bindingHandlers.page.init(element, valueAccessor);
+        },
+        update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            var $element = $(element);
+            // How are we being updated?
+            var val = ko.utils.unwrapObservable(valueAccessor());
+            ko.bindingHandlers.page.update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+            if (!val || val === '') {
+                // Just hide the dialog
+                $element.modal('hide');
+            } else {
                 $element.modal('show');
             }
         }
@@ -178,12 +181,11 @@ if (!window.rR) {
         oldjQAjax.apply(this, Array.prototype.slice.call(arguments, 0));
     }
 
-    $.extend(rR, {
-        models: {
-            user: user,
-            application: application,
-            page: page,
-            modal: modal
-        }
+    rR.publish('models', {
+        user: user,
+        application: application,
+        page: page,
+        dialog: dialog,
+        model: model
     });
-})(window.rR);
+})(window);
