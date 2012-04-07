@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Hosting;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
-//[assembly: WebActivator.PreApplicationStartMethod(typeof(ReviewR.Web.App_Start.SpaRouter), "Start")]
+[assembly: WebActivator.PreApplicationStartMethod(typeof(ReviewR.Web.App_Start.SpaRouter), "Start")]
 namespace ReviewR.Web.App_Start
 {
     public class SpaRouter : IHttpModule
@@ -37,7 +37,7 @@ namespace ReviewR.Web.App_Start
             {
                 ctx.RewritePath(path + ".html");
             }
-            else if (!pathProvider.FileExists(path))
+            else if (!pathProvider.FileExists(path) && !path.StartsWith("~/api"))
             {
                 // Rewrite the request for the root of the app and let client-side code handle it
                 ctx.RewritePath("~/");

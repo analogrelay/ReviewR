@@ -1,4 +1,5 @@
-﻿/// <reference path="signals.js" />
+﻿/// <reference path="underscore.js" />
+/// <reference path="signals.js" />
 /// <reference path="crossroads.js" />
 /// <reference path="hasher.js" />
 /// <reference path="jquery-1.7.1.js" />

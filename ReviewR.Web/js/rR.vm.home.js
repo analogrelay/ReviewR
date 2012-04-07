@@ -9,11 +9,17 @@
 
     // Modals
     var index = (function () {
-        var self = rR.models.page({});
+        var self = rR.models.page();
+        return self;
+    })();
+
+    var dashboard = (function () {
+        var self = rR.models.page();
         return self;
     })();
 
     rR.publish('vm.home', {
-        index: index
+        index: index,
+        dashboard: dashboard
     });
 })(window);

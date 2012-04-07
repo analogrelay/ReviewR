@@ -514,6 +514,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
+    <Content Include="js\Backbone.lite.js" />
     <Content Include="js\rR.vm.home.js" />
     <Content Include="js\knockout.validation.js" />
     <Content Include="js\rR.vm.auth.js" />
@@ -574,10 +575,13 @@
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\signals.js" />
     <Content Include="Scripts\signals.min.js" />
+    <Content Include="Scripts\underscore.js" />
+    <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Auth\_Register.cshtml" />
     <Content Include="App_Code\Controls.cshtml" />
     <None Include="Views\Auth\_Login.cshtml" />
+    <Content Include="Views\Home\_Dashboard.cshtml" />
     <None Include="Views\Home\_Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

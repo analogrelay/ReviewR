@@ -32,7 +32,7 @@
                     </a>
                     <nav id="master-nav">
                         <ul class="nav" data-bind="visible: currentUser().loggedIn">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="/">Dashboard</a></li>
                         </ul>
                     </nav>
                     <nav id="login-nav">
@@ -63,6 +63,7 @@
     </div>
 
     <!-- Load scripts -->
+    <script type="text/javascript" src="~/Scripts/underscore.js"></script>
     <script type="text/javascript" src="~/Scripts/signals.js"></script>
     <script type="text/javascript" src="~/Scripts/crossroads.js"></script>
     <script type="text/javascript" src="~/Scripts/hasher.js"></script>
@@ -71,6 +72,7 @@
     <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
     <script type="text/javascript" src="~/Scripts/knockout.debug.js"></script>
     <script type="text/javascript" src="~/Scripts/modernizr-2.5.3.js"></script>
+    <script type="text/javascript" src="~/js/Backbone.lite.js"></script>
     <script type="text/javascript" src="~/js/knockout.validation.js"></script>
     <script type="text/javascript" src="~/js/rR.js"></script>
     <script type="text/javascript" src="~/js/rR.models.js"></script>
@@ -88,6 +90,10 @@
     <script id="v:home.index" type="text/html">
         @RenderPage("Views/Home/_Index.cshtml")
     </script>
+    <script id="v:home.dashboard" type="text/html">
+        @RenderPage("Views/Home/_Dashboard.cshtml")
+    </script>
+
 
     <!-- Start! -->
     <script type="text/javascript">

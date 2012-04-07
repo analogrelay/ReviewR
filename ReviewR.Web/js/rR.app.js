@@ -1,4 +1,5 @@
-﻿/// <reference path="rR.js" />
+﻿/// <reference path="Backbone.lite.js" />
+/// <reference path="rR.js" />
 
 // rR.app.js
 // Core application code
@@ -11,12 +12,18 @@
         loginDialog: 'auth.login',
         registerDialog: 'auth.register'
     });
+    
+    var history = Backbone.history = new Backbone.History();
+    var router = new Backbone.Router({});
 
-    // Set up route table
-    crossroads.addRoute('/', function () {
-        viewModel.activePage('home.index');
+    router.route('', 'home', function () {
+        if (viewModel.currentUser().loggedIn()) {
+            viewModel.activePage('home.dashboard');
+        } else {
+            viewModel.activePage('home.index');
+        }
     });
-
+    
     // Public methods
     function start(init) {
         _root = init.root;
@@ -30,21 +37,33 @@
             viewModel.currentUser().loggedIn(true);
         }
 
-        //setup hasher
-        function parseHash(newHash, oldHash) {
-            crossroads.parse(newHash);
-        }
-        hasher.initialized.add(parseHash); //parse initial hash
-        hasher.changed.add(parseHash); //parse hash changes
-        hasher.init(); //start listening for history change
-
+        //setup history
+        history.start({
+            root: _root,
+            hashChange: true,
+            pushState: true
+        });
         ko.applyBindings(viewModel, document.getElementById('root'));
+
+        // Take over all interior links
+        $("a").each(function (a) {
+            var href = $(a).attr('href');
+            if (href && !href.match(/^http.*$/)) {
+                $(a).on('click', function (evt) {
+                    evt.preventDefault();
+                    hasher.setHash(href);
+                });
+            }
+        });
     }
 
     function login(user) {
         viewModel.activeDialog('');
         viewModel.currentUser()._.update(user);
         viewModel.currentUser().loggedIn(true);
+        
+        // Rerun the current route
+        history.loadUrl();
     }
 
     function dismissDialog() {
