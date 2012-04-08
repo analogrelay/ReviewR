@@ -1,0 +1,19 @@
+﻿<form data-bind="submit: createReview">
+    <hgroup class="modal-header">
+        <h1>Create a review.</h1>
+        <h2>Show your codez!</h2>
+    </hgroup>
+    <div class="modal-body">
+        <div class="alert alert-error" data-bind="visible: hasMessage, text: errorMessage"></div>
+        <div class="form form-horizontal">
+            <ol>
+                @Controls.Text("Title", "title")
+                @Controls.Textarea("Description", "description", validation: false)
+            </ol>
+        </div>
+    </div>
+    <footer class="modal-footer">
+        <button class="btn pull-right" data-bind="click: close" type="button">Close</button>
+        <button class="btn btn-primary pull-right">Create</button>
+    </footer>
+</form>

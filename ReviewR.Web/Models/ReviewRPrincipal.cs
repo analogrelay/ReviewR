@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Security.Principal;
-using System.Text;
-using System.Web;
 using Microsoft.Internal.Web.Utils;
-using ReviewR.Web.Models;
 using ReviewR.Web.Models.Data;
+using ReviewR.Web.Services;
 
 namespace ReviewR.Web.Models
 {
@@ -44,12 +41,7 @@ namespace ReviewR.Web.Models
             {
                 if (!String.Equals(_emailWhenHashGenerated, Email, StringComparison.Ordinal))
                 {
-                    MD5 m = new MD5Cng();
-                    _hash =
-                        BitConverter.ToString(
-                            m.ComputeHash(Encoding.UTF8.GetBytes(Email.Trim().ToLower())))
-                            .Replace("-", "")
-                            .ToLower();
+                    _hash = Utils.GetGravatarHash(Email);
                     _emailWhenHashGenerated = Email;
                 }
                 return _hash;

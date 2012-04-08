@@ -57,14 +57,5 @@ namespace DynamicData
         {
             GridView1.PageIndex = 0;
         }
-
-        protected void Unnamed_ItemCommand(object source, RepeaterCommandEventArgs e)
-        {
-            if (e.CommandName == "Page")
-            {
-                GridView1.PageIndex = Int32.Parse((string)e.CommandArgument);
-            }
-        }
-
     }
 }

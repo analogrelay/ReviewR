@@ -87,24 +87,30 @@
     }
 
     ko.validation.validatableModel = function (self) {
-        return ko.utils.extend(self || {}, {
-            validate: function () {
-                for (var key in self) {
-                    if (self.hasOwnProperty(key) && ko.isObservable(self[key]) && self[key].validating) {
-                        self[key].validating(true);
-                    }
+        self = self || {};
+        self.customError = ko.observable('');
+        self.isValid = ko.computed(function () {
+            var v = true;
+            for (var key in self) {
+                if (self.hasOwnProperty(key) && ko.isObservable(self[key]) && self[key].validating && self[key].validating()) {
+                    v &= self[key].isValid();
                 }
-            },
-            isValid: ko.computed(function () {
-                var v = true;
-                for (var key in self) {
-                    if (self.hasOwnProperty(key) && ko.isObservable(self[key]) && self[key].validating && self[key].validating()) {
-                        v &= self[key].isValid();
-                    }
-                }
-                return v;
-            })
+            }
+            return v;
         });
+        self.errorMessage = ko.computed(function () {
+            return self.isValid() ? self.customError() : 'Whoops, there were some errors :(';
+        });
+        self.hasMessage = ko.computed(function () {
+            return !self.isValid() || (self.customError() && (self.customError().length > 0));
+        });
+        self.validate = function () {
+            for (var key in self) {
+                if (self.hasOwnProperty(key) && ko.isObservable(self[key]) && self[key].validating) {
+                    self[key].validating(true);
+                }
+            }
+        };
     }
     
     ko.validation.refreshValidators = function () {

@@ -8,6 +8,7 @@
     }
 }
 
+@* Templated Helpers (infrastructure for the real controls below) *@
 @helper Control(string title, string name, bool validation, Func<object, HelperResult> template) {
     string binding = validation ? " data-bind=\"css: { error: !" + name + ".isValid() }\"" : String.Empty;
     <li class="control-group"@Html.Raw(binding)>
@@ -29,7 +30,16 @@
     @Control(title, name, validation, @<input type="@type" name="@name" data-bind="@valueBinding: @name" />)
 }
 
+@* Actual Controls *@
+
+@helper Textarea(string title, string name, bool validation = true) {
+    @Control(title, name, validation, @<textarea name="@name" data-bind="value: @name"></textarea>)
+}
 @helper Text(string title, string name, bool validation = true) { @Input(title, name, "text", validation) }
 @helper Email(string title, string name, bool validation = true) { @Input(title, name, "email", validation) }
 @helper Password(string title, string name, bool validation = true) { @Input(title, name, "password", validation) }
 @helper Checkbox(string title, string name, bool validation = true) { @Input(title, name, "checkbox", "checked", validation) }
+@helper File(string title, string name) {
+    // File upload is tricky, it requires some additional work. In this helper we just render the input tag with NO binding
+    @Control(title, name, false, @<input type="file" name="@name" />)
+}

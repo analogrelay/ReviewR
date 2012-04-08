@@ -2,8 +2,10 @@
 @using Newtonsoft.Json;
 @using Newtonsoft.Json.Serialization;
 @{
-    RolePrincipal user = User as RolePrincipal;
-    ReviewRIdentity id = user.Identity as ReviewRIdentity;
+    ReviewRIdentity id = null;
+    if(User != null) {
+        id = User.Identity as ReviewRIdentity;
+    }
     var userString = id == null ? "null" : JsonConvert.SerializeObject(id, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() });
     var root = Href("~/");
     var env = System.Web.Configuration.WebConfigurationManager.AppSettings["Environment"];
@@ -32,6 +34,7 @@
                     </a>
                     <nav id="master-nav">
                         <ul class="nav" data-bind="visible: currentUser().loggedIn">
+                            <li data-bind="visible: currentUser().isAdmin"><a href="~/_dbadmin" data-skip="true">Database Admin</a></li>
                             <li><a href="/">Dashboard</a></li>
                         </ul>
                     </nav>
@@ -44,8 +47,6 @@
                                     <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li data-bind="visible: currentUser().isAdmin"><a href="#">Database Admin</a></li>
-                                    <li data-bind="visible: currentUser().isAdmin" class="divider"></li>
                                     <li><a href="#">Logout</a></li>
                                 </ul>
                             </li>
@@ -65,8 +66,6 @@
     <!-- Load scripts -->
     <script type="text/javascript" src="~/Scripts/underscore.js"></script>
     <script type="text/javascript" src="~/Scripts/signals.js"></script>
-    <script type="text/javascript" src="~/Scripts/crossroads.js"></script>
-    <script type="text/javascript" src="~/Scripts/hasher.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery-1.7.1.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.18.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
@@ -75,10 +74,12 @@
     <script type="text/javascript" src="~/js/Backbone.lite.js"></script>
     <script type="text/javascript" src="~/js/knockout.validation.js"></script>
     <script type="text/javascript" src="~/js/rR.js"></script>
+    <script type="text/javascript" src="~/js/rR.bus.js"></script>
     <script type="text/javascript" src="~/js/rR.models.js"></script>
     <script type="text/javascript" src="~/js/rR.app.js"></script>
     <script type="text/javascript" src="~/js/rR.vm.auth.js"></script>
     <script type="text/javascript" src="~/js/rR.vm.home.js"></script>
+    <script type="text/javascript" src="~/js/rR.vm.reviews.js"></script>
 
     <!-- Templates -->
     <script id="v:auth.login" type="text/html">
@@ -92,6 +93,12 @@
     </script>
     <script id="v:home.dashboard" type="text/html">
         @RenderPage("Views/Home/_Dashboard.cshtml")
+    </script>
+    <script id="v:reviews.create" type="text/html">
+        @RenderPage("Views/Reviews/_Create.cshtml")
+    </script>
+    <script id="v:reviews.view" type="text/html">
+        @RenderPage("Views/Reviews/_View.cshtml")
     </script>
 
 

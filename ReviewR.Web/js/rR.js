@@ -68,7 +68,7 @@
 
     function fail(msg) {
         if (_devMode) {
-            if (confirm('Assert failed: ' + msg + '\nPress OK to throw, Cancel to abort')) {
+            if (confirm('Assert failed: ' + msg + '\nPress OK to throw, Cancel to continue')) {
                 throw 'Assert failed: ' + msg;
             } else {
                 if (window.stop) {

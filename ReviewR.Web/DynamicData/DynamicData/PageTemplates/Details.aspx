@@ -25,7 +25,7 @@
                         <asp:DynamicEntity runat="server" />
                         <tr class="td">
                             <td colspan="2">
-                                <asp:DynamicHyperLink runat="server" Action="Edit" CssClass="btn btn-primary"><i class="icon-edit icon-white"></i> Edit</asp:DynamicHyperLink>
+                                <asp:DynamicHyperLink runat="server" Action="Edit" CssClass="btn btn-primary" Text="&lt;i class=&quot;icon-edit icon-white&quot;&gt;&lt;/i&gt; Edit"></asp:DynamicHyperLink>
                                 <asp:LinkButton runat="server" CommandName="Delete" CssClass="btn btn-danger"
                                     OnClientClick='return confirm("Are you sure you want to delete this item?");'>
                                     <i class="icon-remove icon-white"></i>

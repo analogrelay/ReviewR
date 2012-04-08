@@ -10,6 +10,7 @@ namespace ReviewR.Web.Models.Data
         public int Id { get; set; }
         public int UserId { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
 
         public virtual User Creator { get; set; }
         public virtual ICollection<FileChange> Files { get; set; }

@@ -1,1 +1,22 @@
-﻿<h1>ReviewR Dashboard!</h1>
+﻿<h1>Your Dashboard</h1>
+<div class="well">
+    <h2>Created by you</h2>
+    <!-- ko if: (!loading() && createdReviews().length > 0) -->
+    <ul data-bind="foreach: createdReviews">
+        <li><span data-bind="text: title"></span></li>
+    </ul>
+    <!-- /ko -->
+    <p data-bind="if: (!loading() && createdReviews().length === 0)">No reviews!</p>
+    <p data-bind="if: loading()">Loading...</p>
+    <h2>Assigned to you</h2>
+    <!-- ko if: (!loading() && createdReviews().length > 0) -->
+    <ul data-bind="foreach: assignedReviews">
+        <li><span data-bind="text: title"></span></li>
+    </ul>
+    <!-- /ko -->
+    <p data-bind="if: (!loading() && assignedReviews().length === 0)">No reviews!</p>
+    <p data-bind="if: loading()">Loading...</p>
+</div>
+<p>
+    <button type="button" class="btn btn-primary" data-bind="click: showNewReview"><i class="icon-plus icon-white"></i> New Review</button>
+</p>

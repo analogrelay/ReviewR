@@ -36,47 +36,22 @@
                 <Columns>
                     <asp:TemplateField ItemStyle-Width="250px">
                         <ItemTemplate>
-                            <asp:DynamicHyperLink runat="server" Action="Edit" CssClass="btn">
-                                <i class="icon-edit"></i>
-                                Edit
+                            <asp:DynamicHyperLink runat="server" Action="Edit" CssClass="btn" Text="&lt;i class=&quot;icon-edit&quot;&gt;&lt;/i&gt; Edit">
                             </asp:DynamicHyperLink>
-                            <asp:LinkButton runat="server" CommandName="Delete" CssClass="btn btn-danger" OnClientClick='return confirm("Are you sure you want to delete this item?");'>
-                                <i class="icon-trash icon-white"></i>
-                                Delete
+                            <asp:LinkButton 
+                                runat="server" 
+                                CommandName="Delete" 
+                                CssClass="btn btn-danger" 
+                                OnClientClick='return confirm("Are you sure you want to delete this item?");'
+                                Text="&lt;i class=&quot;icon-trash icon-white&quot;&gt;&lt;/i&gt; Delete">
                             </asp:LinkButton>
-                            <asp:DynamicHyperLink runat="server" CssClass="btn btn-primary">
-                                <i class="icon-list icon-white"></i>
-                                Details
+                            <asp:DynamicHyperLink runat="server" Action="Details" CssClass="btn btn-primary" Text="&lt;i class=&quot;icon-list icon-white&quot;&gt;&lt;/i&gt; Details">                                
                             </asp:DynamicHyperLink>
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
 
-                <PagerStyle CssClass="DDFooter"/>        
-                <PagerTemplate>
-                    <ul class="pagination pagination-centered">
-                        <li>
-                            <asp:LinkButton CommandName="Page" CommandArgument="First" runat="server"><i class="icon-fast-backward"></i></asp:LinkButton>
-                        </li>
-                        <li>
-                            <asp:LinkButton CommandName="Page" CommandArgument="Prev" runat="server"><i class="icon-backward"></i></asp:LinkButton>
-                        </li>
-                        <asp:Repeater DataSource="<%# Enumerable.Range(-2, 5).Select(i => i + GridView1.PageIndex).Where(i => i >= 0) %>" runat="server" OnItemCommand="Unnamed_ItemCommand">
-                            <ItemTemplate>
-                                <li runat="server" class='<%# ((int)Container.DataItem) == GridView1.PageIndex ? "active" : "" %>'>
-                                    <asp:LinkButton CommandName="Page" CommandArgument="<%# (int)Container.DataItem %>" runat="server"><%# (int)Container.DataItem + 1 %></asp:LinkButton>
-                                </li>
-                            </ItemTemplate>
-                        </asp:Repeater>
-                        <li>
-                            <asp:LinkButton CommandName="Page" CommandArgument="Next" runat="server"><i class="icon-forward"></i></asp:LinkButton>
-                        </li>
-                        <li>
-                            <asp:LinkButton CommandName="Page" CommandArgument="Last" runat="server"><i class="icon-fast-forward"></i></asp:LinkButton>
-                        </li>
-                    </ul>
-                    <%--<asp:GridViewPager runat="server" />--%>
-                </PagerTemplate>
+                <PagerStyle CssClass="DDFooter"/>
                 <EmptyDataTemplate>
                     There are currently no items in this table.
                 </EmptyDataTemplate>

@@ -72,6 +72,10 @@
     <Reference Include="Ninject.Web.Common">
       <HintPath>..\packages\Ninject.Web.Common.3.0.0.7\lib\net40-full\Ninject.Web.Common.dll</HintPath>
     </Reference>
+    <Reference Include="NuGet.Core, Version=1.6.30117.9648, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\NuGet.Core.1.6.2\lib\net40\NuGet.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -96,6 +100,10 @@
       <Aliases>global,da</Aliases>
     </Reference>
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\AspNetWebPages.Core.2.0.20126.16343\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\AspNetWebApi.Core.4.0.20126.16343\lib\net40\System.Web.Http.dll</HintPath>
@@ -110,7 +118,27 @@
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\AspNetRazor.Core.2.0.20126.16343\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\AspNetWebPages.Core.2.0.20126.16343\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Administration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\AspNetWebPages.2.0.20126.16343\lib\net40\System.Web.WebPages.Administration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\AspNetWebPages.Core.2.0.20126.16343\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\AspNetWebPages.Core.2.0.20126.16343\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
@@ -131,6 +159,7 @@
     <Compile Include="..\Common\Requires.cs">
       <Link>Common\Requires.cs</Link>
     </Compile>
+    <Compile Include="Api\ReviewsController.cs" />
     <Compile Include="Api\SessionsController.cs" />
     <Compile Include="Api\UsersController.cs" />
     <Compile Include="App_Start\NinjectWeb.cs" />
@@ -156,11 +185,18 @@
     <Compile Include="Infrastructure\AuthenticationHandler.cs" />
     <Compile Include="Infrastructure\AuthenticationModule.cs" />
     <Compile Include="Infrastructure\ReviewRApiController.cs" />
+    <Compile Include="Infrastructure\SpaRoute.cs" />
     <Compile Include="Infrastructure\Temp\JsonContractResolver.cs" />
     <Compile Include="Infrastructure\Temp\BetterJsonMediaTypeFormatter.cs" />
     <Compile Include="Infrastructure\Temp\XHRRequestHeaderMapping.cs" />
+    <Compile Include="Migrations\201204080002571_AddDescriptionToReview.cs" />
+    <Compile Include="Migrations\201204080002571_AddDescriptionToReview.Designer.cs">
+      <DependentUpon>201204080002571_AddDescriptionToReview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Request\CreateSessionRequestModel.cs" />
-    <Compile Include="Models\Response\FormResponseModel.cs" />
+    <Compile Include="Models\Request\ReviewRequestModel.cs" />
+    <Compile Include="Models\Response\DashboardResponseModel.cs" />
+    <Compile Include="Models\Response\ReviewResponseModel.cs" />
     <Compile Include="Models\ReviewRPrincipal.cs" />
     <Compile Include="Infrastructure\CompareAttribute.cs" />
     <Compile Include="Infrastructure\IEntitySet.cs" />
@@ -214,7 +250,9 @@
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\CreateUserResult.cs" />
     <Compile Include="Services\HashService.cs" />
+    <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Services\TokenService.cs" />
+    <Compile Include="Services\Utils.cs" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -515,6 +553,8 @@
   <ItemGroup>
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
     <Content Include="js\Backbone.lite.js" />
+    <Content Include="js\rR.vm.reviews.js" />
+    <Content Include="js\rR.bus.js" />
     <Content Include="js\rR.vm.home.js" />
     <Content Include="js\knockout.validation.js" />
     <Content Include="js\rR.vm.auth.js" />
@@ -561,10 +601,6 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\crossroads.js" />
-    <Content Include="Scripts\crossroads.min.js" />
-    <Content Include="Scripts\hasher.js" />
-    <Content Include="Scripts\hasher.min.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -582,6 +618,7 @@
     <Content Include="App_Code\Controls.cshtml" />
     <None Include="Views\Auth\_Login.cshtml" />
     <Content Include="Views\Home\_Dashboard.cshtml" />
+    <Content Include="Views\Home\_View.cshtml" />
     <None Include="Views\Home\_Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -591,6 +628,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Old\Shared\Error.cshtml" />
+    <Content Include="Views\Reviews\_Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

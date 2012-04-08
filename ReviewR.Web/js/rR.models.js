@@ -50,7 +50,7 @@
         self.roles = ko.observableArray(init.roles || []);
         self.loggedIn = ko.observable(init.loggedIn || false);
         self.isAdmin = ko.computed(function () {
-            return $.inArray('admin', self.roles()) > -1;
+            return $.inArray('Admin', self.roles()) > -1;
         });
         self.gravatarUrl = ko.computed(function () {
             return 'http://www.gravatar.com/avatar/' + self.emailHash() + '?s=16';
@@ -99,7 +99,18 @@
         init = init || {};
         var self = model(init);
 
+        // Signals
+        self.opened = new signals.Signal();
+        self.closed = new signals.Signal();
+
         self.root = ko.observable(rR.app.viewModel);
+        self.open = function () { self.opened.dispatch(); }
+        self.close = function () {
+            if (self._ && self._.reset) {
+                self._.reset();
+            }
+            self.closed.dispatch();
+        }
         return self;
     }
 
@@ -108,9 +119,10 @@
         init = init || {};
         var self = page(init);
 
-        self.close = function () {
-            rR.app.dismissDialog();
-        }
+        // Dismiss dialog on close
+        self.closed.add(function () {
+            rR.bus.closeDialog.publish();
+        });
         return self;
     }
 
@@ -123,13 +135,12 @@
             var val = ko.utils.unwrapObservable(valueAccessor());
             if (!val || val === '') {
                 var model = $element.data('model');
-                if (model && model._ && model._.reset) {
-                    model._.reset();
-                }
+                if (model && model.close) { model.close(); }
             } else {
                 var model = rR.utils.getModel(val);
                 rR.utils.assert(model, "Model not found: '" + val + "'");
                 rR.utils.assert(rR.utils.getView(val), "View not found: '" + val + "'");
+                if (model && model.open) { model.open(); }
 
                 $element.data('model', model);
 

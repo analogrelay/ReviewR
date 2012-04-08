@@ -44,17 +44,17 @@
                     data: { email: self.email(), password: self.password(), rememberMe: self.rememberMe() },
                     statusCode: {
                         403: function () {
-                            self.serverError('Invalid user name or password!');
+                            self.customError('Invalid user name or password!');
                         },
                         400: function () {
-                            self.serverError('Whoops, there were some errors :(');
+                            self.customError('Whoops, there were some errors :(');
                         },
                         500: function () {
-                            self.serverError('Uurp... something bad happened on the server.');
+                            self.customError('Uurp... something bad happened on the server.');
                         },
                         201: function (data) {
                             // data contains a user token
-                            rR.app.login(data);
+                            rR.bus.login.publish(data);
                         }
                     },
                     complete: function () { self.loading(false); }
@@ -86,15 +86,7 @@
         ko.validation.validatableModel(self);
 
         // UI State
-        self.serverError = ko.observable('');
         self.loading = ko.observable(false);
-
-        self.errorMessage = ko.computed(function () {
-            return self.isValid() ? self.serverError() : 'Whoops, there were some errors :(';
-        });
-        self.hasMessage = ko.computed(function () {
-            return !self.isValid() || (self.serverError() && (self.serverError().length > 0));
-        });
 
         // Operations
         self.register = function () {
@@ -108,17 +100,17 @@
                     data: { email: self.email(), displayName: self.displayName(), password: self.password(), confirmPassword: self.confirmPassword() },
                     statusCode: {
                         409: function () {
-                            self.serverError('There is already a user with that email address!');
+                            self.customError('There is already a user with that email address!');
                         },
                         400: function () {
-                            self.serverError('Whoops, there were some errors :(');
+                            self.customError('Whoops, there were some errors :(');
                         },
                         500: function () {
-                            self.serverError('Uurp... something bad happened on the server.');
+                            self.customError('Uurp... something bad happened on the server.');
                         },
                         201: function (data) {
                             // data contains a user token
-                            rR.app.login(data);
+                            rR.bus.login.publish(data);
                         }
                     },
                     complete: function () { self.loading(false); }

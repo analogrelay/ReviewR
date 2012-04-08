@@ -1,5 +1,6 @@
 ﻿/// <reference path="Backbone.lite.js" />
 /// <reference path="rR.js" />
+/// <reference path="rR.bus.js" />
 
 // rR.app.js
 // Core application code
@@ -22,6 +23,12 @@
         } else {
             viewModel.activePage('home.index');
         }
+    });
+    router.route('reviews/:id', 'review', function (id) {
+        rR.app.currentParams = {
+            id: id
+        };
+        viewModel.activePage('reviews.view');
     });
     
     // Public methods
@@ -47,33 +54,45 @@
 
         // Take over all interior links
         $("a").each(function (a) {
-            var href = $(a).attr('href');
-            if (href && !href.match(/^http.*$/)) {
-                $(a).on('click', function (evt) {
-                    evt.preventDefault();
-                    hasher.setHash(href);
-                });
+            if ($(a).data('skip')) {
+                var href = $(a).attr('href');
+                if (href && !href.match(/^http.*$/)) {
+                    $(a).on('click', function (evt) {
+                        evt.preventDefault();
+                        hasher.setHash(href);
+                    });
+                }
             }
         });
     }
 
-    function login(user) {
-        viewModel.activeDialog('');
+    rR.bus.sink('login', ['user']).subscribe(function (user) {
+        rR.bus.closeDialog.publish();
         viewModel.currentUser()._.update(user);
         viewModel.currentUser().loggedIn(true);
-        
+
         // Rerun the current route
         history.loadUrl();
-    }
-
-    function dismissDialog() {
+    });
+    
+    rR.bus.sink('closeDialog').subscribe(function () {
         viewModel.activeDialog('');
-    }
+    });
+
+    rR.bus.sink('showDialog', ['id']).subscribe(function (id) {
+        viewModel.activeDialog(id);
+    });
+
+    rR.bus.sink('navigate', ['url']).subscribe(function (url) {
+        if (viewModel.activeDialog()) {
+            viewModel.activeDialog('');
+        }
+        router.navigate(url, { trigger: true });
+    });
 
     rR.publish('app', {
         start: start,
-        dismissDialog: dismissDialog,
-        login: login,
-        viewModel: viewModel
+        viewModel: viewModel,
+        currentParams: {}
     });
 })(window);
