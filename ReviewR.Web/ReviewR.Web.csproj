@@ -618,7 +618,7 @@
     <Content Include="App_Code\Controls.cshtml" />
     <None Include="Views\Auth\_Login.cshtml" />
     <Content Include="Views\Home\_Dashboard.cshtml" />
-    <Content Include="Views\Home\_View.cshtml" />
+    <Content Include="Views\Reviews\_View.cshtml" />
     <None Include="Views\Home\_Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

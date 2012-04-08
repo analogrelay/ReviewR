@@ -74,6 +74,12 @@
         // Rerun the current route
         history.loadUrl();
     });
+
+    rR.bus.sink('logout').subscribe(function () {
+        rR.bus.closeDialog.publish();
+        viewModel.currentUser()._.reset();
+        history.loadUrl();
+    });
     
     rR.bus.sink('closeDialog').subscribe(function () {
         viewModel.activeDialog('');
@@ -84,9 +90,7 @@
     });
 
     rR.bus.sink('navigate', ['url']).subscribe(function (url) {
-        if (viewModel.activeDialog()) {
-            viewModel.activeDialog('');
-        }
+        rR.bus.closeDialog.publish();
         router.navigate(url, { trigger: true });
     });
 

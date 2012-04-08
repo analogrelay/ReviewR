@@ -91,6 +91,14 @@
         self.showRegister = function () {
             self.activeDialog(init.registerDialog);
         }
+
+        self.logout = function () {
+            rR.bus.logout.publish();
+            $.ajax({
+                url: '~/api/sessions',
+                type: 'delete'
+            });
+        }
         return self;
     }
 

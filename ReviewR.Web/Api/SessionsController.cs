@@ -38,5 +38,11 @@ namespace ReviewR.Web.Api
             }
             return new HttpResponseMessage(HttpStatusCode.BadRequest);
         }
+
+        public HttpResponseMessage Delete()
+        {
+            User = null;
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
     }
 }

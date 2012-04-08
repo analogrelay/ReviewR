@@ -17,13 +17,14 @@ namespace ReviewR.Web.Infrastructure
     public class ReviewRApiController : ApiController
     {
         private ReviewRPrincipal _sessionUser;
+        private bool _sessionUserSet = false;
 
         [Inject]
         public TokenService Tokens { get; set; }
         
         public ReviewRPrincipal User {
-            get { return _sessionUser ?? (Request.GetUserPrincipal() as ReviewRPrincipal); }
-            set { _sessionUser = value; }
+            get { return _sessionUserSet ? _sessionUser : (Request.GetUserPrincipal() as ReviewRPrincipal); }
+            set { _sessionUser = value; _sessionUserSet = true; }
         }
 
         public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
