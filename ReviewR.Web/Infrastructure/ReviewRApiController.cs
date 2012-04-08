@@ -82,6 +82,8 @@ namespace ReviewR.Web.Infrastructure
         protected HttpResponseMessage<T> BadRequest<T>(T val) { return R(val, HttpStatusCode.BadRequest); }
         protected HttpResponseMessage Forbidden() { return R(HttpStatusCode.Forbidden); }
         protected HttpResponseMessage<T> Forbidden<T>(T val) { return R(val, HttpStatusCode.Forbidden); }
+        protected HttpResponseMessage NotFound() { return R(HttpStatusCode.NotFound); }
+        protected HttpResponseMessage<T> NotFound<T>(T val) { return R(val, HttpStatusCode.NotFound); }
         protected HttpResponseMessage Conflict() { return R(HttpStatusCode.Conflict); }
         protected HttpResponseMessage<T> Conflict<T>(T val) { return R(val, HttpStatusCode.Conflict); }
         protected HttpResponseMessage Ok() { return R(HttpStatusCode.OK); }

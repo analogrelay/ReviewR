@@ -10,8 +10,6 @@ namespace ReviewR.Web.Models.Response
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string AuthorName { get; set; }
-        public string AuthorEmail { get; set; }
-        public string AuthorEmailHash { get; set; }
+        public UserModel Author { get; set; }
     }
 }

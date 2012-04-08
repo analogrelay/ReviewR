@@ -54,7 +54,7 @@
 
         // Take over all interior links
         // Select all 'a's with out data-skip, and with an href starting "http" or "//"
-        $(document).on('click', "a:not([data-skip],[href^='http'],[href^='//'])", function (evt) {
+        $(document).on('click', "a:not([data-skip],[href^='http'],[href^='//'],[href='#'])", function (evt) {
             evt.preventDefault();
             router.navigate($(this).attr('href'), { trigger: true });
         });

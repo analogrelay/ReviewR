@@ -15,6 +15,32 @@ namespace ReviewR.Web.Facts.Controllers
 {
     public class SessionsControllerFacts
     {
+        public class Delete
+        {
+            [Fact]
+            public void SetsCurrentUserToNull()
+            {
+                // Arrange
+                var c = CreateController();
+
+                // Act
+                c.Delete();
+
+                // Assert
+                Assert.Null(c.User);
+            }
+
+            [Fact]
+            public void ReturnsOK()
+            {
+                // Arrange
+                var c = CreateController();
+
+                // Act/Assert
+                Assert.Equal(HttpStatusCode.OK, c.Delete().StatusCode);
+            }
+        }
+
         public class Post
         {
             [Fact]
@@ -53,7 +79,7 @@ namespace ReviewR.Web.Facts.Controllers
                 var expectedId = new ReviewRIdentity()
                 {
                     Email = "real@user.com",
-                    UserId = user.Id,
+                    Id = user.Id,
                     DisplayName = "Real User",
                     Roles = new HashSet<string>(new [] { "Role1", "Role2", "Role3" }),
                     RememberMe = false

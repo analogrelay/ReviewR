@@ -1,21 +1,19 @@
 ﻿<h1>Your Dashboard</h1>
 <div class="well">
-    <h2>Created by you</h2>
-    <!-- ko if: (!loading() && createdReviews().length > 0) -->
-    <ul class="nav" data-bind="foreach: createdReviews">
+    <ul class="nav">
+        <li class="nav-header">Created by you</li>
+        <!-- ko foreach: createdReviews -->
         <li><a data-bind="attr: { href: url }, text: title"></a></li>
-    </ul>
-    <!-- /ko -->
-    <p data-bind="if: (!loading() && createdReviews().length === 0)">No reviews!</p>
-    <p data-bind="if: loading()">Loading...</p>
-    <h2>Assigned to you</h2>
-    <!-- ko if: (!loading() && createdReviews().length > 0) -->
-    <ul class="nav" data-bind="foreach: assignedReviews">
+        <!-- /ko -->
+        <li data-bind="if: (!loading() && createdReviews().length === 0)">No reviews!</li>
+        <li data-bind="if: loading()">Loading...</li>
+        <li class="nav-header">Assigned to you</li>
+        <!-- ko foreach: assignedReviews -->
         <li><a data-bind="attr: { href: url }, text: title"></a></li>
+        <!-- /ko -->
+        <li data-bind="if: (!loading() && assignedReviews().length === 0)">No reviews!</li>
+        <li data-bind="if: loading()">Loading...</li>
     </ul>
-    <!-- /ko -->
-    <p data-bind="if: (!loading() && assignedReviews().length === 0)">No reviews!</p>
-    <p data-bind="if: loading()">Loading...</p>
 </div>
 <p>
     <button type="button" class="btn btn-primary" data-bind="click: showNewReview"><i class="icon-plus icon-white"></i> New Review</button>

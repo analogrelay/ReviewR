@@ -64,7 +64,7 @@ namespace ReviewR.Web.Facts.Controllers
                     Email = "real@user.com",
                     RememberMe = false,
                     Roles = new HashSet<string>(),
-                    UserId = c.Auth.Data.GetLastId()
+                    Id = c.Auth.Data.GetLastId()
                 };
                 Assert.Equal(HttpStatusCode.Created, result.StatusCode);
                 Assert.Equal(expectedId, c.User.Identity);

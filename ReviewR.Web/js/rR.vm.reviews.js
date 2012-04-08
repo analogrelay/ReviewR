@@ -50,14 +50,73 @@
         return self;
     })();
 
+    function iteration(init) {
+        init = init || {};
+        var self = rR.models.model();
+
+        // Fields
+        self.id = ko.observable(init.id);
+        self.order = ko.observable(init.order || 0);
+        self.description = ko.observable(init.description || '');
+        self.active = ko.observable(false);
+
+        self.activate = function () {
+            if (!self.active()) {
+                if (view.activeIteration()) {
+                    view.activeIteration().active(false);
+                }
+                self.active(true);
+            }
+        }
+
+        return self;
+    }
+
     var view = (function () {
         var self = rR.models.page();
 
         self.id = ko.observable();
+        self.description = ko.observable('');
+        self.iterations = ko.observableArray([]);
+        self.participants = ko.observableArray([]);
+        self.title = ko.observable('');
+        self.author = ko.observable();
+        self.activeIteration = ko.computed(function () {
+            return ko.utils.arrayFirst(self.iterations(), function (item) { return item.active(); });
+        });
 
         self.opened.add(function () {
-            self.id(rR.app.currentParams.id);
+            var id = rR.app.currentParams.id;
+            $.ajax({
+                url: '~/api/reviews/' + id,
+                type: 'get',
+                statusCode: {
+                    401: function () {
+                        rR.utils.fail('todo: prompt user for login');
+                        rR.bus.navigate.publish('');
+                    },
+                    403: function () {
+                        rR.utils.fail("todo: tell user they aren't on this review");
+                        rR.bus.navigate.publish('');
+                    },
+                    200: function (data) {
+                        self.id(data.id);
+                        self.title(data.title);
+                        self.description(data.description);
+                        self.author(rR.models.user(data.author));
+                        self.iterations.removeAll();
+                        for (var i = 0; i < data.iterations.length; i++) { self.iterations.push(iteration(data.iterations[i])); }
+                        if (self.iterations().length > 0) { self.iterations()[0].active(true); }
+                        //self.participants.removeAll();
+                        //for(var i = 0; i < data.participants.length; i++) { self.participants.push(rR.models.participant(data.participants[i])); }
+                    }
+                }
+            });
         });
+
+        self.newIteration = function () {
+            rR.bus.showDialog.publish('iterations.create');
+        };
 
         return self;
     })();

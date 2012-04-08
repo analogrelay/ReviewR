@@ -25,11 +25,44 @@ namespace ReviewR.Web.Api.Controllers
         public DashboardResponseModel Get()
         {
             // Get all reviews created by this user
-            IEnumerable<Review> reviews = Reviews.GetReviewsCreatedBy(User.Identity.UserId).ToArray();
+            IEnumerable<Review> reviews = Reviews.GetReviewsCreatedBy(User.Identity.Id).ToArray();
             return new DashboardResponseModel()
             {
                 Created = reviews.Select(ConvertReview)
             };
+        }
+
+        public HttpResponseMessage Get(int id)
+        {
+            Review review = Reviews.GetReview(id);
+            if (review == null)
+            {
+                return NotFound();
+            }
+            else if (review.UserId != User.Identity.Id && !review.Participants.Any(p => p.UserId == User.Identity.Id))
+            {
+                return Forbidden();
+            }
+            else
+            {
+                return Ok(new ReviewDetailResponseModel()
+                {
+                    Id = review.Id,
+                    Title = review.Name,
+                    Author = UserModel.FromUser(review.Creator),
+                    Description = review.Description,
+                    Iterations = review.Iterations.OrderBy(i => i.StartedOn).Select((i, idx) => new IterationModel() {
+                        Id = i.Id,
+                        Order = idx,
+                        Description = i.Description
+                    }),
+                    Participants = review.Participants.Select(p => new ParticipantModel() {
+                        User = UserModel.FromUser(p.User),
+                        Status = p.Status,
+                        Required = p.Required
+                    })
+                });
+            }
         }
 
         // POST /api/reviews
@@ -37,7 +70,7 @@ namespace ReviewR.Web.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                Review r = Reviews.CreateReview(model.Title, model.Description, User.Identity.UserId);
+                Review r = Reviews.CreateReview(model.Title, model.Description, User.Identity.Id);
                 return Created(ConvertReview(r));
             }
             return ValidationErrors();
@@ -48,7 +81,8 @@ namespace ReviewR.Web.Api.Controllers
             return new ReviewResponseModel()
             {
                 Id = r.Id,
-                Title = r.Name
+                Title = r.Name,
+                Author = r.Creator == null ? null : UserModel.FromUser(r.Creator)
             };
         }
     }

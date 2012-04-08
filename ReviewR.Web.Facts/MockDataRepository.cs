@@ -18,12 +18,16 @@ namespace ReviewR.Web.Facts
         private MockEntitySet<Review> _reviews;
         private MockEntitySet<FileChange> _changes;
         private MockEntitySet<Comment> _comments;
+        private MockEntitySet<Participant> _participants;
+        private MockEntitySet<Iteration> _iterations;
 
         public IEntitySet<Role> Roles { get { return _roles; } }
         public IEntitySet<User> Users { get { return _users; } }
         public IEntitySet<Review> Reviews { get { return _reviews; } }
         public IEntitySet<FileChange> Changes { get { return _changes; } }
         public IEntitySet<Comment> Comments { get { return _comments; } }
+        public IEntitySet<Participant> Participants { get { return _participants; } }
+        public IEntitySet<Iteration> Iterations { get { return _iterations; } }
 
         public int LastId { get { return _nextId - 1; } }
 
@@ -34,6 +38,8 @@ namespace ReviewR.Web.Facts
             _reviews = new MockEntitySet<Review>(this);
             _changes = new MockEntitySet<FileChange>(this);
             _comments = new MockEntitySet<Comment>(this);
+            _participants = new MockEntitySet<Participant>(this);
+            _iterations = new MockEntitySet<Iteration>(this);
         }
 
         public int SaveChanges()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Principal;
 using Microsoft.Internal.Web.Utils;
 using ReviewR.Web.Models.Data;
+using ReviewR.Web.Models.Response;
 using ReviewR.Web.Services;
 
 namespace ReviewR.Web.Models
@@ -25,34 +26,16 @@ namespace ReviewR.Web.Models
         }
     }
 
-    public class ReviewRIdentity : IIdentity
+    public class ReviewRIdentity : UserModel, IIdentity
     {
-        private string _hash;
-        private string _emailWhenHashGenerated;
-
-        public int UserId { get; set; }
         public bool RememberMe { get; set; }
-        public string DisplayName { get; set; }
-        public string Email { get; set; }
         public HashSet<string> Roles { get; set; }
-        public string EmailHash
-        {
-            get
-            {
-                if (!String.Equals(_emailWhenHashGenerated, Email, StringComparison.Ordinal))
-                {
-                    _hash = Utils.GetGravatarHash(Email);
-                    _emailWhenHashGenerated = Email;
-                }
-                return _hash;
-            }
-        }
-
+        
         public static ReviewRIdentity FromUser(User u)
         {
             return new ReviewRIdentity()
             {
-                UserId = u.Id,
+                Id = u.Id,
                 DisplayName = u.DisplayName,
                 Email = u.Email,
                 Roles = u.Roles == null ?
@@ -65,20 +48,16 @@ namespace ReviewR.Web.Models
         {
             ReviewRIdentity other = obj as ReviewRIdentity;
             return other != null &&
-                   UserId == other.UserId &&
+                   base.Equals(other) &&
                    RememberMe == other.RememberMe &&
-                   String.Equals(DisplayName, other.DisplayName, StringComparison.Ordinal) &&
-                   String.Equals(Email, other.Email, StringComparison.Ordinal) &&
                    Roles.SequenceEqual(other.Roles, StringComparer.OrdinalIgnoreCase);
         }
 
         public override int GetHashCode()
         {
             return HashCodeCombiner.Start()
-                                   .Add(UserId)
+                                   .Add(base.GetHashCode())
                                    .Add(RememberMe)
-                                   .Add(DisplayName)
-                                   .Add(Email)
                                    .Add(Roles)
                                    .CombinedHash;
         }
@@ -86,7 +65,7 @@ namespace ReviewR.Web.Models
         public override string ToString()
         {
             return String.Format("{{UserId = {0}, DisplayName = {1}, Email = {2}, RememberMe = {3}, Roles = {4}}}",
-                UserId,
+                Id,
                 DisplayName,
                 Email,
                 RememberMe,

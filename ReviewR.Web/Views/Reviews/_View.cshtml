@@ -1,2 +1,10 @@
-﻿<h1>Review</h1>
-<p data-bind="text: id"></p>
+﻿<header>
+    <h1 data-bind="text: title"></h1>
+    <p data-bind="if: author">Created by <a class="user-badge" data-bind="attr: { href: '@Href("~/users")/' + author().id() }"><img data-bind="attr: { src: author().gravatarUrl }" /> <span data-bind="text: author().displayName"></span></a></p>
+    <ul class="nav nav-tabs">
+        <!-- ko foreach: iterations -->
+        <li data-bind="css: { active: active }"><a href="#" data-bind="click: activate, text: order() + 1"></a></li>
+        <!-- /ko -->
+        <li><a href="#" data-bind="click: newIteration"><i class="icon-plus"></i></a></li>
+    </ul>
+</header>

@@ -1,4 +1,5 @@
-﻿using System.Web.DynamicData;
+﻿using System.Data.Entity.Infrastructure;
+using System.Web.DynamicData;
 using System.Web.Routing;
 using DynamicData.EFCodeFirstProvider;
 using ReviewR.Web.Models.Data;
@@ -19,7 +20,7 @@ namespace DynamicData
         public static void Register(RouteCollection routes)
         {
             DefaultModel.RegisterContext(
-                new EFCodeFirstDataModelProvider(() => new ReviewRDbContext()),
+                () => ((IObjectContextAdapter)new ReviewRDbContext()).ObjectContext,
                 new ContextConfiguration() { ScaffoldAllTables = true });
             DefaultModel.DynamicDataFolderVirtualPath = "~/DynamicData/DynamicData";
 

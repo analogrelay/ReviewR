@@ -23,7 +23,10 @@ namespace ReviewR.Web.Services
             {
                 Name = name,
                 Description = description,
-                UserId = ownerId
+                UserId = ownerId,
+                Iterations = new List<Iteration>() {
+                    new Iteration()
+                }
             };
             Data.Reviews.Add(r);
             Data.SaveChanges();
@@ -39,6 +42,10 @@ namespace ReviewR.Web.Services
         public virtual Review GetReview(int id)
         {
             return Data.Reviews
+                       .Include("Iterations")
+                       .Include("Participants")
+                       .Include("Participants.User")
+                       .Include("Creator")
                        .Where(r => r.Id == id)
                        .FirstOrDefault();
         }

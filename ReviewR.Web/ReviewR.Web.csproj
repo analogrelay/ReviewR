@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ReviewR.Web</RootNamespace>
     <AssemblyName>ReviewR.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -36,6 +36,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,15 +45,16 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DynamicData.EFCodeFirstProvider, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DynamicData.EFCodeFirstProvider.0.3.0.0\lib\net40\DynamicData.EFCodeFirstProvider.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.5.0.0-beta2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -193,12 +195,26 @@
     <Compile Include="Migrations\201204080002571_AddDescriptionToReview.Designer.cs">
       <DependentUpon>201204080002571_AddDescriptionToReview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201204080404178_IterationsAndParticipants.cs" />
+    <Compile Include="Migrations\201204080404178_IterationsAndParticipants.Designer.cs">
+      <DependentUpon>201204080404178_IterationsAndParticipants.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201204080511297_AddDatesToReviewAndIteration.cs" />
+    <Compile Include="Migrations\201204080511297_AddDatesToReviewAndIteration.Designer.cs">
+      <DependentUpon>201204080511297_AddDatesToReviewAndIteration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Data\Iteration.cs" />
+    <Compile Include="Models\Data\Participant.cs" />
+    <Compile Include="Models\Data\ParticipantStatus.cs" />
     <Compile Include="Models\Request\CreateSessionRequestModel.cs" />
     <Compile Include="Models\Request\ReviewRequestModel.cs" />
+    <Compile Include="Models\Response\IterationModel.cs" />
+    <Compile Include="Models\Response\ParticipantModel.cs" />
+    <Compile Include="Models\Response\UserModel.cs" />
     <Compile Include="Models\Response\DashboardResponseModel.cs" />
+    <Compile Include="Models\Response\ReviewDetailResponseModel.cs" />
     <Compile Include="Models\Response\ReviewResponseModel.cs" />
     <Compile Include="Models\ReviewRPrincipal.cs" />
-    <Compile Include="Infrastructure\CompareAttribute.cs" />
     <Compile Include="Infrastructure\IEntitySet.cs" />
     <Compile Include="Infrastructure\Temp\CloneableExtensions.cs" />
     <Compile Include="Infrastructure\Temp\CookieHeaderValue.cs" />
@@ -253,6 +269,8 @@
     <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Services\TokenService.cs" />
     <Compile Include="Services\Utils.cs" />
+    <Content Include="Content\metro-orange.css" />
+    <Content Include="Content\metro-teal.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -553,6 +571,7 @@
   <ItemGroup>
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
     <Content Include="js\Backbone.lite.js" />
+    <Content Include="js\rR.vm.iterations.js" />
     <Content Include="js\rR.vm.reviews.js" />
     <Content Include="js\rR.bus.js" />
     <Content Include="js\rR.vm.home.js" />
@@ -619,6 +638,7 @@
     <None Include="Views\Auth\_Login.cshtml" />
     <Content Include="Views\Home\_Dashboard.cshtml" />
     <Content Include="Views\Reviews\_View.cshtml" />
+    <Content Include="Views\Iterations\_Create.cshtml" />
     <None Include="Views\Home\_Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

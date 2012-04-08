@@ -1,12 +1,16 @@
 /* System styles */
 .sys {
-    display: none
+    display: none;
 }
 
 /* Header/Footer */
+h1, h2, h3, h4, h5 {
+    font-weight: normal;
+}
+
 body {
+    font-family: Segoe UI, Segoe WP, Helvetica Neue, Roboto, sans-serif;
     padding-top: 40px;
-    font-family: 'Segoe UI', "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
     body > header {
@@ -22,6 +26,10 @@ nav img {
 }
 
 /* Forms */
+form {
+    margin: 0;
+}
+
 fieldset.no-legend legend {
     display: none;
 }
@@ -176,7 +184,6 @@ abbr.timeago {
 }
 
 div.fixed-list {
-    
 }
 
 .valmsg.valid {
@@ -186,3 +193,26 @@ div.fixed-list {
 .modal {
     overflow: visible;
 }
+
+.user-badge {
+    padding: 5px;
+    font-size: 11.049999999999999px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #3A87AD;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+    .user-badge:hover {
+        background-color: #2d6987;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .user-badge img {
+        position: relative;
+        top: 4px;
+    }
