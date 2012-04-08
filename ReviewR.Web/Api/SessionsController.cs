@@ -29,20 +29,20 @@ namespace ReviewR.Web.Api
                 {
                     User = new ReviewRPrincipal(user);
                     User.Identity.RememberMe = model.RememberMe;
-                    return new HttpResponseMessage<ReviewRIdentity>(User.Identity, HttpStatusCode.Created);
+                    return Created(User.Identity);
                 }
                 else
                 {
-                    return new HttpResponseMessage(HttpStatusCode.Forbidden);
+                    return Forbidden();
                 }
             }
-            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            return ValidationErrors();
         }
 
         public HttpResponseMessage Delete()
         {
             User = null;
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            return Ok();
         }
     }
 }

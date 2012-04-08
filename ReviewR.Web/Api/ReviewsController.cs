@@ -38,11 +38,9 @@ namespace ReviewR.Web.Api.Controllers
             if (ModelState.IsValid)
             {
                 Review r = Reviews.CreateReview(model.Title, model.Description, User.Identity.UserId);
-                return new HttpResponseMessage<ReviewResponseModel>(
-                    ConvertReview(r),
-                    HttpStatusCode.Created);
+                return Created(ConvertReview(r));
             }
-            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            return ValidationErrors();
         }
 
         private static ReviewResponseModel ConvertReview(Review r)

@@ -7,20 +7,7 @@
 (function (window, undefined) {
     "use strict";
 
-    // Modals
-    function review(init) {
-        init = init || {};
-        var self = {};
-
-        self.id = ko.observable(init.id);
-        self.title = ko.observable(init.title);
-        self.authorName = ko.observable(init.authorName);
-        self.authorEmail = ko.observable(init.authorEmail);
-        self.authorEmailHash = ko.observable(init.authorEmailHash);
-
-        return self;
-    }
-
+    // Models
     var index = (function () {
         var self = rR.models.page();
         return self;
@@ -41,13 +28,15 @@
                 statusCode: {
                     200: function (data) {
                         if (data.created) {
+                            self.createdReviews.removeAll();
                             for (var i = 0; i < data.created.length; i++) {
-                                self.createdReviews.push(review(data.created[i]));
+                                self.createdReviews.push(rR.models.review(data.created[i]));
                             }
                         }
                         if (data.assigned) {
+                            self.assignedReviews.removeAll();
                             for (var i = 0; i < data.assigned.length; i++) {
-                                self.assignedReviews.push(review(data.assigned[i]));
+                                self.assignedReviews.push(rR.models.review(data.assigned[i]));
                             }
                         }
                     }

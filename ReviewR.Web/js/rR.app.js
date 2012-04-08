@@ -53,16 +53,10 @@
         ko.applyBindings(viewModel, document.getElementById('root'));
 
         // Take over all interior links
-        $("a").each(function (a) {
-            if ($(a).data('skip')) {
-                var href = $(a).attr('href');
-                if (href && !href.match(/^http.*$/)) {
-                    $(a).on('click', function (evt) {
-                        evt.preventDefault();
-                        hasher.setHash(href);
-                    });
-                }
-            }
+        // Select all 'a's with out data-skip, and with an href starting "http" or "//"
+        $(document).on('click', "a:not([data-skip],[href^='http'],[href^='//'])", function (evt) {
+            evt.preventDefault();
+            router.navigate($(this).attr('href'), { trigger: true });
         });
     }
 

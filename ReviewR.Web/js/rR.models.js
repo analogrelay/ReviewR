@@ -20,7 +20,14 @@
                 if (self.hasOwnProperty(key)) {
                     var val = self[key];
                     if (ko.isWriteableObservable(val)) {
-                        val(null);
+                        var value = val();
+                        if (typeof value === "boolean") {
+                            val(false);
+                        } else if (typeof value === "string") {
+                            val('');
+                        } else {
+                            val(null);
+                        }
                     }
                     if (ko.isObservable(val) && val.validating) {
                         val.validating(false);
@@ -134,6 +141,25 @@
         return self;
     }
 
+    function review(init) {
+        init = init || {};
+        var self = {};
+
+        self.id = ko.observable(init.id);
+        self.title = ko.observable(init.title);
+        self.authorName = ko.observable(init.authorName);
+        self.authorEmail = ko.observable(init.authorEmail);
+        self.authorEmailHash = ko.observable(init.authorEmailHash);
+
+        self.authorGravatarUrl = ko.computed(function () {
+            return 'http://www.gravatar.com/avatar/' + self.authorEmailHash() + '?s=16';
+        });
+
+        self.url = ko.computed(function () { return 'reviews/' + self.id(); });
+
+        return self;
+    }
+
     ko.bindingHandlers.page = {
         init: function (element, valueAccessor) {
             return ko.bindingHandlers.template.init(element, function () { return { name: rR.utils.getViewId(ko.utils.unwrapObservable(valueAccessor())) }; });
@@ -205,6 +231,7 @@
         application: application,
         page: page,
         dialog: dialog,
-        model: model
+        model: model,
+        review: review
     });
 })(window);

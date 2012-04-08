@@ -36,14 +36,14 @@ namespace ReviewR.Web.Api
                     User = new ReviewRPrincipal(result.Item1);
 
                     // This will send an unencrypted copy of the token down to the client so they can optimize the UI based on that.
-                    return new HttpResponseMessage<ReviewRIdentity>(User.Identity, HttpStatusCode.Created);
+                    return Created(User.Identity);
                 }
                 else
                 {
-                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                    return Conflict();
                 }
             }
-            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            return ValidationErrors();
         }
     }
 }
