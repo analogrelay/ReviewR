@@ -10,6 +10,9 @@
     // Modals
     var create = (function () {
         var self = rR.models.dialog();
+        
+        self.description = ko.observable('');
+
         ko.validation.validatableModel(self);
         return self;
     })();

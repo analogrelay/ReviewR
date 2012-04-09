@@ -9,12 +9,15 @@
 }
 
 @* Templated Helpers (infrastructure for the real controls below) *@
-@helper Control(string title, string name, bool validation, Func<object, HelperResult> template) {
+@helper Control(string title, string name, bool validation, Func<object, HelperResult> template, string helpText = null) {
     string binding = validation ? " data-bind=\"css: { error: !" + name + ".isValid() }\"" : String.Empty;
     <li class="control-group"@Html.Raw(binding)>
         <label class="control-label" for="@name">@title</label>
         <div class="controls">
             @template(null)
+            @if(!String.IsNullOrEmpty(helpText)) {
+                <p class="help-block">@helpText</p>
+            }
             @if(validation) {
                 <p class="help-block" data-bind="ifnot: @(name).isValid, text: @(name).errorMessage"></p>
             }
@@ -22,24 +25,28 @@
     </li>
 }
 
-@helper Input(string title, string name, string type, bool validation) {
-    @Input(title, name, type, "value", validation)
+@helper Input(string title, string name, string type, bool validation, string helpText = null)
+{
+    @Input(title, name, type, "value", validation, helpText)
 }
 
-@helper Input(string title, string name, string type, string valueBinding, bool validation) {
-    @Control(title, name, validation, @<input type="@type" name="@name" data-bind="@valueBinding: @name" />)
+@helper Input(string title, string name, string type, string valueBinding, bool validation, string helpText = null)
+{
+    @Control(title, name, validation, @<input type="@type" name="@name" data-bind="@valueBinding: @name" />, helpText)
 }
 
 @* Actual Controls *@
 
-@helper Textarea(string title, string name, bool validation = true) {
-    @Control(title, name, validation, @<textarea name="@name" data-bind="value: @name"></textarea>)
+@helper Textarea(string title, string name, bool validation = true, string helpText = null)
+{
+    @Control(title, name, validation, @<textarea name="@name" data-bind="value: @name"></textarea>, helpText)
 }
-@helper Text(string title, string name, bool validation = true) { @Input(title, name, "text", validation) }
-@helper Email(string title, string name, bool validation = true) { @Input(title, name, "email", validation) }
-@helper Password(string title, string name, bool validation = true) { @Input(title, name, "password", validation) }
-@helper Checkbox(string title, string name, bool validation = true) { @Input(title, name, "checkbox", "checked", validation) }
-@helper File(string title, string name) {
+@helper Text(string title, string name, bool validation = true, string helpText = null) { @Input(title, name, "text", validation, helpText) }
+@helper Email(string title, string name, bool validation = true, string helpText = null) { @Input(title, name, "email", validation, helpText) }
+@helper Password(string title, string name, bool validation = true, string helpText = null) { @Input(title, name, "password", validation, helpText) }
+@helper Checkbox(string title, string name, bool validation = true, string helpText = null) { @Input(title, name, "checkbox", "checked", validation, helpText) }
+@helper File(string title, string name, string helpText = null)
+{
     // File upload is tricky, it requires some additional work. In this helper we just render the input tag with NO binding
-    @Control(title, name, false, @<input type="file" name="@name" />)
+    @Control(title, name, false, @<input type="file" name="@name" />, helpText)
 }
