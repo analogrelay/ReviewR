@@ -4,13 +4,36 @@
     <ul class="nav nav-tabs">
         <!-- ko foreach: iterations -->
         <li data-bind="css: { active: active }">
-            <a href="#" data-bind="click: activate, text: order() + 1"></a>
+            <a class="iteration-tab" href="#" data-bind="click: activate, text: order() + 1, css: { unpublished: !published() }"></a>
         </li>
         <!-- /ko -->
         <li><a href="#" data-bind="click: newIteration"><i class="icon-plus"></i></a></li>
     </ul>
     <div data-bind="if: activeIteration()">
-        <p data-bind="text: activeIteration().id"></p>
-        <button class="btn btn-danger" data-bind="click: activeIteration().remove"><i class="icon-trash icon-white"></i> Delete</button>
+        <!-- ko with: activeIteration() -->
+        <p class="alert alert-warning" data-bind="visible: !published()"><i class="icon-flag"></i> This iteration has not been published.</p>
+        <p class="alert alert-warning" data-bind="visible: files().length === 0"><i class="icon-file"></i> This iteration has no files.</p>
+        <div class="iteration-row row-fluid">
+            <div class="span2">
+                <div class="well">
+                    <p data-bind="visible: files().length === 0">
+                        This iteration has no files. 
+                    </p>
+                    <button class="btn btn-success" data-bind="visible: files().length === 0, click: addFiles"><i class="icon-plus icon-white"></i> Add Files...</button>
+                </div>
+            </div>
+            <div class="span10 offset2">
+                <div class="diff-viewer-host">
+                    <p data-bind="visible: !activeFile()">Select a file from the list on the left</p>
+                </div>
+            </div>
+        </div>
+        <div class="appbar well">
+            <button class="btn btn-danger pull-right" data-bind="click: remove"><i class="icon-trash icon-white"></i> Delete Iteration</button>
+            <button class="btn btn-primary" data-bind="visible: !published(), click: publish"><i class="icon-share icon-white"></i> Publish</button>
+            <button class="btn btn-warning" data-bind="visible: published(), click: unpublish"><i class="icon-share icon-white"></i> Unpublish</button>
+            <button class="btn btn-success" data-bind="click: addFiles"><i class="icon-plus icon-white"></i> Add Files...</button>
+        </div>
+        <!-- /ko -->
     </div>
 </header>

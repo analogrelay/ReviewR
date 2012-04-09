@@ -216,3 +216,33 @@ div.fixed-list {
         position: relative;
         top: 4px;
     }
+
+a.iteration-tab.unpublished {
+    background-color: silver;
+    color: white;
+}
+
+li.active a.iteration-tab.unpublished {
+    color: #555;
+}
+
+a.iteration-tab.unpublished:hover {
+    color: black;
+}
+
+li.active a.iteration-tab, li.active a.iteration-tab.unpublished {
+    background-color: #08C;
+    color: white;
+}
+
+.appbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: 0;
+}
+
+.diff-viewer-host {
+    padding: 19px;
+}

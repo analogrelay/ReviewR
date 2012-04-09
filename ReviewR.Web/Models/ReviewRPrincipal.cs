@@ -31,7 +31,7 @@ namespace ReviewR.Web.Models
         public bool RememberMe { get; set; }
         public HashSet<string> Roles { get; set; }
         
-        public static ReviewRIdentity FromUser(User u)
+        public new static ReviewRIdentity FromUser(User u)
         {
             return new ReviewRIdentity()
             {

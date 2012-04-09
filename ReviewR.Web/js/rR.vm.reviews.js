@@ -41,8 +41,7 @@
                                 rR.bus.navigate.publish('/reviews/' + data.id);
                             }
                         }
-                    },
-                    complete: function () { self.loading(false); }
+                    }
                 });
             }
         }
@@ -57,7 +56,10 @@
         // Fields
         self.id = ko.observable(init.id);
         self.order = ko.observable(init.order || 0);
+        self.published = ko.observable(init.published || false);
         self.description = ko.observable(init.description || '');
+        self.files = ko.observableArray([]);
+        self.activeFile = ko.observable();
         self.active = ko.observable(false);
 
         self.activate = function () {
@@ -67,6 +69,20 @@
                 }
                 self.active(true);
             }
+        }
+
+        self.publish = function () {
+            alert('todo: update server');
+            self.published(true);
+        }
+
+        self.unpublish = function () {
+            alert('todo: update server');
+            self.published(false);
+        }
+
+        self.addFiles = function () {
+            alert('todo: add files');
         }
 
         self.remove = function () {
