@@ -88,6 +88,8 @@ namespace ReviewR.Web.Infrastructure
         protected HttpResponseMessage<T> Conflict<T>(T val) { return R(val, HttpStatusCode.Conflict); }
         protected HttpResponseMessage Ok() { return R(HttpStatusCode.OK); }
         protected HttpResponseMessage<T> Ok<T>(T val) { return R(val, HttpStatusCode.OK); }
+        protected HttpResponseMessage NoContent() { return R(HttpStatusCode.NoContent); }
+        protected HttpResponseMessage<T> NoContent<T>(T val) { return R(val, HttpStatusCode.NoContent); }
         protected HttpResponseMessage Created() { return R(HttpStatusCode.Created); }
         protected HttpResponseMessage<T> Created<T>(T val) { return R(val, HttpStatusCode.Created); }
 

@@ -45,8 +45,3 @@
 @helper Email(string title, string name, bool validation = true, string helpText = null) { @Input(title, name, "email", validation, helpText) }
 @helper Password(string title, string name, bool validation = true, string helpText = null) { @Input(title, name, "password", validation, helpText) }
 @helper Checkbox(string title, string name, bool validation = true, string helpText = null) { @Input(title, name, "checkbox", "checked", validation, helpText) }
-@helper File(string title, string name, string helpText = null)
-{
-    // File upload is tricky, it requires some additional work. In this helper we just render the input tag with NO binding
-    @Control(title, name, false, @<input type="file" name="@name" />, helpText)
-}

@@ -7,8 +7,8 @@ namespace ReviewR.Web.Models.Data
 {
     public enum FileChangeType
     {
-        Added,
-        Modified,
-        Removed
+        Added = 0,
+        Modified = 1,
+        Removed = 2
     }
 }

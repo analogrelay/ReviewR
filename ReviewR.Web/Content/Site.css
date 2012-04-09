@@ -241,8 +241,13 @@ li.active a.iteration-tab, li.active a.iteration-tab.unpublished {
     left: 0;
     right: 0;
     margin-bottom: 0;
+    height: 28px;
 }
 
-.diff-viewer-host {
-    padding: 19px;
+body.appbar-host {
+    margin-bottom: 60px;
+}
+
+.scroll-overflow {
+    overflow: auto;
 }

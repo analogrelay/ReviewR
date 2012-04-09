@@ -7,9 +7,9 @@ namespace ReviewR.Diff
 {
     public enum LineDiffType
     {
-        Same,
-        Added,
-        Removed,
-        HunkHeader
+        Same = 0,
+        Added = 1,
+        Removed = 2,
+        HunkHeader = 3
     }
 }

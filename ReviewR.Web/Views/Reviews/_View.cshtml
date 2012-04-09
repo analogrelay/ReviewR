@@ -10,30 +10,73 @@
         <li><a href="#" data-bind="click: newIteration"><i class="icon-plus"></i></a></li>
     </ul>
     <div data-bind="if: activeIteration()">
-        <!-- ko with: activeIteration() -->
-        <p class="alert alert-warning" data-bind="visible: !published()"><i class="icon-flag"></i> This iteration has not been published.</p>
-        <p class="alert alert-warning" data-bind="visible: files().length === 0"><i class="icon-file"></i> This iteration has no files.</p>
+        <p class="alert alert-warning" data-bind="visible: !activeIteration().published()"><i class="icon-flag"></i> This iteration has not been published.</p>
+        <p class="alert alert-warning" data-bind="visible: activeIteration().folders().length === 0"><i class="icon-file"></i> This iteration has no files.</p>
         <div class="iteration-row row-fluid">
+            <!-- ko with: activeIteration() -->
             <div class="span2">
-                <div class="well">
-                    <p data-bind="visible: files().length === 0">
+                <div class="well scroll-overflow">
+                    <!-- ko if: folders().length === 0 -->
+                    <p>
                         This iteration has no files. 
                     </p>
-                    <button class="btn btn-success" data-bind="visible: files().length === 0, click: addFiles"><i class="icon-plus icon-white"></i> Add Files...</button>
+                    <button class="btn btn-success" data-bind="click: addFiles"><i class="icon-plus icon-white"></i> Add Files...</button>
+                    <!-- /ko -->
+                    <!-- ko if: folders().length > 0 -->
+                    <ul class="nav nav-list">
+                        <!-- ko foreach: folders() -->
+                        <li class="nav-header">
+                            <i class="icon-folder-open"></i>
+                            <span data-bind="text: name"></span>
+                        </li>
+                        <!-- ko foreach: files() -->
+                        <li data-bind="css: { 'active': active() }">
+                            <a href="#" data-bind="click: activate">
+                                <i data-bind="css: { 'icon-plus': changeType() === 0, 'icon-minus': changeType() === 2, 'icon-pencil': changeType() === 1 }"></i>
+                                <span data-bind="text: fileName"></span>
+                            </a>
+                        </li>
+                        <!-- /ko -->
+                        <!-- /ko -->
+                    </ul>
+                    <!-- /ko -->
                 </div>
             </div>
+            <!-- /ko -->
             <div class="span10 offset2">
                 <div class="diff-viewer-host">
+                    <!-- ko if: !activeFile() -->
                     <p data-bind="visible: !activeFile()">Select a file from the list on the left</p>
+                    <!-- /ko -->
+                    <!-- ko if: activeFile() -->
+                    <!-- ko with: activeFile() -->
+                    <h3 data-bind="text: fileName"></h3>
+                    <!-- ko if: diff() -->
+                    <table class="diff-view">
+                        <tbody data-bind="foreach: diff().lines()">
+                            <tr data-bind="css: {'diff-added': type() === 1, 'diff-removed': type() === 2, 'diff-hunk-header': type() === 3}">
+                                <td class="diff-linenum" data-bind="text: leftLine"></td>
+                                <td class="diff-linenum" data-bind="text: rightLine"></td>
+                                <td class="diff-linenum">
+                                    <i data-bind="css: {'icon-plus': type() === 1, 'icon-minus': type() === 2, 'icon-map-marker': type() === 3}"></i>
+                                </td>
+                                <td class="diff-line">
+                                    <pre data-bind="text: text"></pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <!-- /ko -->
                 </div>
             </div>
         </div>
         <div class="appbar well">
-            <button class="btn btn-danger pull-right" data-bind="click: remove"><i class="icon-trash icon-white"></i> Delete Iteration</button>
-            <button class="btn btn-primary" data-bind="visible: !published(), click: publish"><i class="icon-share icon-white"></i> Publish</button>
-            <button class="btn btn-warning" data-bind="visible: published(), click: unpublish"><i class="icon-share icon-white"></i> Unpublish</button>
-            <button class="btn btn-success" data-bind="click: addFiles"><i class="icon-plus icon-white"></i> Add Files...</button>
+            <button class="btn btn-danger pull-right" data-bind="click: activeIteration().remove"><i class="icon-trash icon-white"></i> Delete Iteration</button>
+            <button class="btn btn-primary" data-bind="visible: !activeIteration().published(), click: activeIteration().publish"><i class="icon-share icon-white"></i> Publish</button>
+            <button class="btn btn-warning" data-bind="visible: activeIteration().published(), click: activeIteration().unpublish"><i class="icon-share icon-white"></i> Unpublish</button>
+            <button class="btn btn-success" data-bind="click: activeIteration().addFiles"><i class="icon-plus icon-white"></i> Add Files...</button>
         </div>
-        <!-- /ko -->
     </div>
 </header>

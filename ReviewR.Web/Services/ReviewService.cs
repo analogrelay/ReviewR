@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using ReviewR.Web.Models;
@@ -10,11 +11,13 @@ namespace ReviewR.Web.Services
     public class ReviewService
     {
         public IDataRepository Data { get; set; }
+        public DiffService Diff { get; set; }
 
         protected ReviewService() { }
-        public ReviewService(IDataRepository data)
+        public ReviewService(IDataRepository data, DiffService diff)
         {
             Data = data;
+            Diff = diff;
         }
 
         public virtual Review CreateReview(string name, string description, int ownerId)
@@ -74,7 +77,7 @@ namespace ReviewR.Web.Services
 
         public bool? DeleteIteration(int iterationId, int currentUserId)
         {
-            Iteration iter = Data.Iterations.Include("Review").Where(i => i.Id == iterationId).FirstOrDefault();
+            Iteration iter = GetIteration(iterationId);
             if (iter == null)
             {
                 return null;
@@ -87,6 +90,48 @@ namespace ReviewR.Web.Services
             Data.Iterations.Remove(iter);
             Data.SaveChanges();
             return true;
+        }
+
+        public bool? AddDiffToIteration(int id, string diff, int currentUserId)
+        {
+            Iteration iter = GetIteration(id);
+            if (iter == null)
+            {
+                return null;
+            }
+            else if (iter.Review.UserId != currentUserId)
+            {
+                return false;
+            }
+            
+            ICollection<FileChange> changes;
+            using(TextReader reader = new StringReader(diff)) {
+                changes = Diff.CreateFromGitDiff(reader);
+            }
+            foreach (FileChange change in changes)
+            {
+                iter.Files.Add(change);
+            }
+            Data.SaveChanges();
+            return true;
+        }
+
+        public Iteration GetIteration(int iterationId)
+        {
+            return Data.Iterations
+                       .Include("Review")
+                       .Include("Review.Participants")
+                       .Where(i => i.Id == iterationId)
+                       .FirstOrDefault();
+        }
+
+        public FileChange GetChange(int id)
+        {
+            return Data.Changes
+                       .Include("Iteration.Review")
+                       .Include("Iteration.Review.Participants")
+                       .Where(c => c.Id == id)
+                       .FirstOrDefault();
         }
     }
 }

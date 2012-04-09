@@ -1,0 +1,17 @@
+﻿<form data-bind="submit: upload">
+    <hgroup class="modal-header">
+        <h1>Upload some files.</h1>
+    </hgroup>
+    <div class="modal-body">
+        <div class="alert alert-error" data-bind="visible: hasMessage, text: errorMessage"></div>
+        <div class="form form-horizontal">
+            <ol>
+                @Controls.Textarea("Diff", "diff", helpText: "Paste a unified diff or git diff file here!")
+            </ol>
+        </div>
+    </div>
+    <footer class="modal-footer">
+        <button class="btn pull-right" data-bind="click: close" type="button">Close</button>
+        <button class="btn btn-primary pull-right">Add</button>
+    </footer>
+</form>

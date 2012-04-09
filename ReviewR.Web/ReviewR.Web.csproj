@@ -161,6 +161,7 @@
     <Compile Include="..\Common\Requires.cs">
       <Link>Common\Requires.cs</Link>
     </Compile>
+    <Compile Include="Api\ChangesController.cs" />
     <Compile Include="Api\IterationsController.cs" />
     <Compile Include="Api\ReviewsController.cs" />
     <Compile Include="Api\SessionsController.cs" />
@@ -213,6 +214,8 @@
     <Compile Include="Models\Data\ParticipantStatus.cs" />
     <Compile Include="Models\Request\CreateSessionRequestModel.cs" />
     <Compile Include="Models\Request\ReviewRequestModel.cs" />
+    <Compile Include="Models\Response\DiffFileModel.cs" />
+    <Compile Include="Models\Response\DiffLineModel.cs" />
     <Compile Include="Models\Response\IterationModel.cs" />
     <Compile Include="Models\Response\ParticipantModel.cs" />
     <Compile Include="Models\Response\UserModel.cs" />
@@ -270,6 +273,8 @@
     <Compile Include="Models\Data\FileChangeType.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\CreateUserResult.cs" />
+    <Compile Include="Services\DiffConverter.cs" />
+    <Compile Include="Services\DiffService.cs" />
     <Compile Include="Services\HashService.cs" />
     <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Services\TokenService.cs" />
@@ -654,6 +659,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Reviews\_Create.cshtml" />
+    <Content Include="Views\Reviews\_Upload.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

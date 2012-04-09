@@ -75,6 +75,7 @@ namespace ReviewR.Web.App_Start
             kernel.Bind<IDataRepository>().To<DefaultDataRepository>();
             kernel.Bind<DelegatingHandler>().To<AuthenticationHandler>();
             kernel.Bind<IHttpModule>().To<AuthenticationModule>();
+            kernel.Bind<DiffService>().ToSelf();
         }        
     }
 }

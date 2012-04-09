@@ -83,6 +83,7 @@
         self.currentUser = ko.observable(init.currentUser || user());
         self.activePage = ko.observable(init.activePage);
         self.activeDialog = ko.observable(init.activeDialog || '');
+        self.appBarVisible = ko.observable(false);
         
         // Computed Properties
         self.isDev = ko.computed(function () { self.environment() === 'Development'; });

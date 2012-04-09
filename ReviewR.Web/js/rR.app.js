@@ -50,7 +50,7 @@
             hashChange: true,
             pushState: true
         });
-        ko.applyBindings(viewModel, document.getElementById('root'));
+        ko.applyBindings(viewModel, document.body);
 
         // Take over all interior links
         // Select all 'a's with out data-skip, and with an href starting "http" or "//"
