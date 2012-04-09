@@ -11,6 +11,7 @@ namespace ReviewR.Web.Models.Data
         public int ReviewId { get; set; }
         public string Description { get; set; }
         public DateTimeOffset StartedOn { get; set; }
+        public bool Published { get; set; }
 
         public virtual Review Review { get; set; }
         public virtual ICollection<FileChange> Files { get; set; }

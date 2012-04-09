@@ -3,8 +3,14 @@
     <p data-bind="if: author">Created by <a class="user-badge" data-bind="attr: { href: '@Href("~/users")/' + author().id() }"><img data-bind="attr: { src: author().gravatarUrl }" /> <span data-bind="text: author().displayName"></span></a></p>
     <ul class="nav nav-tabs">
         <!-- ko foreach: iterations -->
-        <li data-bind="css: { active: active }"><a href="#" data-bind="click: activate, text: order() + 1"></a></li>
+        <li data-bind="css: { active: active }">
+            <a href="#" data-bind="click: activate, text: order() + 1"></a>
+        </li>
         <!-- /ko -->
         <li><a href="#" data-bind="click: newIteration"><i class="icon-plus"></i></a></li>
     </ul>
+    <div data-bind="if: activeIteration()">
+        <p data-bind="text: activeIteration().id"></p>
+        <button class="btn btn-danger" data-bind="click: activeIteration().remove"><i class="icon-trash icon-white"></i> Delete</button>
+    </div>
 </header>

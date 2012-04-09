@@ -69,6 +69,32 @@
             }
         }
 
+        self.remove = function () {
+            $.ajax({
+                url: '~/api/iterations/' + self.id(),
+                type: 'delete',
+                statusCode: {
+                    404: function () {
+                        rR.utils.fail('todo: tell user no such review');
+                        rR.bus.navigate.publish('');
+                    },
+                    403: function () {
+                        rR.utils.fail("todo: tell user they aren't on this review");
+                        rR.bus.navigate.publish('');
+                    },
+                    200: function (data) {
+                        // Calculate next order based on current numbers
+                        var nextOrder = self.order() > 0 ? self.order() - 1 : self.order() + 1;
+                        var newActive = view.iterations()[nextOrder];
+                        view.iterations.remove(self);
+                        if (newActive) {
+                            newActive.active(true);
+                        }
+                    }
+                }
+            });
+        }
+
         return self;
     }
 
@@ -83,6 +109,13 @@
         self.author = ko.observable();
         self.activeIteration = ko.computed(function () {
             return ko.utils.arrayFirst(self.iterations(), function (item) { return item.active(); });
+        });
+
+        self.iterations.subscribe(function() {
+            // Reorder
+            for(var i = 0; i < self.iterations().length; i++) {
+                self.iterations()[i].order(i);
+            }
         });
 
         self.opened.add(function () {
@@ -115,7 +148,28 @@
         });
 
         self.newIteration = function () {
-            rR.bus.showDialog.publish('iterations.create');
+            // Add a new iteration
+            $.ajax({
+                url: '~/api/iterations',
+                type: 'post',
+                data: { reviewId: self.id() },
+                statusCode: {
+                    403: function () {
+                        rR.utils.fail("todo: tell user they aren't on this review");
+                        rR.bus.navigate.publish('');
+                    },
+                    201: function (data) {
+                        var lastIter = self.iterations()[self.iterations().length - 1];
+                        var order = lastIter ? lastIter.order() + 1 : 0;
+                        var iter = iteration({
+                            id: data.id,
+                            order: order
+                        });
+                        self.iterations.push(iter);
+                        iter.activate();
+                    }
+                }
+            });
         };
 
         return self;

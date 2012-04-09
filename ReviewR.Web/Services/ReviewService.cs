@@ -55,43 +55,38 @@ namespace ReviewR.Web.Services
             return Data.Reviews;
         }
 
-        //public virtual FileChange GetChange(int id)
-        //{
-        //    return Data.Changes
-        //               .Include("Review")
-        //               .Where(c => c.Id == id)
-        //               .FirstOrDefault();
-        //}
+        public Iteration AddIteration(int reviewId, int currentUserId)
+        {
+            Review r = GetReview(reviewId);
+            if (r.UserId != currentUserId)
+            {
+                return null;
+            }
+            Iteration i = new Iteration()
+            {
+                Published = false,
+                StartedOn = DateTimeOffset.UtcNow
+            };
+            r.Iterations.Add(i);
+            Data.SaveChanges();
+            return i;
+        }
 
-        //public virtual Comment CreateComment(int changeId, int? line, int userId, string body)
-        //{
-        //    Comment c = Data.Comments.Add(new Comment()
-        //    {
-        //        FileId = changeId,
-        //        DiffLineIndex = line,
-        //        UserId = userId,
-        //        Content = body,
-        //        PostedOn = DateTime.UtcNow
-        //    });
-        //    Data.SaveChanges();
-        //    return c;
-        //}
-
-        //public Comment GetComment(int id)
-        //{
-        //    return Data.Comments.Where(c => c.Id == id).FirstOrDefault();
-        //}
-
-        //public void DeleteComment(Comment c)
-        //{
-        //    Data.Comments.Remove(c);
-        //    Data.SaveChanges();
-        //}
-
-        //public void DeleteReview(Review r)
-        //{
-        //    Data.Reviews.Remove(r);
-        //    Data.SaveChanges();
-        //}
+        public bool? DeleteIteration(int iterationId, int currentUserId)
+        {
+            Iteration iter = Data.Iterations.Include("Review").Where(i => i.Id == iterationId).FirstOrDefault();
+            if (iter == null)
+            {
+                return null;
+            }
+            else if (iter.Review.UserId != currentUserId)
+            {
+                return false;
+            }
+            iter.Review.Iterations.Remove(iter);
+            Data.Iterations.Remove(iter);
+            Data.SaveChanges();
+            return true;
+        }
     }
 }

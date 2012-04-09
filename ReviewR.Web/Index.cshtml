@@ -77,34 +77,10 @@
     <script type="text/javascript" src="~/js/rR.bus.js"></script>
     <script type="text/javascript" src="~/js/rR.models.js"></script>
     <script type="text/javascript" src="~/js/rR.app.js"></script>
-    <script type="text/javascript" src="~/js/rR.vm.auth.js"></script>
-    <script type="text/javascript" src="~/js/rR.vm.home.js"></script>
-    <script type="text/javascript" src="~/js/rR.vm.reviews.js"></script>
-    <script type="text/javascript" src="~/js/rR.vm.iterations.js"></script>
+@Composition.ViewModelScripts("~/js")
 
     <!-- Templates -->
-    <script id="v:auth.login" type="text/html">
-        @RenderPage("Views/Auth/_Login.cshtml")
-    </script>
-    <script id="v:auth.register" type="text/html">
-        @RenderPage("Views/Auth/_Register.cshtml")
-    </script>
-    <script id="v:home.index" type="text/html">
-        @RenderPage("Views/Home/_Index.cshtml")
-    </script>
-    <script id="v:home.dashboard" type="text/html">
-        @RenderPage("Views/Home/_Dashboard.cshtml")
-    </script>
-    <script id="v:reviews.create" type="text/html">
-        @RenderPage("Views/Reviews/_Create.cshtml")
-    </script>
-    <script id="v:reviews.view" type="text/html">
-        @RenderPage("Views/Reviews/_View.cshtml")
-    </script>
-    <script id="v:iterations.create" type="text/html">
-        @RenderPage("Views/Iterations/_Create.cshtml")
-    </script>
-
+@Composition.ViewModelTemplates("~/Views")
 
     <!-- Start! -->
     <script type="text/javascript">

@@ -1,0 +1,29 @@
+﻿@helper ViewModelScripts(string jsRoot)
+{
+    string physical = Server.MapPath(jsRoot);
+    if (Directory.Exists(physical))
+    {
+        foreach (string fileName in Directory.EnumerateFiles(physical, "rR.vm.*.js", SearchOption.TopDirectoryOnly))
+        {
+            FileInfo file = new FileInfo(fileName);
+    <script src="~/js/@file.Name" type="text/javascript"></script>
+        }
+    }
+}
+@helper ViewModelTemplates(string templatesRoot)
+{
+    string physical = Server.MapPath(templatesRoot);
+    if (Directory.Exists(physical))
+    {
+        foreach (string categoryName in Directory.EnumerateDirectories(physical))
+        {
+            DirectoryInfo category = new DirectoryInfo(categoryName);
+            foreach (FileInfo file in category.EnumerateFiles("_*.cshtml"))
+            {
+    <script id="v:@(category.Name.ToLower()).@(Path.GetFileNameWithoutExtension(file.Name).Substring(1).ToLower())" type="text/html">
+    @CurrentPage.RenderPage("~/Views/" + category.Name + "/" + file.Name)
+    </script>
+            }
+        }
+    }
+}

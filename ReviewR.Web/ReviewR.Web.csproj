@@ -161,6 +161,7 @@
     <Compile Include="..\Common\Requires.cs">
       <Link>Common\Requires.cs</Link>
     </Compile>
+    <Compile Include="Api\IterationsController.cs" />
     <Compile Include="Api\ReviewsController.cs" />
     <Compile Include="Api\SessionsController.cs" />
     <Compile Include="Api\UsersController.cs" />
@@ -202,6 +203,10 @@
     <Compile Include="Migrations\201204080511297_AddDatesToReviewAndIteration.cs" />
     <Compile Include="Migrations\201204080511297_AddDatesToReviewAndIteration.Designer.cs">
       <DependentUpon>201204080511297_AddDatesToReviewAndIteration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201204090547293_AddPublishedFlagToIteration.cs" />
+    <Compile Include="Migrations\201204090547293_AddPublishedFlagToIteration.Designer.cs">
+      <DependentUpon>201204090547293_AddPublishedFlagToIteration.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Data\Iteration.cs" />
     <Compile Include="Models\Data\Participant.cs" />
@@ -571,7 +576,6 @@
   <ItemGroup>
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
     <Content Include="js\Backbone.lite.js" />
-    <Content Include="js\rR.vm.iterations.js" />
     <Content Include="js\rR.vm.reviews.js" />
     <Content Include="js\rR.bus.js" />
     <Content Include="js\rR.vm.home.js" />
@@ -625,6 +629,8 @@
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.18.js" />
     <Content Include="Scripts\jquery-ui-1.8.18.min.js" />
+    <Content Include="Scripts\jquery.fileupload.js" />
+    <Content Include="Scripts\jquery.iframe-transport.js" />
     <Content Include="Scripts\knockout.debug.js" />
     <Content Include="Scripts\knockout.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
@@ -635,10 +641,10 @@
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Auth\_Register.cshtml" />
     <Content Include="App_Code\Controls.cshtml" />
+    <Content Include="App_Code\Composition.cshtml" />
     <None Include="Views\Auth\_Login.cshtml" />
     <Content Include="Views\Home\_Dashboard.cshtml" />
     <Content Include="Views\Reviews\_View.cshtml" />
-    <Content Include="Views\Iterations\_Create.cshtml" />
     <None Include="Views\Home\_Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -647,7 +653,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Old\Shared\Error.cshtml" />
     <Content Include="Views\Reviews\_Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -667,12 +672,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Old\Account\Login.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Old\Account\Register.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="..\Common\CommonResources.resx">
       <Link>Common\CommonResources.resx</Link>
       <Generator>ResXFileCodeGenerator</Generator>
@@ -684,30 +683,6 @@
     <Content Include="DynamicData\DynamicData\web.config" />
     <Content Include="DynamicData\Site.master" />
     <Content Include="DynamicData\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Old\Reviews\New.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Old\Reviews\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Old\Reviews\View.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Old\Shared\_FileList.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Old\Changes\View.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Old\Shared\_DiffView.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Old\Comments\New.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Old\Shared\_ReviewLayout.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

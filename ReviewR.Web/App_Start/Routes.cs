@@ -13,6 +13,7 @@ namespace ReviewR.Web.App_Start
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.Ignore("{resource}.axd/{*pathInfo}");
+
             routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
