@@ -152,7 +152,7 @@
         self.description = ko.observable(init.description || '');
         self.folders = ko.observableArray([]);
         self.active = ko.computed(function () {
-            return new Boolean(view.activeIteration() && view.activeIteration().id() === self.id());
+            return view.activeIteration() && view.activeIteration().id() === self.id();
         });
 
         self.activate = function () {
@@ -207,29 +207,31 @@
         };
 
         self.remove = function () {
-            $.ajax({
-                url: '~/api/iterations/' + self.id(),
-                type: 'delete',
-                statusCode: {
-                    404: function () {
-                        rR.utils.fail('todo: tell user no such review');
-                        rR.bus.navigate.publish('');
-                    },
-                    403: function () {
-                        rR.utils.fail("todo: tell user they aren't on this review");
-                        rR.bus.navigate.publish('');
-                    },
-                    204: function (data) {
-                        // Calculate next order based on current numbers
-                        var nextOrder = self.order() > 0 ? self.order() - 1 : self.order() + 1;
-                        var newActive = view.iterations()[nextOrder];
-                        view.iterations.remove(self);
-                        if (newActive) {
-                            newActive.active(true);
+            if (confirm('Are you sure you want to delete this iteration? This cannot be undone. If you just want to hide it from users, you can unpublish it')) {
+                $.ajax({
+                    url: '~/api/iterations/' + self.id(),
+                    type: 'delete',
+                    statusCode: {
+                        404: function () {
+                            rR.utils.fail('todo: tell user no such review');
+                            rR.bus.navigate.publish('');
+                        },
+                        403: function () {
+                            rR.utils.fail("todo: tell user they aren't on this review");
+                            rR.bus.navigate.publish('');
+                        },
+                        204: function (data) {
+                            // Calculate next order based on current numbers
+                            var nextOrder = self.order() > 0 ? self.order() - 1 : self.order() + 1;
+                            var newActive = view.iterations()[nextOrder];
+                            view.iterations.remove(self);
+                            if (newActive) {
+                                view.activeIteration(newActive);
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
 
         return self;

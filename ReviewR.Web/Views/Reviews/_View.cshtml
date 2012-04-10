@@ -75,8 +75,8 @@
         <div class="appbar well">
             <button class="btn btn-danger pull-right" data-bind="click: activeIteration().remove"><i class="icon-trash icon-white"></i> Delete Iteration</button>
             <button class="btn btn-primary" data-bind="visible: !activeIteration().published(), click: activeIteration().publish"><i class="icon-share icon-white"></i> Publish</button>
-            <button class="btn btn-warning" data-bind="visible: activeIteration().published(), click: activeIteration().unpublish"><i class="icon-share icon-white"></i> Unpublish</button>
-            <button class="btn btn-success" data-bind="click: activeIteration().addFiles"><i class="icon-plus icon-white"></i> Add Files...</button>
+            <button class="btn btn-success" data-bind="visible: !activeIteration().published(), click: activeIteration().addFiles"><i class="icon-plus icon-white"></i> Add Files...</button>
+            <button class="btn btn-info" data-bind="visible: activeIteration().published(), click: activeIteration().unpublish"><i class="icon-share icon-white"></i> Unpublish</button>
         </div>
     </div>
 </header>
