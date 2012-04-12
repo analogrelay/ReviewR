@@ -581,10 +581,13 @@
   <ItemGroup>
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
     <Content Include="js\fx\Backbone.lite.js" />
-    <Content Include="js\fx\classes.js" />
-    <Content Include="js\fx\modularious.js" />
+    <Content Include="js\fx\namespace.js" />
+    <Content Include="js\fx\syrah.bus.js" />
+    <Content Include="js\fx\syrah.dom.js" />
+    <Content Include="js\fx\syrah.js" />
+    <Content Include="js\fx\syrah.rendering.js" />
+    <Content Include="js\fx\syrah.routing.js" />
     <Content Include="js\rR.vm.reviews.js" />
-    <Content Include="js\rR.bus.js" />
     <Content Include="js\rR.vm.home.js" />
     <Content Include="js\knockout.validation.js" />
     <Content Include="js\rR.vm.auth.js" />
