@@ -12,28 +12,6 @@
         }
     }
 
-    function mix(obj, mixin) {
-        /// <param name="obj" type="Object" />
-        /// <param name="mixin" type="Function" />
-        mixin.apply(obj, []);
-    }
-
-    function mixin(contract, definition) {
-        /// <param name="contract" type="Function" />
-        /// <param name="definition" type="Function" />
-        if (definition === undefined) {
-            definition = contract;
-            contract = function () { return {}; };
-        }
-
-        // vsdoc_only
-        definition.apply(contract(), []); // For design-time support.
-        // end vsdoc_only
-        return function () {
-            definition.apply(this, []);
-        };
-    }
-
     function namespace(name, definition) {
         var ns = {};
         if (typeof definition === "function") {
@@ -61,8 +39,6 @@
         }
     }
 
-    publishSymbol(exports, 'mixin', mixin);
-    publishSymbol(exports, 'mix', mix);
     publishSymbol(exports, 'namespace', namespace);
 
     return exports;
