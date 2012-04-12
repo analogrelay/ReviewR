@@ -6,7 +6,8 @@
 
 // syrah - a system for modular JavaScript application development
 (function (querySelector, undefined) {
-    classes.namespace('syrah', function (ns) {
+    "use strict";
+    namespace.define('syrah', function (ns) {
         function autoconfig(key) {
             return document.documentElement.getAttribute('data-' + key);
         }

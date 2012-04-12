@@ -1,4 +1,4 @@
-﻿var classes = (function (undefined) {
+﻿var namespace = (function (undefined) {
     "use strict";
     var exports = {};
 
@@ -12,7 +12,7 @@
         }
     }
 
-    function namespace(name, definition) {
+    function define(name, definition) {
         var ns = {};
         if (typeof definition === "function") {
             var ret = definition(ns);
@@ -39,10 +39,10 @@
         }
     }
 
-    publishSymbol(exports, 'namespace', namespace);
+    publishSymbol(exports, 'define', define);
 
     return exports;
 })();
 
-// Define classes namespace using classes!
-classes.namespace('classes', classes);
+// Define namespace namespace using namespace!
+namespace.define('namespace', namespace);

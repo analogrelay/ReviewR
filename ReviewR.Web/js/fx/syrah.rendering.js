@@ -1,7 +1,8 @@
 ﻿/// <reference path="syrah.js" />
 /// <reference path="syrah.dom.js" />
 (function (undefined) {
-    classes.namespace('syrah.rendering', function (ns) {
+    "use strict";
+    namespace.define('syrah.rendering', function (ns) {
         ns.View = function (templateId, modelConstructor) {
             var self = this;
             self.injected = new syrah.Signal();

@@ -1,6 +1,7 @@
-﻿/// <reference path="classes.js" />
+﻿/// <reference path="namespace.js" />
 (function (undefined) {
-    classes.namespace('syrah.dom', function (ns) {
+    "use strict";
+    namespace.define('syrah.dom', function (ns) {
         ns.querySelector = function (selector) {
             return (_provider || initProvider()).querySelector(selector);
         }
@@ -33,7 +34,7 @@
         }
     });
 
-    classes.namespace('syrah.dom.abstractions', function (ns) {
+    namespace.define('syrah.dom.abstractions', function (ns) {
         ns.DomAbstractionLayer = function () {
             this.querySelector = function (selector) {
                 throw 'Override querySelector(selector)'

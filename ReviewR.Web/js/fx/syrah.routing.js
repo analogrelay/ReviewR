@@ -1,6 +1,8 @@
-﻿/// <reference path="Backbone.lite.js" />
+﻿/// <reference path="namespace.js" />
+/// <reference path="Backbone.lite.js" />
 (function (undefined) {
-    classes.namespace('syrah.routing', function (ns) {
+    "use strict";
+    namespace.define('syrah.routing', function (ns) {
         ns.Router = function () {
             Backbone.history || (Backbone.history = new Backbone.History());
 
