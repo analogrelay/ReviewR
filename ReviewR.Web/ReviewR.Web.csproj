@@ -580,7 +580,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
-    <Content Include="js\Backbone.lite.js" />
+    <Content Include="js\fx\Backbone.lite.js" />
+    <Content Include="js\fx\classes.js" />
+    <Content Include="js\fx\modularious.js" />
     <Content Include="js\rR.vm.reviews.js" />
     <Content Include="js\rR.bus.js" />
     <Content Include="js\rR.vm.home.js" />
