@@ -1,4 +1,5 @@
-﻿/// <reference path="syrah.js" />
+﻿/// <reference path="syrah.plugins.dom.js" />
+/// <reference path="syrah.js" />
 /// <reference path="syrah.dom.js" />
 (function (undefined) {
     "use strict";
@@ -7,13 +8,18 @@
             var self = this;
             self.injected = new syrah.Signal();
             self.removed = new syrah.Signal();
-            self.obscured = new syrah.Signal();
-            self.revealed = new syrah.Signal();
             self.templateId = templateId;
             self.modelConstructor = modelConstructor;
         }
 
-        ns.ViewHost = function (element) {
+        ns.Page = function (templateId, modelConstructor) {
+            var self = this;
+            syrah.rendering.View.apply(this, [templateId, modelConstructor]);
+            self.obscured = new syrah.Signal();
+            self.revealed = new syrah.Signal();
+        }
+
+        ns.ViewHost = function (element, dialogMode) {
             var self = this;
             var _hostElement = element;
             var _currentView;
@@ -68,22 +74,21 @@
                 if (view) {
                     self.setView(view, model);
                 }
-                syrah.dom.showDialog(_hostElement);
+                syrah.plugins.dom.showDialog(_hostElement);
             };
 
             self.closeDialog = function () {
-                syrah.dom.closeDialog(_hostElement);
+                syrah.plugins.dom.closeDialog(_hostElement);
                 self.clearView();
             }
-        };
 
-        ns.KnockoutViewHost = function (element) {
-            /// <param name="element" type="HTMLElement"/>
-            var self = this;
-            self._injectView = function (name, model) {
-                ko.renderTemplate(name, model);
-            };
-            ns.ViewHost.apply(self, [element]);
-        }
+            function dialogHidden() {
+                self.clearView();
+            }
+
+            if (dialogMode) {
+                syrah.plugins.dom.initDialog(_hostElement, dialogHidden);
+            }
+        };
     });
 })();

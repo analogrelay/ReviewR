@@ -1,96 +1,49 @@
-﻿/// <reference path="Backbone.lite.js" />
-/// <reference path="rR.js" />
-/// <reference path="rR.bus.js" />
-
+﻿/// <reference path="rR.models.js" />
 // rR.app.js
 // Core application code
 
 (function (window, undefined) {
     "use strict";
 
-    var _root = '/';
-    var viewModel = rR.models.application({
-        loginDialog: 'auth.login',
-        registerDialog: 'auth.register'
-    });
-    
-    var history = Backbone.history = new Backbone.History();
-    var router = new Backbone.Router({});
+    namespace.define('rR', function (ns) {
+        var _modules = [];
+        ns.App = function (rootUrl, environment, pageHost, dialogHost) {
+            var self = this;
+            syrah.App.apply(self, rootUrl, environment, pageHost, dialogHost);
 
-    router.route('', 'home', function () {
-        if (viewModel.currentUser().loggedIn()) {
-            viewModel.activePage('home.dashboard');
-        } else {
-            viewModel.activePage('home.index');
-        }
-    });
-    router.route('reviews/:id', 'review', function (id) {
-        rR.app.currentParams = {
-            id: id
+            // Fields
+            self.environment = ko.observable(environment || '');
+            self.currentUser = ko.observable(new rR.models.User());
+
+            // Computed Properties
+            self.isDev = ko.computed(function () { self.environment() === 'Development'; });
+            self.isTest = ko.computed(function () { self.environment() === 'Test'; });
+            self.isProd = ko.computed(function () { self.environment() === 'Production'; });
+            self.isStage = ko.computed(function () { self.environment() === 'Staging'; });
         };
-        viewModel.activePage('reviews.view');
-    });
-    
-    // Public methods
-    function start(init) {
-        _root = init.root;
-        viewModel.environment(init.env);
 
-        if (init.env === 'Development') {
-            rR.utils.activateDevMode();
-        }
-        if (init.user) {
-            viewModel.currentUser()._.update(init.user);
-            viewModel.currentUser().loggedIn(true);
+        ns.start = function (rootUrl, environment, pageHost, dialogHost) {
+            rR.app = new rR.App(rootUrl, environment, pageHost, dialogHost);
+
+            for (var i = 0; i < _modules.length; i++) {
+                rR.app.module(_modules[i]);
+            }
+            _modules = null;
+
+            rR.app.start();
         }
 
-        //setup history
-        history.start({
-            root: _root,
-            hashChange: true,
-            pushState: true
-        });
-        ko.applyBindings(viewModel, document.body);
-
-        // Take over all interior links
-        // Select all 'a's with out data-skip, and with an href starting "http" or "//"
-        $(document).on('click', "a:not([data-skip],[href^='http'],[href^='//'],[href='#'])", function (evt) {
-            evt.preventDefault();
-            router.navigate($(this).attr('href'), { trigger: true });
-        });
-    }
-
-    rR.bus.sink('login', ['user']).subscribe(function (user) {
-        rR.bus.closeDialog.publish();
-        viewModel.currentUser()._.update(user);
-        viewModel.currentUser().loggedIn(true);
-
-        // Rerun the current route
-        history.loadUrl();
+        ns.module = function (module) {
+            /// <param name="module" type="syrah.Module" />
+            if (rR.app) {
+                // Inject it right away
+                rR.app.module(module);
+            }
+            _modules.push(module);
+        }
     });
 
-    rR.bus.sink('logout').subscribe(function () {
-        rR.bus.closeDialog.publish();
-        viewModel.currentUser()._.reset();
-        history.loadUrl();
-    });
-    
-    rR.bus.sink('closeDialog').subscribe(function () {
-        viewModel.activeDialog('');
-    });
-
-    rR.bus.sink('showDialog', ['id']).subscribe(function (id) {
-        viewModel.activeDialog(id);
-    });
-
-    rR.bus.sink('navigate', ['url']).subscribe(function (url) {
-        rR.bus.closeDialog.publish();
-        router.navigate(url, { trigger: true });
-    });
-
-    rR.publish('app', {
-        start: start,
-        viewModel: viewModel,
-        currentParams: {}
+    $(function () {
+        rR.start();
     });
 })(window);

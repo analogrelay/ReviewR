@@ -1,8 +1,9 @@
-﻿/// <reference path="../../Scripts/signals.js" />
-/// <reference path="classes.js" />
+﻿/// <reference path="namespace.js" />
 /// <reference path="syrah.routing.js" />
 /// <reference path="syrah.rendering.js" />
 /// <reference path="syrah.dom.js" />
+/// <reference path="syrah.plugins.dom.js" />
+/// <reference path="syrah.plugins.binding.js" />
 
 // syrah - a system for modular JavaScript application development
 (function (querySelector, undefined) {
@@ -15,12 +16,12 @@
         function createViewHost(selectors) {
             var found;
             for (var i = 0; found && i < arguments.length; i++) {
-                found = syrah.dom.querySelector(arguments[i]);
+                found = syrah.plugins.dom.querySelector(arguments[i]);
             }
             if (!found) {
                 throw 'view host not found!';
             }
-            return new syrah.rendering.KnockoutViewHost(found);
+            return syrah.plugins.binding.createViewHost(found);
         }
 
         function unwrapViewHost(funcOrObj) {
@@ -38,21 +39,34 @@
             var _pageHost = unwrapViewHost(pageHost) || createViewHost('#syrah-page-host');
             var _dialogHost = unwrapViewHost(dialogHost) || createViewHost('#syrah-dialog-host');
             var _modules = [];
+            var _running = false;
+
+            if (_environment === 'Development') {
+                syrah.utils.enableAsserts();
+            }
 
             self.router = new syrah.routing.Router();
             self.route = self.router.map;
             
             self.module = function (module) {
                 /// <param name="module" type="syrah.Module" />
-                _modules.push(module);
+                if (_running) {
+                    module.attach(self);
+                } else {
+                    _modules.push(module);
+                }
             };
 
-            self.start = function () {
+            self.start = function (model) {
+                _running = true;
                 for (var i = 0; i < _modules.length; i++) {
                     _modules[i].attach(self);
                 }
 
                 self.router.start(_rootUrl);
+
+                // Bind the rest of the page
+                syrah.plugins.binding.applyBindings(document.body, self);
             };
 
             self.openPage = function (view, model) {
@@ -71,6 +85,14 @@
             self.closeDialog = function () {
                 _dialogHost.closeDialog();
                 _pageHost.reveal();
+            }
+
+            self.resolveUrl = function(url) {
+                /// <param name="url" type="String" />
+                if (url[0] === '~' && url[1] === '/') {
+                    return _rootUrl + url.substr(2);
+                }
+                return _rootUrl + url;
             }
         };
 

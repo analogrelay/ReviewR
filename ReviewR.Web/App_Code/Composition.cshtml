@@ -3,10 +3,10 @@
     string physical = Server.MapPath(jsRoot);
     if (Directory.Exists(physical))
     {
-        foreach (string fileName in Directory.EnumerateFiles(physical, "rR.vm.*.js", SearchOption.TopDirectoryOnly))
+        foreach (string fileName in Directory.EnumerateFiles(physical, "rR.m.*.js", SearchOption.TopDirectoryOnly))
         {
             FileInfo file = new FileInfo(fileName);
-    <script src="~/js/@file.Name" type="text/javascript"></script>
+    <script src="~/js/modules/@file.Name" type="text/javascript"></script>
         }
     }
 }

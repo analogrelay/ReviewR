@@ -1,18 +1,10 @@
-﻿@using ReviewR.Web.Models;
-@using Newtonsoft.Json;
-@using Newtonsoft.Json.Serialization;
-@{
-    ReviewRIdentity id = null;
-    if(User != null) {
-        id = User.Identity as ReviewRIdentity;
-    }
-    var userString = id == null ? "null" : JsonConvert.SerializeObject(id, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+﻿@{
     var root = Href("~/");
     var env = System.Web.Configuration.WebConfigurationManager.AppSettings["Environment"];
 }
 
 <!DOCTYPE html>
-<html>
+<html data-root="@root" data-environment="@env">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -58,9 +50,8 @@
             </div>
         </header>
         <p class="alert alert-error" data-bind="ifnot: isProd">This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped WITHOUT notification and ALL data will be removed.</p>
-        <div class="container-fluid" data-bind="page: activePage">
-        </div>
-        <div data-bind="dialog: activeDialog" class="modal fade"></div>
+        <div id="syrah-page-host"></div>
+        <div id="syrah-dialog-host"></div>
     </div>
 
     <!-- Load scripts -->
@@ -71,13 +62,17 @@
     <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
     <script type="text/javascript" src="~/Scripts/knockout.debug.js"></script>
     <script type="text/javascript" src="~/Scripts/modernizr-2.5.3.js"></script>
-    <script type="text/javascript" src="~/js/Backbone.lite.js"></script>
-    <script type="text/javascript" src="~/js/knockout.validation.js"></script>
-    <script type="text/javascript" src="~/js/rR.js"></script>
-    <script type="text/javascript" src="~/js/rR.bus.js"></script>
-    <script type="text/javascript" src="~/js/rR.models.js"></script>
-    <script type="text/javascript" src="~/js/rR.app.js"></script>
-@Composition.ViewModelScripts("~/js")
+    <script type="text/javascript" src="~/js/fx/Backbone.lite.js"></script>
+    <script type="text/javascript" src="~/js/fx/knockout.validation.js"></script>
+    <script type="text/javascript" src="~/js/fx/namespace.js"></script>
+    <script type="text/javascript" src="~/js/fx/syrah.bus.js"></script>
+    <script type="text/javascript" src="~/js/fx/syrah.js"></script>
+    <script type="text/javascript" src="~/js/fx/syrah.plugins.dom.js"></script>
+    <script type="text/javascript" src="~/js/fx/syrah.plugins.js"></script>
+    <script type="text/javascript" src="~/js/fx/syrah.rendering.js"></script>
+    <script type="text/javascript" src="~/js/fx/syrah.routing.js"></script>
+    <script type="text/javascript" src="~/js/fx/syrah.utils.js"></script>
+@Composition.ViewModelScripts("~/js/modules")
 
     <!-- Templates -->
 @Composition.ViewModelTemplates("~/Views")

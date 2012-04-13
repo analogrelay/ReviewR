@@ -581,17 +581,19 @@
   <ItemGroup>
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
     <Content Include="js\fx\Backbone.lite.js" />
+    <Content Include="js\fx\syrah.plugins.binding.js" />
+    <Content Include="js\fx\syrah.utils.js" />
+    <Content Include="js\fx\syrah.plugins.dom.js" />
     <Content Include="js\fx\namespace.js" />
     <Content Include="js\fx\syrah.bus.js" />
-    <Content Include="js\fx\syrah.dom.js" />
     <Content Include="js\fx\syrah.js" />
+    <Content Include="js\fx\syrah.plugins.js" />
     <Content Include="js\fx\syrah.rendering.js" />
     <Content Include="js\fx\syrah.routing.js" />
-    <Content Include="js\rR.vm.reviews.js" />
-    <Content Include="js\rR.vm.home.js" />
-    <Content Include="js\knockout.validation.js" />
-    <Content Include="js\rR.vm.auth.js" />
-    <Content Include="js\rR.js" />
+    <None Include="js\modules\rR.m.reviews.js.old" />
+    <None Include="js\modules\rR.m.home.js.old" />
+    <Content Include="js\fx\knockout.validation.js" />
+    <None Include="js\modules\rR.m.auth.js.old" />
     <Content Include="js\rR.models.js" />
     <Content Include="js\rR.app.js" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
