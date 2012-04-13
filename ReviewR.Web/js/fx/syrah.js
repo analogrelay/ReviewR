@@ -107,11 +107,12 @@
             };
         }
 
-        ns.Module = function () {
+        ns.Module = function (name) {
             var self = this;
             var _app;
             var _attached = new ns.Signal();
             var _routes = [];
+            var _actions = [];
             var _pages = {};
             var _dialogs = {};
 
@@ -180,6 +181,15 @@
                 // !!endif
                 return self;
             };
+
+            self.action = function (name, handler) {
+                var callback = function () { handler.apply(_actor, Array.prototype.slice.call(arguments)); }
+                _actions.push({ name: name, handler: callback });
+                // !!if VSDOC
+                // callback();
+                // !!endif
+                return self;
+            }
 
             self.page = function (id, modelConstructor, templateId) {
                 /// <signature>

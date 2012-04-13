@@ -33,8 +33,11 @@
             rR.app.start();
         }
 
-        ns.module = function (module) {
-            /// <param name="module" type="syrah.Module" />
+        ns.module = function (fn) {
+            /// <param name="fn" type="Function" />
+            var module = new syrah.Module();
+            fn.apply(module);
+
             if (rR.app) {
                 // Inject it right away
                 rR.app.module(module);

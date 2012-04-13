@@ -31,10 +31,6 @@
                 allowOnly = args;
                 args = [];
             }
-
-            if (syrah.bus.hasOwnProperty(name)) {
-                return syrah.bus[name];
-            }
             var sink = new syrah.bus.Sink(args);
             var pub = sink;
             if (allowOnly === 'publish') {
@@ -42,8 +38,9 @@
             } else if (allowOnly === 'subscribe') {
                 pub = restrictPublish(pub);
             }
-            syrah.bus[name] = pub;
 
+            namespace.define('syrah.bus.' + name, pub);
+            
             return sink;
         }
 

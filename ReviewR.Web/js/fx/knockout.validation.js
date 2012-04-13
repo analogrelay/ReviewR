@@ -86,7 +86,7 @@
         }
     }
 
-    ko.validation.validatableModel = function (self) {
+    ko.validation.addValidation = function (self) {
         self = self || {};
         self.customError = ko.observable('');
         self.isValid = ko.computed(function () {
