@@ -28,17 +28,11 @@ namespace ReviewR.Web.Api
             {
                 return NotFound();
             }
-            else if (!IsAuthorized(change))
-            {
-                return Forbidden();
-            }
+            //else if (!IsAuthorized(change))
+            //{
+            //    return Forbidden();
+            //}
             return Ok(Diff.CreateViewModelFromUnifiedDiff(change.FileName, change.Diff));
-        }
-
-        private bool IsAuthorized(FileChange change)
-        {
-            Review r = change.Iteration.Review;
-            return r.UserId == User.Identity.Id || r.Participants.Any(p => p.UserId == User.Identity.Id);
         }
     }
 }

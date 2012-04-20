@@ -10,64 +10,29 @@ using System.Web.Security;
 using Newtonsoft.Json;
 using ReviewR.Web.Infrastructure;
 using ReviewR.Web.Models;
+using ReviewR.Web.Models.Data;
 
 namespace ReviewR.Web.Services
 {
     public class TokenService
     {
-        public TimeSpan Timeout { get; set; }
-        public string CookieName { get; set; }
-
-        public TokenService()
+        public IDataRepository Data { get; set; }
+        
+        public TokenService(IDataRepository data)
         {
-            Timeout = TimeSpan.FromMinutes(30);
-            CookieName = "AuthToken";
+            Data = data;
         }
 
-        public virtual CookieHeaderValue CreateAuthCookie(ReviewRIdentity authTicket)
+        public string EncryptToken(AuthenticationToken token, string purpose)
         {
-            string authTicketStr = JsonConvert.SerializeObject(authTicket);
-            string data = MachineKey.Encode(Encoding.UTF8.GetBytes(authTicketStr), MachineKeyProtection.All);
-
-            var cookie = new CookieHeaderValue(CookieName, data)
-            {
-                HttpOnly = true,
-                Path = "/"
-            };
-            if (authTicket.RememberMe)
-            {
-                cookie.Expires = DateTimeOffset.UtcNow.Add(Timeout);
-            }
-            return cookie;
+            return Convert.ToBase64String(MachineKey.Protect(token.EncodeToken(), purpose));
         }
 
-        public virtual ReviewRIdentity ReadAuthCookie(CookieHeaderValue currentCookie)
+        public AuthenticationToken DecryptToken(string token, string purpose)
         {
-            return ReadAuthCookie(currentCookie.Cookies.Single().Value);
-        }
-
-        public virtual ReviewRIdentity ReadAuthCookie(string encodedCookieValue)
-        {
-            try
-            {
-                string encoded = encodedCookieValue;
-                string data = Encoding.UTF8.GetString(MachineKey.Decode(encoded, MachineKeyProtection.All));
-                return JsonConvert.DeserializeObject<ReviewRIdentity>(data);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public virtual CookieHeaderValue CreateSignoutCookie()
-        {
-            return new CookieHeaderValue(CookieName, String.Empty)
-            {
-                HttpOnly = true,
-                Path = "/",
-                Expires = new DateTimeOffset(new DateTime(1999, 10, 12))
-            };
+            byte[] data = Convert.FromBase64String(token);
+            byte[] encodedToken = MachineKey.Unprotect(data, purpose);
+            return AuthenticationToken.FromEncodedToken(encodedToken);
         }
     }
 }

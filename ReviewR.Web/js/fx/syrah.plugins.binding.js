@@ -7,10 +7,10 @@
     function KnockoutViewHost(element) {
         /// <param name="element" type="HTMLElement"/>
         var self = this;
-        self._injectView = function (name, model) {
-            ko.renderTemplate(name, model);
-        };
         syrah.rendering.ViewHost.apply(self, [element]);
+        self._injectView = function (name, model) {
+            ko.renderTemplate('v:' + name, model, {}, element);
+        };
     }
 
     function Binder(currentAccessor) {
@@ -20,18 +20,27 @@
         }
 
         self.applyBindings = function (rootElement, model) {
-            return self.requireCurrent('applyBindings', 'Override applyBindings(rootElement, model)')
-                       .applyBindings(rootElement, model);
+            if (self.current && self.current().applyBindings) {
+                return self.current().applyBindings(rootElement, model);
+            } else {
+                throw 'Override applyBindings(rootElement, model)';
+            }
         };
 
         self.applyDescendantBindings = function (rootElement, model) {
-            return self.requireCurrent('applyDescendantBindings', 'Override applyDescendantBindings(rootElement, model)')
-                       .applyDescendantBindings(rootElement, model);
+            if (self.current && self.current().applyDescendantBindings) {
+                return self.current().applyDescendantBindings(rootElement, model);
+            } else {
+                throw 'Override applyDescendantBindings(rootElement, model)';
+            }
         };
 
         self.createViewHost = function (element) {
-            return self.requireCurrent('createViewHost', 'Override createViewHost(element)')
-                       .createViewHost(element);
+            if (self.current && self.current().createViewHost) {
+                return self.current().createViewHost(element);
+            } else {
+                throw 'Override createViewHost(element)';
+            }
         }
     }
     syrah.plugins.add('binding', Binder);

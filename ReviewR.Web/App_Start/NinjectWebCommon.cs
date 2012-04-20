@@ -71,11 +71,10 @@ namespace ReviewR.Web.App_Start
             kernel.Bind<AuthenticationHandler>().ToSelf();
             kernel.Bind<TokenService>().ToSelf();
             kernel.Bind<AuthenticationService>().ToSelf();
-            kernel.Bind<HashService>().ToSelf();
             kernel.Bind<IDataRepository>().To<DefaultDataRepository>();
             kernel.Bind<DelegatingHandler>().To<AuthenticationHandler>();
-            kernel.Bind<IHttpModule>().To<AuthenticationModule>();
             kernel.Bind<DiffService>().ToSelf();
+            kernel.Bind<ISettings>().To<WebSettings>();
         }        
     }
 }

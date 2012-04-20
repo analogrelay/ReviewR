@@ -1,10 +1,14 @@
 ﻿@{
-    var root = Href("~/");
+    Uri requestUrl = Request.Url;
+
+    string absroot = String.Format("{0}://{1}{2}",
+	requestUrl.Scheme,
+        requestUrl.Authority,
+        Href("~/"));
     var env = System.Web.Configuration.WebConfigurationManager.AppSettings["Environment"];
 }
-
 <!DOCTYPE html>
-<html data-root="@root" data-environment="@env">
+<html data-root="~/" data-absroot="@absroot" data-environment="@env">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -13,20 +17,20 @@
     <link rel="stylesheet" type="text/css" href="~/Content/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
 </head>
-<body data-bind="css: { 'appbar-host': appBarVisible }">
+<body>
     <div id="root">
         <a href="http://github.com/anurse/reviewr" target="_blank">
-            <img style="position: absolute; top: 40px; right: 0; border: 0; z-index: 1000" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub">
+            <img style="position: absolute; top: 40px; right: 0; border: 0; z-index: 1000" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+                alt="Fork me on GitHub">
         </a>
         <header class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container-fluid">
-                    <a class="brand" href="#">
-                        ReviewR
-                    </a>
+                    <a class="brand" href="#">ReviewR </a>
                     <nav id="master-nav">
                         <ul class="nav" data-bind="visible: currentUser().loggedIn">
-                            <li data-bind="visible: currentUser().isAdmin"><a href="~/_dbadmin" data-skip="true">Database Admin</a></li>
+                            <li data-bind="visible: currentUser().isAdmin"><a href="~/_dbadmin" data-skip="true">
+                                Database Admin</a></li>
                             <li><a href="/">Dashboard</a></li>
                         </ul>
                     </nav>
@@ -34,26 +38,28 @@
                         <ul class="nav pull-right">
                             <li class="dropdown" data-bind="visible: currentUser().loggedIn" style="display: none">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img data-bind="attr: { src: currentUser().gravatarUrl, alt: currentUser().email }" src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=16" alt="Not logged in" />
-                                    <span data-bind="text: currentUser().displayName"></span>
-                                    <b class="caret"></b>
+                                    <img data-bind="attr: { src: currentUser().gravatarUrl, alt: currentUser().email }"
+                                        src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=16" alt="Not logged in" />
+                                    <span data-bind="text: currentUser().displayName"></span><b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="/" data-bind="click: logout">Logout</a></li>
                                 </ul>
                             </li>
-                            <li data-bind="visible: !currentUser().loggedIn()"><a href="#" data-bind="click: showRegister">Register</a></li>
-                            <li data-bind="visible: !currentUser().loggedIn()"><a href="#" data-bind="click: showLogin">Login</a></li>
+                            <li data-bind="visible: !currentUser().loggedIn()"><a href="#" class="janrainEngage">
+                                Login</a></li>
                         </ul>
                     </nav>
                 </div>
             </div>
         </header>
-        <p class="alert alert-error" data-bind="ifnot: isProd">This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped WITHOUT notification and ALL data will be removed.</p>
+        <p class="alert alert-error" data-bind="ifnot: isProd">
+            This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped
+            WITHOUT notification and ALL data will be removed.
+        </p>
         <div id="syrah-page-host"></div>
-        <div id="syrah-dialog-host"></div>
+        <div class="modal fade" id="syrah-dialog-host"></div>
     </div>
-
     <!-- Load scripts -->
     <script type="text/javascript" src="~/Scripts/underscore.js"></script>
     <script type="text/javascript" src="~/Scripts/signals.js"></script>
@@ -65,25 +71,46 @@
     <script type="text/javascript" src="~/js/fx/Backbone.lite.js"></script>
     <script type="text/javascript" src="~/js/fx/knockout.validation.js"></script>
     <script type="text/javascript" src="~/js/fx/namespace.js"></script>
-    <script type="text/javascript" src="~/js/fx/syrah.bus.js"></script>
     <script type="text/javascript" src="~/js/fx/syrah.js"></script>
-    <script type="text/javascript" src="~/js/fx/syrah.plugins.dom.js"></script>
+    <script type="text/javascript" src="~/js/fx/syrah.bus.js"></script>
     <script type="text/javascript" src="~/js/fx/syrah.plugins.js"></script>
+    <script type="text/javascript" src="~/js/fx/syrah.plugins.dom.js"></script>
+    <script type="text/javascript" src="~/js/fx/syrah.plugins.binding.js"></script>
     <script type="text/javascript" src="~/js/fx/syrah.rendering.js"></script>
     <script type="text/javascript" src="~/js/fx/syrah.routing.js"></script>
     <script type="text/javascript" src="~/js/fx/syrah.utils.js"></script>
-@Composition.ViewModelScripts("~/js/modules")
-
-    <!-- Templates -->
-@Composition.ViewModelTemplates("~/Views")
-
-    <!-- Start! -->
+    <script type="text/javascript" src="~/js/rR.app.js"></script>
+    <script type="text/javascript" src="~/js/rR.models.js"></script>
+    @Composition.ViewModelScripts("~/js/modules")
     <script type="text/javascript">
-    rR.app.start({
-        root: '@root',
-        env: '@env',
-        user: @Html.Raw(userString)
-    });
+    syrah.bus.register('janrain.ready');
+    (function () {
+        window.janrainWidgetOnload = function () {
+            syrah.bus.janrain.ready.publish();
+        };
+
+        if (typeof window.janrain !== 'object') window.janrain = {};
+        if (typeof window.janrain.settings !== 'object') window.janrain.settings = {};
+
+        janrain.settings.tokenUrl = $(document.documentElement).data('absroot');
+        janrain.settings.tokenAction = 'event';
+        janrain.ready = true;
+
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.id = 'janrainAuthWidget';
+
+        if (document.location.protocol === 'https:') {
+            e.src = 'https://rpxnow.com/js/lib/reviewr/engage.js';
+        } else {
+            e.src = 'http://widget-cdn.rpxnow.com/js/lib/reviewr/engage.js';
+        }
+
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(e, s);
+    })();
     </script>
+    <!-- Templates -->
+    @Composition.ViewModelTemplates("~/Views")
 </body>
 </html>

@@ -26,24 +26,25 @@ namespace ReviewR.Web.Api
         [AllowAnonymous]
         public HttpResponseMessage Post(CreateUserRequestModel model)
         {
-            var response = Request.CreateResponse();
-            if (ModelState.IsValid)
-            {
-                var result = Auth.CreateUser(model.Email, model.DisplayName, model.Password);
-                if (result.Item2 == CreateUserResult.Success)
-                {
-                    // Set the authentication token
-                    User = new ReviewRPrincipal(result.Item1);
+            //var response = Request.CreateResponse();
+            //if (ModelState.IsValid)
+            //{
+            //    var result = Auth.CreateUser(model.Email, model.DisplayName, model.Password);
+            //    if (result.Item2 == CreateUserResult.Success)
+            //    {
+            //        // Set the authentication token
+            //        User = new ReviewRPrincipal(result.Item1);
 
-                    // This will send an unencrypted copy of the token down to the client so they can optimize the UI based on that.
-                    return Created(User.Identity);
-                }
-                else
-                {
-                    return Conflict();
-                }
-            }
-            return ValidationErrors();
+            //        // This will send an unencrypted copy of the token down to the client so they can optimize the UI based on that.
+            //        return Created(User.Identity);
+            //    }
+            //    else
+            //    {
+            //        return Conflict();
+            //    }
+            //}
+            //return ValidationErrors();
+            throw new NotImplementedException();
         }
     }
 }

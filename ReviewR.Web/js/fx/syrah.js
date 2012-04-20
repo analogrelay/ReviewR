@@ -1,7 +1,7 @@
-﻿/// <reference path="namespace.js" />
+﻿/// <reference path="../../Scripts/signals.js" />
+/// <reference path="namespace.js" />
 /// <reference path="syrah.routing.js" />
 /// <reference path="syrah.rendering.js" />
-/// <reference path="syrah.dom.js" />
 /// <reference path="syrah.plugins.dom.js" />
 /// <reference path="syrah.plugins.binding.js" />
 
@@ -15,7 +15,7 @@
 
         function createViewHost(selectors) {
             var found;
-            for (var i = 0; found && i < arguments.length; i++) {
+            for (var i = 0; !found && i < arguments.length; i++) {
                 found = syrah.plugins.dom.querySelector(arguments[i]);
             }
             if (!found) {
@@ -39,6 +39,7 @@
             var _pageHost = unwrapViewHost(pageHost) || createViewHost('#syrah-page-host');
             var _dialogHost = unwrapViewHost(dialogHost) || createViewHost('#syrah-dialog-host');
             var _modules = [];
+            var _actions = {};
             var _running = false;
 
             if (_environment === 'Development') {
@@ -47,6 +48,24 @@
 
             self.router = new syrah.routing.Router();
             self.route = self.router.map;
+
+            self.resolveUrl = function (vpath) {
+                /// <param name="vpath" type="String" />
+                if (vpath[0] === '~' && vpath[1] === '/') {
+                    return _rootUrl + vpath.substr(1);
+                }
+                return vpath;
+            };
+            if ($ && $.ajaxPrefilter) {
+                // Prefilter jquery ajax requests
+                $.ajaxPrefilter(function (options) {
+                    options.url = self.resolveUrl(options.url);
+                });
+            }
+
+            self.action = function (name, handler) {
+                _actions[name] = handler;
+            };
             
             self.module = function (module) {
                 /// <param name="module" type="syrah.Module" />
@@ -73,54 +92,70 @@
                 /// <param name="view" type="syrah.rendering.View" />
                 /// <param name="model" type="Object" />
                 _pageHost.setView(view, model);
-            }
+            };
 
             self.showDialog = function (view, model) {
                 /// <param name="view" type="syrah.rendering.View" />
                 /// <param name="model" type="Object" />
                 _pageHost.obscure();
                 _dialogHost.showDialog(view, model);
-            }
+            };
 
             self.closeDialog = function () {
                 _dialogHost.closeDialog();
                 _pageHost.reveal();
-            }
+            };
 
-            self.resolveUrl = function(url) {
+            self.resolveUrl = function (url) {
                 /// <param name="url" type="String" />
                 if (url[0] === '~' && url[1] === '/') {
                     return _rootUrl + url.substr(2);
                 }
                 return _rootUrl + url;
-            }
+            };
+
+            syrah.bus.register('navigate', ['url']);
+            syrah.bus.navigate.subscribe(function (url) {
+                self.router.navigate(url);
+            });
+
+            syrah.bus.register('exec', ['action']);
+            syrah.bus.exec.subscribe(function (action) {
+                var act = _actions[action];
+                syrah.utils.assert(act, 'no such action: ' + action);
+                act();
+            });
+
+            syrah.bus.register('dialog.dismiss');
+            syrah.bus.dialog.dismiss.subscribe(function () {
+                self.closeDialog();
+            });
         };
 
-        ns.Signal = function () {}
-        ns.Signal.prototype = new signals.Signal();
-        ns.Signal.prototype.asListener = function () {
+        ns.DialogViewModel = function () {
             var self = this;
-            return {
-                add: function (listener, listenerContext, priority) { self.add(listener, listenerContext, priority); },
-                addOnce: function (listener, listenerContext, priority) { self.addOnce(listener, listenerContext, priority); },
-                remove: function (listener, context) { self.remove(listener, context); },
-            };
-        }
+
+            self.close = function () {
+                syrah.bus.closeCurrentDialog && syrah.bus.closeCurrentDialog.publish();
+            }
+        };
 
         ns.Module = function (name) {
             var self = this;
             var _app;
-            var _attached = new ns.Signal();
+            var _attached = new signals.Signal();
             var _routes = [];
             var _actions = [];
-            var _pages = {};
-            var _dialogs = {};
+            var _moduleName = name;
+
+            self.pages = {};
+            self.dialogs = {};
 
             // Constrained "actor" object to use as this in route handlers. Of course, if you capture this before mixing in the module
             // class, there's nothing to stop you calling other methods.
             var _actor = { };
 
-            self.attached = _attached.asListener();
+            self.attached = _attached;
             self.attach = function (app) {
                 /// <param name="app" type="syrah.App" />
                 // Capture the app
@@ -129,6 +164,11 @@
                 // Attach routes
                 for (var i = 0; i < _routes.length; i++) {
                     app.route(_routes[i].name, _routes[i].url, _routes[i].handler);
+                }
+
+                // Attach actions
+                for (var i = 0; i < _actions.length; i++) {
+                    app.action(_actions[i].name, _actions[i].handler);
                 }
 
                 _attached.dispatch();
@@ -148,7 +188,7 @@
                 ///     <param name="pageId" type="String">The id of the view to open</param>
                 ///     <param name="model" type="Object">The view model for the view</param>
                 /// </signature>
-                var view = getRequiredView(_pages, pageId);
+                var view = getRequiredView(self.pages, pageId);
                 _app.openPage(view, model);
             }
             _actor.openPage = self.openPage;
@@ -163,7 +203,7 @@
                 ///     <param name="pageId" type="String">The id of the view to open</param>
                 ///     <param name="model" type="Object">The view model for the view</param>
                 /// </signature>
-                var view = getRequiredView(_dialogs, dialogId);
+                var view = getRequiredView(self.dialogs, dialogId);
                 _app.showDialog(view, model);
             }
             _actor.showDialog = self.showDialog;
@@ -175,7 +215,7 @@
 
             self.route = function (name, url, handler) {
                 var callback = function () { handler.apply(_actor, Array.prototype.slice.call(arguments)); }
-                _routes.push({ name: name, url: url, handler: callback });
+                _routes.push({ name: _moduleName + '.' + name, url: url, handler: callback });
                 // !!if VSDOC
                 // callback();
                 // !!endif
@@ -184,7 +224,7 @@
 
             self.action = function (name, handler) {
                 var callback = function () { handler.apply(_actor, Array.prototype.slice.call(arguments)); }
-                _actions.push({ name: name, handler: callback });
+                _actions.push({ name: _moduleName + '.' + name, handler: callback });
                 // !!if VSDOC
                 // callback();
                 // !!endif
@@ -201,7 +241,7 @@
                 ///     <param name="modelConstructor" type="Function">A function which, when called with 'new', creates the view model for this page</param>
                 ///     <param name="templateId" type="String">The id of the template to render for this page</param>
                 /// </signature>
-                addView(_pages, id, modelConstructor, templateId);
+                return addView(self.pages, id, modelConstructor, templateId);
             }
 
             self.dialog = function (id, modelConstructor, templateId) {
@@ -214,20 +254,20 @@
                 ///     <param name="modelConstructor" type="Function">A function which, when called with 'new', creates the view model for this page</param>
                 ///     <param name="templateId" type="String">The id of the template to render for this page</param>
                 /// </signature>
-                addView(_dialogs, id, modelConstructor, templateId);
+                return addView(self.dialogs, id, modelConstructor, templateId);
             }
 
             function addView(container, id, modelConstructor, templateId) {
-                if (_pages.hasOwnProperty(id)) {
+                if (container.hasOwnProperty(id)) {
                     throw 'a view named ' + id + ' has already been defined by this module';
                 }
 
                 if (templateId === undefined) {
                     templateId = id;
                 }
-                var view = new syrah.rendering.View(templateId, modelConstructor);
-                _pages[id] = view;
-                return self;
+                var view = new syrah.rendering.View(_moduleName + '.' + templateId, modelConstructor);
+                container[id] = view;
+                return view;
             }
 
             function getRequiredView(container, id) {

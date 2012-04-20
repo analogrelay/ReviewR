@@ -15,8 +15,15 @@ namespace ReviewR.Web.App_Start
             routes.Ignore("{resource}.axd/{*pathInfo}");
 
             routes.MapHttpRoute(
+                name: "Sessions",
+                routeTemplate: "api/v1/sessions/{action}/{id}",
+                defaults: new { controller="sessions", id = RouteParameter.Optional },
+                constraints: new { controller = @"[A-Za-z]*" }
+            );
+
+            routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
+                routeTemplate: "api/v1/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional },
                 constraints: new { controller = @"[A-Za-z]*" }
             );

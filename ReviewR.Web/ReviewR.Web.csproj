@@ -187,8 +187,9 @@
       <DependentUpon>Code_Edit.ascx</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\AuthenticationHandler.cs" />
-    <Compile Include="Infrastructure\AuthenticationModule.cs" />
+    <Compile Include="Infrastructure\ISettings.cs" />
     <Compile Include="Infrastructure\ReviewRApiController.cs" />
+    <Compile Include="Infrastructure\Settings.private.cs" />
     <Compile Include="Infrastructure\SpaRoute.cs" />
     <Compile Include="Infrastructure\Temp\JsonContractResolver.cs" />
     <Compile Include="Infrastructure\Temp\BetterJsonMediaTypeFormatter.cs" />
@@ -209,9 +210,20 @@
     <Compile Include="Migrations\201204090547293_AddPublishedFlagToIteration.Designer.cs">
       <DependentUpon>201204090547293_AddPublishedFlagToIteration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201204200338455_OAuth.cs" />
+    <Compile Include="Migrations\201204200338455_OAuth.Designer.cs">
+      <DependentUpon>201204200338455_OAuth.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201204200557286_AddExpiryToTokens.cs" />
+    <Compile Include="Migrations\201204200557286_AddExpiryToTokens.Designer.cs">
+      <DependentUpon>201204200557286_AddExpiryToTokens.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AuthenticationToken.cs" />
+    <Compile Include="Models\Data\Credential.cs" />
     <Compile Include="Models\Data\Iteration.cs" />
     <Compile Include="Models\Data\Participant.cs" />
     <Compile Include="Models\Data\ParticipantStatus.cs" />
+    <Compile Include="Models\Data\Token.cs" />
     <Compile Include="Models\Request\CreateSessionRequestModel.cs" />
     <Compile Include="Models\Request\ReviewRequestModel.cs" />
     <Compile Include="Models\Response\DiffFileModel.cs" />
@@ -222,7 +234,6 @@
     <Compile Include="Models\Response\DashboardResponseModel.cs" />
     <Compile Include="Models\Response\ReviewDetailResponseModel.cs" />
     <Compile Include="Models\Response\ReviewResponseModel.cs" />
-    <Compile Include="Models\ReviewRPrincipal.cs" />
     <Compile Include="Infrastructure\IEntitySet.cs" />
     <Compile Include="Infrastructure\Temp\CloneableExtensions.cs" />
     <Compile Include="Infrastructure\Temp\CookieHeaderValue.cs" />
@@ -271,11 +282,12 @@
     <Compile Include="Models\Data\FileChange.cs" />
     <Compile Include="Models\Data\Review.cs" />
     <Compile Include="Models\Data\FileChangeType.cs" />
+    <Compile Include="Models\TokenPair.cs" />
+    <Compile Include="Models\UserIdentifier.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\CreateUserResult.cs" />
     <Compile Include="Services\DiffConverter.cs" />
     <Compile Include="Services\DiffService.cs" />
-    <Compile Include="Services\HashService.cs" />
     <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Services\TokenService.cs" />
     <Compile Include="Services\Utils.cs" />
@@ -593,7 +605,7 @@
     <None Include="js\modules\rR.m.reviews.js.old" />
     <None Include="js\modules\rR.m.home.js.old" />
     <Content Include="js\fx\knockout.validation.js" />
-    <None Include="js\modules\rR.m.auth.js.old" />
+    <Content Include="js\modules\rR.m.auth.js" />
     <Content Include="js\rR.models.js" />
     <Content Include="js\rR.app.js" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
@@ -659,12 +671,6 @@
     <Content Include="Views\Reviews\_View.cshtml" />
     <None Include="Views\Home\_Index.cshtml" />
     <Content Include="Web.config" />
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Views\Reviews\_Create.cshtml" />
     <Content Include="Views\Reviews\_Upload.cshtml" />
   </ItemGroup>

@@ -8,23 +8,16 @@
             var self = this;
             var base = new baseType();
 
-            var _current;
-            function getCurrent() {
-                if (!_current) {
-                    for (var key in self.implementations) {
-                        if (self.implementations.hasOwnProperty(key) &&
-                            self.implementations[key].isAvailable &&
-                            self.implementations[key].isAvailable()) {
-                                _current = self.implementations[key];
-                                break;
-                            }
-                    }
+            function createCurrent() {
+                for (var key in self.implementations) {
+                    if (self.implementations.hasOwnProperty(key) &&
+                        self.implementations[key].isAvailable &&
+                        self.implementations[key].isAvailable()) {
+                            return new self.implementations[key]();
+                        }
                 }
-                return _current;
             };
-            var proxy = new baseType(getCurrent);
-            
-            baseType.apply(this);
+            baseType.apply(this, [createCurrent]);
             self.implementations = {};
             
             self.extend = function (name, func, isAvailable) {
@@ -33,7 +26,7 @@
                 /// <param name="isAvailable" type="Function" />
                 func.prototype = base;
                 func.isAvailable = isAvailable;
-                self.implementations[name] = func
+                self.implementations[name] = func;
             };
 
             self.setCurrent = function (current) {
@@ -44,23 +37,13 @@
         ns.Proxy = function (currentAccessor) {
             var self = this;
             var _current;
+            var _currentAccessor = currentAccessor;
 
             self.current = function (msg) {
                 if (!_current) {
-                    _current = currentAccessor();
+                    _current = _currentAccessor();
                 }
-            }
-
-            self.requireCurrent = function (key, msg) {
-                if(self.currentSupports(key)) {
-                    throw msg;
-                }
-                return cur;
-            }
-
-            self.currentSupports = function(key) {
-                var cur = self.current();
-                return cur && cur.hasOwnProperty(key);
+                return _current;
             }
         }
 

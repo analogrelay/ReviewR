@@ -9,24 +9,35 @@
         }
 
         self.querySelector = function (selector) {
-            return self.requireCurrent('querySelector', 'Override querySelector(selector)')
-                       .querySelector(selector);
+            if (self.current && self.current().querySelector) {
+                return self.current().querySelector(selector);
+            } else {
+                throw 'Override querySelector(selector)';
+            }
         };
 
         self.initDialog = function (element, onHide) {
-            if(self.currentSupports('initDialog')) {
+            if (self.current && self.current().initDialog) {
                 return self.current().initDialog(element, onHide);
+            } else {
+                throw 'Override initDialog(element, onHide)';
             }
         };
 
         self.showDialog = function (element) {
-            return self.requireCurrent('showDialog', 'Override showDialog(element)')
-                       .showDialog(element);
+            if (self.current && self.current().showDialog) {
+                return self.current().showDialog(element);
+            } else {
+                throw 'Override showDialog(element)';
+            }
         };
 
         self.closeDialog = function (element) {
-            return self.requireCurrent('closeDialog', 'Override closeDialog(element)')
-                       .closeDialog(element);
+            if (self.current && self.current().closeDialog) {
+                return self.current().closeDialog(element);
+            } else {
+                throw 'Override closeDialog(element)';
+            }
         };
     }
     syrah.plugins.add('dom', DomAbstractionLayer);

@@ -15,15 +15,12 @@ namespace ReviewR.Web.Models.Data
         [MaxLength(255)]
         public virtual string Email { get; set; }
 
-        [MaxLength(255)]
-        public virtual string Password { get; set; }
-        [MaxLength(255)]
-        public virtual string PasswordSalt { get; set; }
-
         [Required]
         [MaxLength(255)]
         public virtual string DisplayName { get; set; }
 
+        public virtual ICollection<Token> Tokens { get; set; }
+        public virtual ICollection<Credential> Credentials { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<Participant> Participants { get; set; }

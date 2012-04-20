@@ -32,3 +32,6 @@ packages/
 *.mdf
 *.ldf
 TestResults/
+
+# Api Keys and such are put in *.private.cs files
+*.private.cs

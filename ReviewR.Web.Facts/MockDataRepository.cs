@@ -20,6 +20,8 @@ namespace ReviewR.Web.Facts
         private MockEntitySet<Comment> _comments;
         private MockEntitySet<Participant> _participants;
         private MockEntitySet<Iteration> _iterations;
+        private MockEntitySet<Token> _tokens;
+        private MockEntitySet<Credential> _credentials;
 
         public IEntitySet<Role> Roles { get { return _roles; } }
         public IEntitySet<User> Users { get { return _users; } }
@@ -28,6 +30,8 @@ namespace ReviewR.Web.Facts
         public IEntitySet<Comment> Comments { get { return _comments; } }
         public IEntitySet<Participant> Participants { get { return _participants; } }
         public IEntitySet<Iteration> Iterations { get { return _iterations; } }
+        public IEntitySet<Token> Tokens { get { return _tokens; } }
+        public IEntitySet<Credential> Credentials { get { return _credentials; } }
 
         public int LastId { get { return _nextId - 1; } }
 
@@ -40,6 +44,8 @@ namespace ReviewR.Web.Facts
             _comments = new MockEntitySet<Comment>(this);
             _participants = new MockEntitySet<Participant>(this);
             _iterations = new MockEntitySet<Iteration>(this);
+            _tokens = new MockEntitySet<Token>(this);
+            _credentials = new MockEntitySet<Credential>(this);
         }
 
         public int SaveChanges()

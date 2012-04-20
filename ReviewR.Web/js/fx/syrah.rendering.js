@@ -1,13 +1,12 @@
 ﻿/// <reference path="syrah.plugins.dom.js" />
 /// <reference path="syrah.js" />
-/// <reference path="syrah.dom.js" />
 (function (undefined) {
     "use strict";
     namespace.define('syrah.rendering', function (ns) {
         ns.View = function (templateId, modelConstructor) {
             var self = this;
-            self.injected = new syrah.Signal();
-            self.removed = new syrah.Signal();
+            self.injected = new signals.Signal();
+            self.removed = new signals.Signal();
             self.templateId = templateId;
             self.modelConstructor = modelConstructor;
         }
@@ -79,7 +78,6 @@
 
             self.closeDialog = function () {
                 syrah.plugins.dom.closeDialog(_hostElement);
-                self.clearView();
             }
 
             function dialogHidden() {

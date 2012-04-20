@@ -30,10 +30,10 @@ namespace ReviewR.Web.Api
             {
                 return NotFound();
             }
-            else if (iter.Review.UserId != User.Identity.Id && !iter.Review.Participants.Any(p => p.UserId == User.Identity.Id))
-            {
-                return Forbidden();
-            }
+            //else if (iter.Review.UserId != User.Identity.Id && !iter.Review.Participants.Any(p => p.UserId == User.Identity.Id))
+            //{
+            //    return Forbidden();
+            //}
             return Ok(iter.Files.GroupBy(GetDirectoryName).Select(g => new
             {
                 Name = g.Key,
@@ -48,55 +48,58 @@ namespace ReviewR.Web.Api
 
         public HttpResponseMessage Post(int reviewId)
         {
-            Iteration iter = Reviews.AddIteration(reviewId, User.Identity.Id);
-            if (iter == null)
-            {
-                return Forbidden();
-            }
-            return Created(new
-            {
-                Id = iter.Id,
-                Href = Url.Route("DefaultApi", new { controller = "Iterations", id = iter.Id })
-            });
+            //Iteration iter = Reviews.AddIteration(reviewId, User.Identity.Id);
+            //if (iter == null)
+            //{
+            //    return Forbidden();
+            //}
+            //return Created(new
+            //{
+            //    Id = iter.Id,
+            //    Href = Url.Route("DefaultApi", new { controller = "Iterations", id = iter.Id })
+            //});
+            throw new NotImplementedException();
         }
 
         public HttpResponseMessage Delete(int id)
         {
-            bool? result = Reviews.DeleteIteration(id, User.Identity.Id);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            else if (result.Value)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return Forbidden();
-            }
+            //bool? result = Reviews.DeleteIteration(id, User.Identity.Id);
+            //if (result == null)
+            //{
+            //    return NotFound();
+            //}
+            //else if (result.Value)
+            //{
+            //    return NoContent();
+            //}
+            //else
+            //{
+            //    return Forbidden();
+            //}
+            throw new NotImplementedException();
         }
 
         public HttpResponseMessage Put(int id, string diff)
         {
-            if (String.IsNullOrEmpty(diff))
-            {
-                return BadRequest();
-            }
+            //if (String.IsNullOrEmpty(diff))
+            //{
+            //    return BadRequest();
+            //}
 
-            bool? result = Reviews.AddDiffToIteration(id, diff, User.Identity.Id);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            else if (result.Value)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return Forbidden();
-            }
+            //bool? result = Reviews.AddDiffToIteration(id, diff, User.Identity.Id);
+            //if (result == null)
+            //{
+            //    return NotFound();
+            //}
+            //else if (result.Value)
+            //{
+            //    return NoContent();
+            //}
+            //else
+            //{
+            //    return Forbidden();
+            //}
+            throw new NotImplementedException();
         }
 
         private static string GetDirectoryName(FileChange f)

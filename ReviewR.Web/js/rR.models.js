@@ -9,12 +9,14 @@
             var self = this;
 
             // Fields
+            self.token = '';
             self.id = ko.observable(init.id || 0);
             self.email = ko.observable(init.email || '');
             self.emailHash = ko.observable(init.emailHash || '');
             self.displayName = ko.observable(init.displayName || '');
             self.roles = ko.observableArray(init.roles || []);
             self.loggedIn = ko.observable(init.loggedIn || false);
+            self.serverVerified = ko.observable(init.serverVerified || false);
             self.isAdmin = ko.computed(function () {
                 return $.inArray('Admin', self.roles()) > -1;
             });

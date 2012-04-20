@@ -1,4 +1,4 @@
-﻿/// <reference path="../Scripts/knockout.debug.js" />
+﻿/// <reference path="../../Scripts/knockout.debug.js" />
 (function (window, ko, undefined) {
     ko.validation = {};
     ko.validation.validators = {};

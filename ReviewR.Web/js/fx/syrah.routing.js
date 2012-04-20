@@ -20,6 +20,10 @@
             self.stop = function () {
                 Backbone.history.stop();
             }
+            
+            self.navigate = function (url) {
+                _router.navigate(url, { fragment: true });
+            }
         };
     });
 })();
