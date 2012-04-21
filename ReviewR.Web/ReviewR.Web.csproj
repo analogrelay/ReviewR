@@ -61,8 +61,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.3\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -74,9 +75,9 @@
     <Reference Include="Ninject.Web.Common">
       <HintPath>..\packages\Ninject.Web.Common.3.0.0.7\lib\net40-full\Ninject.Web.Common.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Core, Version=1.6.30117.9648, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\NuGet.Core.1.6.2\lib\net40\NuGet.Core.dll</HintPath>
+    <Reference Include="NuGet.Core, Version=1.7.30402.9028, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NuGet.Core.1.7.0\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -129,10 +130,6 @@
       <Private>True</Private>
       <HintPath>..\packages\AspNetWebPages.Core.2.0.20126.16343\lib\net40\System.Web.WebPages.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.WebPages.Administration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\AspNetWebPages.2.0.20126.16343\lib\net40\System.Web.WebPages.Administration.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\AspNetWebPages.Core.2.0.20126.16343\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
@@ -163,6 +160,7 @@
     </Compile>
     <Compile Include="Api\ChangesController.cs" />
     <Compile Include="Api\IterationsController.cs" />
+    <Compile Include="Api\MyController.cs" />
     <Compile Include="Api\ReviewsController.cs" />
     <Compile Include="Api\SessionsController.cs" />
     <Compile Include="Api\UsersController.cs" />
@@ -187,6 +185,8 @@
       <DependentUpon>Code_Edit.ascx</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\AuthenticationHandler.cs" />
+    <Compile Include="Infrastructure\CacheControlAttribute.cs" />
+    <Compile Include="Infrastructure\ExpiresAttribute.cs" />
     <Compile Include="Infrastructure\ISettings.cs" />
     <Compile Include="Infrastructure\ReviewRApiController.cs" />
     <Compile Include="Infrastructure\Settings.private.cs" />
@@ -282,6 +282,7 @@
     <Compile Include="Models\Data\FileChange.cs" />
     <Compile Include="Models\Data\Review.cs" />
     <Compile Include="Models\Data\FileChangeType.cs" />
+    <Compile Include="Models\ReviewRPrincipal.cs" />
     <Compile Include="Models\TokenPair.cs" />
     <Compile Include="Models\UserIdentifier.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
@@ -306,6 +307,19 @@
     <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="DynamicData\Default.aspx" />
     <Content Include="DynamicData\DynamicData\Content\GridViewPager.ascx" />
     <Content Include="DynamicData\DynamicData\Content\Images\Back.gif" />
@@ -593,6 +607,7 @@
   <ItemGroup>
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
     <Content Include="js\fx\Backbone.lite.js" />
+    <Content Include="js\fx\syrah.ajax.js" />
     <Content Include="js\fx\syrah.plugins.binding.js" />
     <Content Include="js\fx\syrah.utils.js" />
     <Content Include="js\fx\syrah.plugins.dom.js" />
@@ -603,7 +618,7 @@
     <Content Include="js\fx\syrah.rendering.js" />
     <Content Include="js\fx\syrah.routing.js" />
     <None Include="js\modules\rR.m.reviews.js.old" />
-    <None Include="js\modules\rR.m.home.js.old" />
+    <Content Include="js\modules\rR.m.home.js" />
     <Content Include="js\fx\knockout.validation.js" />
     <Content Include="js\modules\rR.m.auth.js" />
     <Content Include="js\rR.models.js" />
@@ -648,11 +663,11 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.7.1.js" />
-    <Content Include="Scripts\jquery-1.7.1.min.js" />
-    <Content Include="Scripts\jquery-ui-1.8.18.js" />
-    <Content Include="Scripts\jquery-ui-1.8.18.min.js" />
+    <Content Include="Scripts\jquery-1.7.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.7.2.js" />
+    <Content Include="Scripts\jquery-1.7.2.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.19.js" />
+    <Content Include="Scripts\jquery-ui-1.8.19.min.js" />
     <Content Include="Scripts\jquery.fileupload.js" />
     <Content Include="Scripts\jquery.iframe-transport.js" />
     <Content Include="Scripts\knockout.debug.js" />
@@ -670,7 +685,9 @@
     <Content Include="Views\Home\_Dashboard.cshtml" />
     <Content Include="Views\Reviews\_View.cshtml" />
     <None Include="Views\Home\_Index.cshtml" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\Reviews\_Create.cshtml" />
     <Content Include="Views\Reviews\_Upload.cshtml" />
   </ItemGroup>

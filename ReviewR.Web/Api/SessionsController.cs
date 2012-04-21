@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ReviewR.Web.Infrastructure;
 using ReviewR.Web.Models;
 using ReviewR.Web.Models.Data;
-using ReviewR.Web.Models.Request;
-using ReviewR.Web.Services;
-using System.Threading.Tasks;
 using ReviewR.Web.Models.Response;
-using System.Security.Cryptography;
-using System.Security;
+using ReviewR.Web.Services;
 
 namespace ReviewR.Web.Api
 {

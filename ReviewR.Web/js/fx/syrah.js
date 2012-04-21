@@ -1,12 +1,13 @@
 ﻿/// <reference path="../../Scripts/signals.js" />
 /// <reference path="namespace.js" />
+/// <reference path="syrah.ajax.js" />
 /// <reference path="syrah.routing.js" />
 /// <reference path="syrah.rendering.js" />
 /// <reference path="syrah.plugins.dom.js" />
 /// <reference path="syrah.plugins.binding.js" />
 
 // syrah - a system for modular JavaScript application development
-(function (querySelector, undefined) {
+(function (undefined) {
     "use strict";
     namespace.define('syrah', function (ns) {
         function autoconfig(key) {
@@ -41,7 +42,9 @@
             var _modules = [];
             var _actions = {};
             var _running = false;
-
+            
+            syrah.ajax.init(_rootUrl);
+            
             if (_environment === 'Development') {
                 syrah.utils.enableAsserts();
             }
@@ -56,12 +59,6 @@
                 }
                 return vpath;
             };
-            if ($ && $.ajaxPrefilter) {
-                // Prefilter jquery ajax requests
-                $.ajaxPrefilter(function (options) {
-                    options.url = self.resolveUrl(options.url);
-                });
-            }
 
             self.action = function (name, handler) {
                 _actions[name] = handler;
@@ -82,10 +79,11 @@
                     _modules[i].attach(self);
                 }
 
-                self.router.start(_rootUrl);
-
                 // Bind the rest of the page
                 syrah.plugins.binding.applyBindings(document.body, self);
+
+                // Start the router
+                self.router.start(_rootUrl);
             };
 
             self.openPage = function (view, model) {
@@ -100,6 +98,10 @@
                 _pageHost.obscure();
                 _dialogHost.showDialog(view, model);
             };
+
+            self.refresh = function () {
+                self.router.refresh();
+            }
 
             self.closeDialog = function () {
                 _dialogHost.closeDialog();

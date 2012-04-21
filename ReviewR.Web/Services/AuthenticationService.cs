@@ -40,7 +40,7 @@ namespace ReviewR.Web.Services
             return Data.Users.Where(u => u.Email == email).FirstOrDefault();
         }
 
-        public virtual User GetUser(string encryptedToken)
+        public virtual User GetUserFromSessionToken(string encryptedToken)
         {
             return GetUser(Tokens.DecryptToken(encryptedToken, SessionTokenPurpose));
         }
@@ -160,7 +160,7 @@ namespace ReviewR.Web.Services
                 Id = sessionToken.TokenId,
                 Persistent = false,
                 UserId = userId,
-                Value = session,
+                Value = Convert.ToBase64String(sessionToken.EncodeToken()),
                 Expires = sessionToken.Expires
             });
             Data.SaveChanges();
@@ -201,7 +201,8 @@ namespace ReviewR.Web.Services
             string tokenString = Convert.ToBase64String(token.EncodeToken());
             Token dbToken = Data.Tokens
                                 .Include("User")
-                                .Where(t => t.Value == tokenString)
+                                .Include("User.Roles")
+                                .Where(t => t.Value == tokenString && t.Id == token.TokenId)
                                 .SingleOrDefault();
             if (token.Expires <= DateTimeOffset.UtcNow)
             {

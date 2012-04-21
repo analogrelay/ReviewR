@@ -17,6 +17,11 @@ namespace ReviewR.Web.Infrastructure
 {
     public class ReviewRApiController : ApiController
     {
+        public ReviewRPrincipal User
+        {
+            get { return ControllerContext.Request.GetUserPrincipal() as ReviewRPrincipal; }
+        }
+
         public HttpResponseMessage<string[]> ValidationErrors()
         {
             return BadRequest(

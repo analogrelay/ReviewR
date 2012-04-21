@@ -27,6 +27,8 @@
                 sy.bus.exec.publish('auth.logout');
             };
             sy.bus.register('auth.setToken').subscribe(function(user, session, persistent) {
+                sy.ajax.setAuth(session, persistent, '~/api/v1/sessions/restore');
+
                 sy.utils.update(self.currentUser(), user);
                 self.currentUser().loggedIn(true);
                 self.currentUser().serverVerified(true);
@@ -59,7 +61,8 @@
 
                 $.post('~/api/v1/sessions/restore', { persistentToken: auth.token })
                  .success(function (data) {
-                     sy.bus.auth.setToken.publish(data.user, data.token);
+                     sy.bus.auth.setToken.publish(data.user, data.token, auth.token);
+                     self.refresh();
                  })
                 .statusCode({
                     404: function () {

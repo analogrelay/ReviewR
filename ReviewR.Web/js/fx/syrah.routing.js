@@ -8,6 +8,15 @@
 
             var self = this;
             var _router = new Backbone.Router();
+            var _currentRoute;
+
+            self.currentRoute = function () {
+                return _currentRoute;
+            };
+
+            self.refresh = function () {
+                _router.refresh();
+            }
 
             self.map = function (name, url, handler) {
                 _router.route(url, name, handler);

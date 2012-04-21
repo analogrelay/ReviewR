@@ -1,4 +1,12 @@
-﻿// A few things from BackboneJS
+﻿/// <reference path="../../Scripts/underscore.js" />
+// A few things from BackboneJS
+// Also includes a few custom patches.
+// Based on BackboneJS, which is available under an MIT License (https://github.com/documentcloud/backbone/blob/master/LICENSE)
+
+// Modifications by Andrew Nurse, also available under an MIT License
+// * Trim down to just routing, history and events.
+// * Track current route handler on Router and allow it to be re-evaluated.
+
 (function (window, undefined) {
     window.Backbone = {};
     // Backbone.Events
@@ -127,6 +135,8 @@
     var namedParam = /:\w+/g;
     var splatParam = /\*\w+/g;
     var escapeRegExp = /[-[\]{}()+?.,\\^$|#\s]/g;
+    var currentHandler;
+    var currentArgs = [];
 
     // Set up all inheritable **Backbone.Router** properties and methods.
     _.extend(Router.prototype, Events, {
@@ -147,11 +157,21 @@
             if (!callback) callback = this[name];
             Backbone.history.route(route, _.bind(function (fragment) {
                 var args = this._extractParameters(route, fragment);
-                callback && callback.apply(this, args);
+                if (callback) {
+                    currentHandler = callback;
+                    currentArgs = args;
+                    callback.apply(this, args);
+                }
                 this.trigger.apply(this, ['route:' + name].concat(args));
                 Backbone.history.trigger('route', this, name, args);
             }, this));
             return this;
+        },
+
+        refresh: function() {
+            if(currentHandler) {
+                currentHandler.apply(this, currentArgs);
+            }
         },
 
         // Simple proxy to `Backbone.history` to save a fragment into the history.

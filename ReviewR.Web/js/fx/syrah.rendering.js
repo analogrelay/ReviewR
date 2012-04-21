@@ -59,7 +59,7 @@
                 _currentView = view;
 
                 if (_currentView && _currentView.injected) {
-                    _currentView.injected.dispatch();
+                    _currentView.injected.dispatch(_currentView, model);
                 }
             };
 

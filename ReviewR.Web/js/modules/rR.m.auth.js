@@ -5,18 +5,6 @@
 (function (sy, rR, undefined) {
     "use strict";
 
-    // Models
-    function LoginViewModel() {
-        var self = this;
-
-        // Fields
-        self.showRegister = ko.observable(false);
-        self.displayName = ko.observable('').required();
-        self.email = ko.observable('').required();
-    };
-    LoginViewModel.prototype = new syrah.DialogViewModel();
-
-
     // Set up the module
     var auth = rR.module('auth', function () {
         var self = this;
@@ -41,10 +29,6 @@
                         });
                 });
             });
-        });
-
-        self.action('login', function () {
-            this.showDialog('login');
         });
     });
 })(syrah, rR);

@@ -21,18 +21,6 @@ namespace ReviewR.Web.Api.Controllers
             Reviews = reviews;
         }
 
-        // GET /api/reviews
-        public DashboardResponseModel Get()
-        {
-            // Get all reviews created by this user
-            //IEnumerable<Review> reviews = Reviews.GetReviewsCreatedBy(User.Identity.Id).ToArray();
-            //return new DashboardResponseModel()
-            //{
-            //    Created = reviews.Select(ConvertReview)
-            //};
-            throw new NotImplementedException();
-        }
-
         public HttpResponseMessage Get(int id)
         {
             //Review review = Reviews.GetReview(id);
@@ -77,16 +65,6 @@ namespace ReviewR.Web.Api.Controllers
             //}
             //return ValidationErrors();
             throw new NotImplementedException();
-        }
-
-        private static ReviewResponseModel ConvertReview(Review r)
-        {
-            return new ReviewResponseModel()
-            {
-                Id = r.Id,
-                Title = r.Name,
-                Author = r.Creator == null ? null : UserModel.FromUser(r.Creator)
-            };
         }
     }
 }

@@ -2,7 +2,7 @@
     Uri requestUrl = Request.Url;
 
     string absroot = String.Format("{0}://{1}{2}",
-	requestUrl.Scheme,
+        requestUrl.Scheme,
         requestUrl.Authority,
         Href("~/"));
     var env = System.Web.Configuration.WebConfigurationManager.AppSettings["Environment"];
@@ -61,26 +61,27 @@
         <div class="modal fade" id="syrah-dialog-host"></div>
     </div>
     <!-- Load scripts -->
-    <script type="text/javascript" src="~/Scripts/underscore.js"></script>
-    <script type="text/javascript" src="~/Scripts/signals.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery-1.7.1.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.18.js"></script>
-    <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
-    <script type="text/javascript" src="~/Scripts/knockout.debug.js"></script>
-    <script type="text/javascript" src="~/Scripts/modernizr-2.5.3.js"></script>
-    <script type="text/javascript" src="~/js/fx/Backbone.lite.js"></script>
-    <script type="text/javascript" src="~/js/fx/knockout.validation.js"></script>
-    <script type="text/javascript" src="~/js/fx/namespace.js"></script>
-    <script type="text/javascript" src="~/js/fx/syrah.js"></script>
-    <script type="text/javascript" src="~/js/fx/syrah.bus.js"></script>
-    <script type="text/javascript" src="~/js/fx/syrah.plugins.js"></script>
-    <script type="text/javascript" src="~/js/fx/syrah.plugins.dom.js"></script>
-    <script type="text/javascript" src="~/js/fx/syrah.plugins.binding.js"></script>
-    <script type="text/javascript" src="~/js/fx/syrah.rendering.js"></script>
-    <script type="text/javascript" src="~/js/fx/syrah.routing.js"></script>
-    <script type="text/javascript" src="~/js/fx/syrah.utils.js"></script>
-    <script type="text/javascript" src="~/js/rR.app.js"></script>
-    <script type="text/javascript" src="~/js/rR.models.js"></script>
+    <script src="~/Scripts/jquery-1.7.2.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.19.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Scripts/signals.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/knockout.debug.js"></script>
+    <script src="~/Scripts/modernizr-2.5.3.js"></script>
+    <script src="~/js/fx/Backbone.lite.js"></script>
+    <script src="~/js/fx/knockout.validation.js"></script>
+    <script src="~/js/fx/namespace.js"></script>
+    <script src="~/js/fx/syrah.js"></script>
+    <script src="~/js/fx/syrah.ajax.js"></script>
+    <script src="~/js/fx/syrah.bus.js"></script>
+    <script src="~/js/fx/syrah.plugins.js"></script>
+    <script src="~/js/fx/syrah.plugins.dom.js"></script>
+    <script src="~/js/fx/syrah.plugins.binding.js"></script>
+    <script src="~/js/fx/syrah.rendering.js"></script>
+    <script src="~/js/fx/syrah.routing.js"></script>
+    <script src="~/js/fx/syrah.utils.js"></script>
+    <script src="~/js/rR.app.js"></script>
+    <script src="~/js/rR.models.js"></script>
     @Composition.ViewModelScripts("~/js/modules")
     <script type="text/javascript">
     syrah.bus.register('janrain.ready');

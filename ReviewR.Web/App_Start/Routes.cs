@@ -17,7 +17,14 @@ namespace ReviewR.Web.App_Start
             routes.MapHttpRoute(
                 name: "Sessions",
                 routeTemplate: "api/v1/sessions/{action}/{id}",
-                defaults: new { controller="sessions", id = RouteParameter.Optional },
+                defaults: new { controller = "sessions", id = RouteParameter.Optional },
+                constraints: new { controller = @"[A-Za-z]*" }
+            );
+
+            routes.MapHttpRoute(
+                name: "MyStuff",
+                routeTemplate: "api/v1/my/{action}",
+                defaults: new { controller = "my", id = RouteParameter.Optional, },
                 constraints: new { controller = @"[A-Za-z]*" }
             );
 
