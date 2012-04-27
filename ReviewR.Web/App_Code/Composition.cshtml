@@ -20,7 +20,9 @@
             DirectoryInfo category = new DirectoryInfo(categoryName);
             foreach (FileInfo file in category.EnumerateFiles("_*.cshtml"))
             {
-    <script id="v:@(category.Name.ToLower()).@(Path.GetFileNameWithoutExtension(file.Name).Substring(1).ToLower())" type="text/html">
+                string cat = Char.ToLower(category.Name[0]) + category.Name.Substring(1);
+                string templateName = Char.ToLower(file.Name[1]) + Path.GetFileNameWithoutExtension(file.Name).Substring(2);
+    <script id="v:@(cat).@(templateName)" type="text/html">
     @CurrentPage.RenderPage("~/Views/" + category.Name + "/" + file.Name)
     </script>
             }

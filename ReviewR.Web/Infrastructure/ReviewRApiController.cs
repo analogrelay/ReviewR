@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using System.Web.Http.Hosting;
 using Ninject;
 using ReviewR.Web.Models;
 using ReviewR.Web.Services;
@@ -17,10 +18,21 @@ namespace ReviewR.Web.Infrastructure
 {
     public class ReviewRApiController : ApiController
     {
-        public ReviewRPrincipal User
+        internal static readonly string CookieName = "ReviewRAuth";
+        internal static readonly string Purpose = "session";
+
+        private string _sessionTokenString;
+        private SessionToken _sessionToken;
+
+        public string SessionToken
         {
-            get { return ControllerContext.Request.GetUserPrincipal() as ReviewRPrincipal; }
+            get { return _sessionTokenString ?? IssueSessionToken(); }
         }
+
+        public ReviewRPrincipal User { get; set; }
+
+        [Inject]
+        public TokenService Tokens { get; set; }
 
         public HttpResponseMessage<string[]> ValidationErrors()
         {
@@ -29,6 +41,70 @@ namespace ReviewR.Web.Infrastructure
                     p => p.Value.Errors.Select(e => e.ErrorMessage)).ToArray());
         }
 
+        public async override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
+        {
+            // Check for an auth token
+            string authCookie = controllerContext.Request.Headers.GetAuthCookie();
+            _sessionTokenString = authCookie;
+            if (!String.IsNullOrEmpty(_sessionTokenString) ||
+                !String.IsNullOrEmpty(_sessionTokenString = controllerContext.Request.Headers.GetAuthHeader()))
+            {
+                // Parse authVal
+                SessionToken token = null;
+                try
+                {
+                    token = Tokens.UnprotectToken(_sessionTokenString, Purpose);
+                }
+                catch (NotSupportedException)
+                {
+                }
+
+                if (token != null)
+                {
+                    _sessionToken = token;
+                    User = _sessionToken.User;
+                    controllerContext.Request.Properties[HttpPropertyKeys.UserPrincipalKey] = User;
+                }
+            }
+            
+            // Run the action
+            HttpResponseMessage resp = await base.ExecuteAsync(controllerContext, cancellationToken);
+            
+            // If we had a request token in the cookie but don't now...
+            string path = GetSiteRoot(controllerContext.Request.RequestUri);
+            if (!String.IsNullOrEmpty(authCookie) && User == null)
+            {
+                // Clear the cookie
+                resp.Headers.ClearCookie(CookieName, path);
+            }
+            // Otherwise if we have a user now...
+            else if (User != null)
+            {
+                // Issue a token
+                resp.Headers.SetAuthCookie(SessionToken, path, _sessionToken.Expires);
+            }
+            
+            return resp;
+        }
+
+        private string GetSiteRoot(Uri uri)
+        {
+            string path = uri.AbsolutePath;
+            int apiRootPos = path.IndexOf("api");
+            return path.Substring(0, apiRootPos);
+        }
+
+        private string IssueSessionToken()
+        {
+            if (User != null)
+            {
+                _sessionToken = new SessionToken(User, DateTimeOffset.UtcNow.AddDays(30));
+                return _sessionTokenString = Tokens.ProtectToken(_sessionToken, Purpose);
+            }
+            return null;
+        }
+
+        #region Status Code Helpers
         protected HttpResponseMessage BadRequest() { return R(HttpStatusCode.BadRequest); }
         protected HttpResponseMessage<T> BadRequest<T>(T val) { return R(val, HttpStatusCode.BadRequest); }
         protected HttpResponseMessage Forbidden() { return R(HttpStatusCode.Forbidden); }
@@ -53,5 +129,6 @@ namespace ReviewR.Web.Infrastructure
         {
             return new HttpResponseMessage<T>(val, code);
         }
+        #endregion
     }
 }

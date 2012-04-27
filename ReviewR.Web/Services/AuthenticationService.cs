@@ -17,9 +17,6 @@ namespace ReviewR.Web.Services
 {
     public class AuthenticationService
     {
-        private const string SessionTokenPurpose = "Session";
-        private const string PersistentTokenPurpose = "Persistent";
-
         public TimeSpan Timeout { get; set; }
         public IDataRepository Data { get; set; }
         public TokenService Tokens { get; set; }
@@ -38,11 +35,6 @@ namespace ReviewR.Web.Services
         public virtual User GetUserByEmail(string email)
         {
             return Data.Users.Where(u => u.Email == email).FirstOrDefault();
-        }
-
-        public virtual User GetUserFromSessionToken(string encryptedToken)
-        {
-            return GetUser(Tokens.DecryptToken(encryptedToken, SessionTokenPurpose));
         }
 
         public async virtual Task<UserInfo> ResolveAuthTokenAsync(string authenticationToken)
@@ -81,29 +73,6 @@ namespace ReviewR.Web.Services
                 identifier.profile.identifier,
                 name,
                 identifier.profile.verifiedEmail);
-        }
-
-        public virtual Tuple<User, string> Login(string persistentToken)
-        {
-            AuthenticationToken token = null;
-            try
-            {
-                token = Tokens.DecryptToken(persistentToken, PersistentTokenPurpose);
-            }
-            catch (CryptographicException)
-            {
-                // Bad token
-                return null;
-            }
-            User user = GetUser(token);
-            if (user == null)
-            {
-                return null;
-            }
-
-            // Issue a fresh session token
-            string session = IssueSessionToken(user.Id);
-            return Tuple.Create(user, session);
         }
 
         public virtual User Login(string provider, string identifier)
@@ -149,72 +118,6 @@ namespace ReviewR.Web.Services
                 Identifier = identifier
             });
             Data.SaveChanges();
-        }
-
-        public string IssueSessionToken(int userId)
-        {
-            AuthenticationToken sessionToken = new AuthenticationToken(Guid.NewGuid(), DateTimeOffset.UtcNow + Timeout);
-            string session = Tokens.EncryptToken(sessionToken, SessionTokenPurpose);
-            Data.Tokens.Add(new Token()
-            {
-                Id = sessionToken.TokenId,
-                Persistent = false,
-                UserId = userId,
-                Value = Convert.ToBase64String(sessionToken.EncodeToken()),
-                Expires = sessionToken.Expires
-            });
-            Data.SaveChanges();
-            return session;
-        }
-
-        public TokenPair IssueTokenPair(int userId)
-        {
-            // Create a pair of tokens, one persistent, one not
-            AuthenticationToken sessionToken = new AuthenticationToken(Guid.NewGuid(), DateTimeOffset.UtcNow + Timeout);
-            AuthenticationToken persistentToken = new AuthenticationToken(Guid.NewGuid(), DateTimeOffset.MaxValue);
-            string session = Tokens.EncryptToken(sessionToken, SessionTokenPurpose);
-            string persistent = Tokens.EncryptToken(persistentToken, PersistentTokenPurpose);
-
-            Data.Tokens.Add(new Token()
-            {
-                Id = sessionToken.TokenId,
-                Persistent = false,
-                UserId = userId,
-                Value = Convert.ToBase64String(sessionToken.EncodeToken()),
-                Expires = sessionToken.Expires
-            });
-            Data.Tokens.Add(new Token()
-            {
-                Id = persistentToken.TokenId,
-                Persistent = true,
-                UserId = userId,
-                Value = Convert.ToBase64String(persistentToken.EncodeToken()),
-                Expires = persistentToken.Expires
-            });
-            Data.SaveChanges();
-            return new TokenPair(session, persistent);
-        }
-
-        private User GetUser(AuthenticationToken token)
-        {
-            // TODO: Don't go to the DB if expired, just add the token to a queue to be swept up in the background
-            string tokenString = Convert.ToBase64String(token.EncodeToken());
-            Token dbToken = Data.Tokens
-                                .Include("User")
-                                .Include("User.Roles")
-                                .Where(t => t.Value == tokenString && t.Id == token.TokenId)
-                                .SingleOrDefault();
-            if (token.Expires <= DateTimeOffset.UtcNow)
-            {
-                Data.Tokens.Remove(dbToken);
-                Data.SaveChanges();
-                throw new SecurityException("Token has expired");
-            }
-            if (dbToken == null)
-            {
-                return null;
-            }
-            return dbToken.User;
         }
     }
 }

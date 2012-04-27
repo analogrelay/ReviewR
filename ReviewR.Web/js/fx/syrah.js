@@ -10,9 +10,10 @@
 (function (undefined) {
     "use strict";
     namespace.define('syrah', function (ns) {
-        function autoconfig(key) {
+        function setting(key) {
             return document.documentElement.getAttribute('data-' + key);
         }
+        ns.setting = setting;
 
         function createViewHost(selectors) {
             var found;
@@ -35,16 +36,21 @@
 
         ns.App = function (rootUrl, environment, pageHost, dialogHost) {
             var self = this;
-            var _rootUrl = rootUrl || autoconfig('root');
-            var _environment = environment || autoconfig('environment');
+            var _rootUrl = rootUrl || setting('root');
+            var _environment = environment || setting('environment');
             var _pageHost = unwrapViewHost(pageHost) || createViewHost('#syrah-page-host');
             var _dialogHost = unwrapViewHost(dialogHost) || createViewHost('#syrah-dialog-host');
             var _modules = [];
             var _actions = {};
             var _running = false;
-            
-            syrah.ajax.init(_rootUrl);
-            
+
+            // Prefilter jquery ajax requests
+            if ($ && $.ajaxPrefilter) {
+                $.ajaxPrefilter(function (options) {
+                    options.url = self.resolveUrl(options.url);
+                });
+            }
+
             if (_environment === 'Development') {
                 syrah.utils.enableAsserts();
             }
@@ -55,7 +61,7 @@
             self.resolveUrl = function (vpath) {
                 /// <param name="vpath" type="String" />
                 if (vpath[0] === '~' && vpath[1] === '/') {
-                    return _rootUrl + vpath.substr(1);
+                    return _rootUrl + vpath.substr(2);
                 }
                 return vpath;
             };
@@ -63,7 +69,7 @@
             self.action = function (name, handler) {
                 _actions[name] = handler;
             };
-            
+
             self.module = function (module) {
                 /// <param name="module" type="syrah.Module" />
                 if (_running) {
@@ -85,6 +91,10 @@
                 // Start the router
                 self.router.start(_rootUrl);
             };
+
+            self.closePage = function () {
+                _pageHost.clearView();
+            }
 
             self.openPage = function (view, model) {
                 /// <param name="view" type="syrah.rendering.View" />
@@ -118,6 +128,7 @@
 
             syrah.bus.register('navigate', ['url']);
             syrah.bus.navigate.subscribe(function (url) {
+                self.closeDialog();
                 self.router.navigate(url);
             });
 
@@ -138,7 +149,7 @@
             var self = this;
 
             self.close = function () {
-                syrah.bus.closeCurrentDialog && syrah.bus.closeCurrentDialog.publish();
+                syrah.bus.dialog && syrah.bus.dialog.dismiss && syrah.bus.dialog.dismiss.publish();
             }
         };
 
@@ -155,7 +166,7 @@
 
             // Constrained "actor" object to use as this in route handlers. Of course, if you capture this before mixing in the module
             // class, there's nothing to stop you calling other methods.
-            var _actor = { };
+            var _actor = {};
 
             self.attached = _attached;
             self.attach = function (app) {
@@ -176,9 +187,14 @@
                 _attached.dispatch();
                 return self;
             };
-            // !!if VSDOC
-            // self.attach(new syrah.App());
-            // !!endif
+            if (window.hasOwnProperty('intellisense')) {
+                self.attach(new syrah.App());
+            }
+
+            self.closePage = function () {
+                _app.closePage();
+            }
+            _actor.closePage = self.closePage;
 
             self.openPage = function (pageId, model) {
                 /// <signature>
@@ -218,18 +234,18 @@
             self.route = function (name, url, handler) {
                 var callback = function () { handler.apply(_actor, Array.prototype.slice.call(arguments)); }
                 _routes.push({ name: _moduleName + '.' + name, url: url, handler: callback });
-                // !!if VSDOC
-                // callback();
-                // !!endif
+                if (window.hasOwnProperty('intellisense')) {
+                    callback();
+                }
                 return self;
             };
 
             self.action = function (name, handler) {
                 var callback = function () { handler.apply(_actor, Array.prototype.slice.call(arguments)); }
                 _actions.push({ name: _moduleName + '.' + name, handler: callback });
-                // !!if VSDOC
-                // callback();
-                // !!endif
+                if (window.hasOwnProperty('intellisense')) {
+                    callback();
+                }
                 return self;
             }
 

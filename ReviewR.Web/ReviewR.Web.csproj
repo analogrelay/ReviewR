@@ -163,7 +163,6 @@
     <Compile Include="Api\MyController.cs" />
     <Compile Include="Api\ReviewsController.cs" />
     <Compile Include="Api\SessionsController.cs" />
-    <Compile Include="Api\UsersController.cs" />
     <Compile Include="App_Start\NinjectWeb.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\Routes.cs" />
@@ -184,16 +183,21 @@
     <Compile Include="DynamicData\DynamicData\FieldTemplates\Code_Edit.ascx.designer.cs">
       <DependentUpon>Code_Edit.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\AuthenticationHandler.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\CacheControlAttribute.cs" />
     <Compile Include="Infrastructure\ExpiresAttribute.cs" />
     <Compile Include="Infrastructure\ISettings.cs" />
+    <Compile Include="Infrastructure\Pluralizer.cs" />
+    <Compile Include="Infrastructure\RequestExtensions.cs" />
     <Compile Include="Infrastructure\ReviewRApiController.cs" />
     <Compile Include="Infrastructure\Settings.private.cs" />
     <Compile Include="Infrastructure\SpaRoute.cs" />
     <Compile Include="Infrastructure\Temp\JsonContractResolver.cs" />
     <Compile Include="Infrastructure\Temp\BetterJsonMediaTypeFormatter.cs" />
     <Compile Include="Infrastructure\Temp\XHRRequestHeaderMapping.cs" />
+    <Compile Include="Infrastructure\UrlExtensions.cs" />
     <Compile Include="Migrations\201204080002571_AddDescriptionToReview.cs" />
     <Compile Include="Migrations\201204080002571_AddDescriptionToReview.Designer.cs">
       <DependentUpon>201204080002571_AddDescriptionToReview.cs</DependentUpon>
@@ -218,13 +222,15 @@
     <Compile Include="Migrations\201204200557286_AddExpiryToTokens.Designer.cs">
       <DependentUpon>201204200557286_AddExpiryToTokens.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\AuthenticationToken.cs" />
+    <Compile Include="Migrations\201204261934160_RemoveDatabaseTokens.cs" />
+    <Compile Include="Migrations\201204261934160_RemoveDatabaseTokens.Designer.cs">
+      <DependentUpon>201204261934160_RemoveDatabaseTokens.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SessionToken.cs" />
     <Compile Include="Models\Data\Credential.cs" />
     <Compile Include="Models\Data\Iteration.cs" />
     <Compile Include="Models\Data\Participant.cs" />
     <Compile Include="Models\Data\ParticipantStatus.cs" />
-    <Compile Include="Models\Data\Token.cs" />
-    <Compile Include="Models\Request\CreateSessionRequestModel.cs" />
     <Compile Include="Models\Request\ReviewRequestModel.cs" />
     <Compile Include="Models\Response\DiffFileModel.cs" />
     <Compile Include="Models\Response\DiffLineModel.cs" />
@@ -283,7 +289,6 @@
     <Compile Include="Models\Data\Review.cs" />
     <Compile Include="Models\Data\FileChangeType.cs" />
     <Compile Include="Models\ReviewRPrincipal.cs" />
-    <Compile Include="Models\TokenPair.cs" />
     <Compile Include="Models\UserIdentifier.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\CreateUserResult.cs" />
@@ -601,13 +606,12 @@
     <Compile Include="Models\Data\Role.cs" />
     <Compile Include="Models\Data\User.cs" />
     <Compile Include="Models\Data\DefaultDataRepository.cs" />
-    <Compile Include="Models\Request\CreateUserRequestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Global.asax" />
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
     <Content Include="js\fx\Backbone.lite.js" />
-    <Content Include="js\fx\syrah.ajax.js" />
     <Content Include="js\fx\syrah.plugins.binding.js" />
     <Content Include="js\fx\syrah.utils.js" />
     <Content Include="js\fx\syrah.plugins.dom.js" />
@@ -617,7 +621,7 @@
     <Content Include="js\fx\syrah.plugins.js" />
     <Content Include="js\fx\syrah.rendering.js" />
     <Content Include="js\fx\syrah.routing.js" />
-    <None Include="js\modules\rR.m.reviews.js.old" />
+    <Content Include="js\modules\rR.m.reviews.js" />
     <Content Include="js\modules\rR.m.home.js" />
     <Content Include="js\fx\knockout.validation.js" />
     <Content Include="js\modules\rR.m.auth.js" />
@@ -688,7 +692,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Reviews\_Create.cshtml" />
+    <Content Include="Views\Home\_NewReview.cshtml" />
     <Content Include="Views\Reviews\_Upload.cshtml" />
   </ItemGroup>
   <ItemGroup>

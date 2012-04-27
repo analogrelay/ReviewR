@@ -23,7 +23,7 @@
             };
 
             self.start = function (root) {
-                Backbone.history.start({ root: root });
+                Backbone.history.start({ root: root, pushState: Modernizr.history });
             };
 
             self.stop = function () {
@@ -31,7 +31,7 @@
             }
             
             self.navigate = function (url) {
-                _router.navigate(url, { fragment: true });
+                _router.navigate(url, { trigger: true });
             }
         };
     });

@@ -13,17 +13,14 @@ namespace ReviewR.Web.Api
     public class SessionsController : ReviewRApiController
     {
         public AuthenticationService Auth { get; set; }
-        public TokenService Tokens { get; set; }
-
-        public SessionsController(AuthenticationService auth, TokenService tokens)
+        
+        public SessionsController(AuthenticationService auth)
         {
             Auth = auth;
-            Tokens = tokens;
         }
 
-        [HttpPost]
         [AllowAnonymous]
-        public async Task<HttpResponseMessage> New(string authToken)
+        public async Task<HttpResponseMessage> Post(string authToken)
         {
             UserInfo id = await Auth.ResolveAuthTokenAsync(authToken);
 
@@ -34,32 +31,20 @@ namespace ReviewR.Web.Api
                 return BadRequest();
             }
 
-            // Issue a new token pair
-            TokenPair pair = Auth.IssueTokenPair(user.Id);
+            // Log in the user
+            User = ReviewRPrincipal.FromUser(user);
 
+            // Return the token and user data
             return Created(new
             {
-                user = UserModel.FromUser(user),
-                tokens = pair
+                user = User.Identity,
+                token = SessionToken
             });
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        public HttpResponseMessage Restore(string persistentToken)
+        public void Delete()
         {
-            // Get the user for this token
-            var result = Auth.Login(persistentToken);
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(new
-            {
-                user = UserModel.FromUser(result.Item1),
-                token = result.Item2
-            });
+            User = null;
         }
 
         private User GetOrCreateUser(UserInfo id)

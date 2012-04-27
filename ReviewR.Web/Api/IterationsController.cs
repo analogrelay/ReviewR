@@ -30,17 +30,17 @@ namespace ReviewR.Web.Api
             {
                 return NotFound();
             }
-            //else if (iter.Review.UserId != User.Identity.Id && !iter.Review.Participants.Any(p => p.UserId == User.Identity.Id))
-            //{
-            //    return Forbidden();
-            //}
+            else if (iter.Review.UserId != User.Identity.UserId && !iter.Review.Participants.Any(p => p.UserId == User.Identity.UserId))
+            {
+                return Forbidden();
+            }
             return Ok(iter.Files.GroupBy(GetDirectoryName).Select(g => new
             {
                 Name = g.Key,
                 Files = g.Select(f => new
                 {
                     Id = f.Id,
-                    FileName = f.NewFileName.Substring(g.Key.Length + 1),
+                    FileName = (String.IsNullOrEmpty(f.NewFileName) ? f.FileName : f.NewFileName).Substring(g.Key.Length + 1),
                     ChangeType = f.ChangeType
                 })
             }));
@@ -48,68 +48,66 @@ namespace ReviewR.Web.Api
 
         public HttpResponseMessage Post(int reviewId)
         {
-            //Iteration iter = Reviews.AddIteration(reviewId, User.Identity.Id);
-            //if (iter == null)
-            //{
-            //    return Forbidden();
-            //}
-            //return Created(new
-            //{
-            //    Id = iter.Id,
-            //    Href = Url.Route("DefaultApi", new { controller = "Iterations", id = iter.Id })
-            //});
-            throw new NotImplementedException();
+            Iteration iter = Reviews.AddIteration(reviewId, User.Identity.UserId);
+            if (iter == null)
+            {
+                return Forbidden();
+            }
+            return Created(new
+            {
+                Id = iter.Id,
+                Href = Url.Resource(iter)
+            });
         }
 
         public HttpResponseMessage Delete(int id)
         {
-            //bool? result = Reviews.DeleteIteration(id, User.Identity.Id);
-            //if (result == null)
-            //{
-            //    return NotFound();
-            //}
-            //else if (result.Value)
-            //{
-            //    return NoContent();
-            //}
-            //else
-            //{
-            //    return Forbidden();
-            //}
-            throw new NotImplementedException();
+            bool? result = Reviews.DeleteIteration(id, User.Identity.UserId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            else if (result.Value)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return Forbidden();
+            }
         }
 
         public HttpResponseMessage Put(int id, string diff)
         {
-            //if (String.IsNullOrEmpty(diff))
-            //{
-            //    return BadRequest();
-            //}
+            if (String.IsNullOrEmpty(diff))
+            {
+                return BadRequest();
+            }
 
-            //bool? result = Reviews.AddDiffToIteration(id, diff, User.Identity.Id);
-            //if (result == null)
-            //{
-            //    return NotFound();
-            //}
-            //else if (result.Value)
-            //{
-            //    return NoContent();
-            //}
-            //else
-            //{
-            //    return Forbidden();
-            //}
-            throw new NotImplementedException();
+            bool? result = Reviews.AddDiffToIteration(id, diff, User.Identity.UserId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            else if (result.Value)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return Forbidden();
+            }
         }
 
         private static string GetDirectoryName(FileChange f)
         {
-            int lastSlash = f.NewFileName.LastIndexOf('/');
+            var fileName = String.IsNullOrEmpty(f.NewFileName) ? f.FileName : f.NewFileName;
+            int lastSlash = fileName.LastIndexOf('/');
             if (lastSlash > -1)
             {
-                return f.NewFileName.Substring(0, lastSlash);
+                return fileName.Substring(0, lastSlash);
             }
-            return f.NewFileName;
+            return fileName;
         }
     }
 }

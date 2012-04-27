@@ -17,7 +17,6 @@ namespace ReviewR.Web.Models.Data
         IEntitySet<Comment> Comments { get; }
         IEntitySet<Participant> Participants { get; }
         IEntitySet<Iteration> Iterations { get; }
-        IEntitySet<Token> Tokens { get; }
         IEntitySet<Credential> Credentials { get; }
         int SaveChanges();
     }
@@ -33,7 +32,6 @@ namespace ReviewR.Web.Models.Data
         public virtual IEntitySet<Comment> Comments { get; private set; }
         public virtual IEntitySet<Participant> Participants { get; private set; }
         public virtual IEntitySet<Iteration> Iterations { get; private set; }
-        public virtual IEntitySet<Token> Tokens { get; private set; }
         public virtual IEntitySet<Credential> Credentials { get; private set; }
 
         public DefaultDataRepository()
@@ -47,7 +45,6 @@ namespace ReviewR.Web.Models.Data
             Comments = new DbSetAdaptor<Comment>(_db.Comments);
             Participants = new DbSetAdaptor<Participant>(_db.Participants);
             Iterations = new DbSetAdaptor<Iteration>(_db.Iterations);
-            Tokens = new DbSetAdaptor<Token>(_db.Tokens);
             Credentials = new DbSetAdaptor<Credential>(_db.Credentials);
         }
 
@@ -66,7 +63,6 @@ namespace ReviewR.Web.Models.Data
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Participant> Participants { get; set; }
         public virtual DbSet<Iteration> Iterations { get; set; }
-        public virtual DbSet<Token> Tokens { get; set; }
         public virtual DbSet<Credential> Credentials { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -79,10 +75,6 @@ namespace ReviewR.Web.Models.Data
                         .HasMany<Participant>(u => u.Participants)
                         .WithRequired(p => p.User)
                         .WillCascadeOnDelete(false);
-            modelBuilder.Entity<Token>()
-                        .Property(t => t.Id)
-                        .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
-                        .IsRequired();
         }
     }
 }

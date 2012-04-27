@@ -20,13 +20,13 @@ namespace ReviewR.Web.Services
             {
                 // Deletion
                 chg.ChangeType = Data.FileChangeType.Removed;
-                chg.FileName = fileDiff.OriginalFile;
+                chg.FileName = CleanFileName(fileDiff.OriginalFile);
             }
             else if (String.Equals(fileDiff.OriginalFile, "/dev/null"))
             {
                 // Addition
                 chg.ChangeType = Data.FileChangeType.Added;
-                chg.FileName = fileDiff.ModifiedFile;
+                chg.FileName = CleanFileName(fileDiff.ModifiedFile);
             }
             else
             {

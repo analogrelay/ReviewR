@@ -8,7 +8,7 @@
     var env = System.Web.Configuration.WebConfigurationManager.AppSettings["Environment"];
 }
 <!DOCTYPE html>
-<html data-root="~/" data-absroot="@absroot" data-environment="@env">
+<html data-root="~/" data-absroot="@absroot" data-environment="@env" data-token="@ReviewR.Web.Services.Utils.DecodeCookieToJson(Context)">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -26,7 +26,7 @@
         <header class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container-fluid">
-                    <a class="brand" href="#">ReviewR </a>
+                    <a class="brand" href="/">ReviewR</a>
                     <nav id="master-nav">
                         <ul class="nav" data-bind="visible: currentUser().loggedIn">
                             <li data-bind="visible: currentUser().isAdmin"><a href="~/_dbadmin" data-skip="true">
@@ -72,7 +72,6 @@
     <script src="~/js/fx/knockout.validation.js"></script>
     <script src="~/js/fx/namespace.js"></script>
     <script src="~/js/fx/syrah.js"></script>
-    <script src="~/js/fx/syrah.ajax.js"></script>
     <script src="~/js/fx/syrah.bus.js"></script>
     <script src="~/js/fx/syrah.plugins.js"></script>
     <script src="~/js/fx/syrah.plugins.dom.js"></script>

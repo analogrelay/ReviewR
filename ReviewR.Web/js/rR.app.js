@@ -15,6 +15,7 @@
             // Fields
             self.environment = ko.observable(environment || '');
             self.currentUser = ko.observable(new rR.models.User());
+            self.appBarVisible = ko.observable(false);
 
             // Computed Properties
             self.isDev = ko.computed(function () { self.environment() === 'Development'; });
@@ -26,50 +27,20 @@
             self.logout = function () {
                 sy.bus.exec.publish('auth.logout');
             };
-            sy.bus.register('auth.setToken').subscribe(function(user, session, persistent) {
-                sy.ajax.setAuth(session, persistent, '~/api/v1/sessions/restore');
-
+            sy.bus.register('auth.setToken').subscribe(function(user) {
                 sy.utils.update(self.currentUser(), user);
                 self.currentUser().loggedIn(true);
-                self.currentUser().serverVerified(true);
-                self.currentUser().token = session;
-
-                // Capture the persistent token in local storage
-                if(persistent) {
-                    window.localStorage.setItem('auth', JSON.stringify({
-                        email: self.currentUser().email(),
-                        emailHash: self.currentUser().emailHash(),
-                        displayName: self.currentUser().displayName(),
-                        token: persistent
-                    }));
-                }
+                self.router.refresh();
             });
-            self.clearToken = function () {
+            sy.bus.register('auth.clearToken').subscribe(function () {
                 self.currentUser(new rR.models.User());
-                window.localStorage.removeItem('auth');
-            };
+                self.router.refresh();
+            });
 
-            // Check for an existing token
-            var auth = window.localStorage['auth'];
-            if (auth && (auth = JSON.parse(auth))) {
-                // Load cached data before going to server
-                self.currentUser().loggedIn(true);
-                self.currentUser().serverVerified(false);
-                self.currentUser().email(auth.email);
-                self.currentUser().emailHash(auth.emailHash);
-                self.currentUser().displayName(auth.displayName);
-
-                $.post('~/api/v1/sessions/restore', { persistentToken: auth.token })
-                 .success(function (data) {
-                     sy.bus.auth.setToken.publish(data.user, data.token, auth.token);
-                     self.refresh();
-                 })
-                .statusCode({
-                    404: function () {
-                        console.log('Auth token has been revoked or expired, removing');
-                        self.clearToken();
-                    }
-                });
+            // If there's a token, initialize it
+            var token = sy.setting('token');
+            if (token) {
+                sy.bus.auth.setToken.publish(JSON.parse(token));
             }
         };
 
@@ -104,5 +75,12 @@
 
     $(function () {
         rR.start();
+    });
+
+    // Hijack all interior links
+    $(document.body).on('click', 'a:not([data-link="exterior"],[href="#"],[href^="http:"],[href^="https:"],[href^="//"]),a[data-link="interior"]', function (evt) {
+        // Send the URL to the router
+        evt.preventDefault();
+        sy.bus.navigate.publish($(this).attr('href'));
     });
 })(syrah);

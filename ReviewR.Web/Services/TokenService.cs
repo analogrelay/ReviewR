@@ -23,16 +23,18 @@ namespace ReviewR.Web.Services
             Data = data;
         }
 
-        public string EncryptToken(AuthenticationToken token, string purpose)
-        {
-            return Convert.ToBase64String(MachineKey.Protect(token.EncodeToken(), purpose));
-        }
-
-        public AuthenticationToken DecryptToken(string token, string purpose)
+        public SessionToken UnprotectToken(string token, string purpose)
         {
             byte[] data = Convert.FromBase64String(token);
             byte[] encodedToken = MachineKey.Unprotect(data, purpose);
-            return AuthenticationToken.FromEncodedToken(encodedToken);
+            return SessionToken.FromEncodedToken(encodedToken);
+        }
+
+        public string ProtectToken(SessionToken token, string purpose)
+        {
+            byte[] encoded = token.EncodeToken();
+            byte[] encrypted = MachineKey.Protect(encoded, purpose);
+            return Convert.ToBase64String(encrypted);
         }
     }
 }

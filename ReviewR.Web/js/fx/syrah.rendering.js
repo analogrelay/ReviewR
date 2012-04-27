@@ -61,6 +61,10 @@
                 if (_currentView && _currentView.injected) {
                     _currentView.injected.dispatch(_currentView, model);
                 }
+
+                if (model.load && typeof(model.load) === 'function') {
+                    model.load();
+                }
             };
 
             self.initDialog = function () {

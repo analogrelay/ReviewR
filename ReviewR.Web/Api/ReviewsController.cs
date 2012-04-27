@@ -23,48 +23,52 @@ namespace ReviewR.Web.Api.Controllers
 
         public HttpResponseMessage Get(int id)
         {
-            //Review review = Reviews.GetReview(id);
-            //if (review == null)
-            //{
-            //    return NotFound();
-            //}
-            //else if (review.UserId != User.Identity.Id && !review.Participants.Any(p => p.UserId == User.Identity.Id))
-            //{
-            //    return Forbidden();
-            //}
-            //else
-            //{
-            //    return Ok(new ReviewDetailResponseModel()
-            //    {
-            //        Id = review.Id,
-            //        Title = review.Name,
-            //        Author = UserModel.FromUser(review.Creator),
-            //        Description = review.Description,
-            //        Iterations = review.Iterations.OrderBy(i => i.StartedOn).Select((i, idx) => new IterationModel() {
-            //            Id = i.Id,
-            //            Order = idx,
-            //            Description = i.Description
-            //        }),
-            //        Participants = review.Participants.Select(p => new ParticipantModel() {
-            //            User = UserModel.FromUser(p.User),
-            //            Status = p.Status,
-            //            Required = p.Required
-            //        })
-            //    });
-            //}
-            throw new NotImplementedException();
+            Review review = Reviews.GetReview(id);
+            if (review == null)
+            {
+                return NotFound();
+            }
+            else if (review.UserId != User.Identity.UserId && !review.Participants.Any(p => p.UserId == User.Identity.UserId))
+            {
+                return Forbidden();
+            }
+            else
+            {
+                return Ok(new ReviewDetailResponseModel()
+                {
+                    Id = review.Id,
+                    Title = review.Name,
+                    Author = UserModel.FromUser(review.Creator),
+                    Description = review.Description,
+                    Iterations = review.Iterations.OrderBy(i => i.StartedOn).Select((i, idx) => new IterationModel()
+                    {
+                        Id = i.Id,
+                        Order = idx,
+                        Description = i.Description
+                    }),
+                    Participants = review.Participants.Select(p => new ParticipantModel()
+                    {
+                        User = UserModel.FromUser(p.User),
+                        Status = p.Status,
+                        Required = p.Required
+                    })
+                });
+            }
         }
 
         // POST /api/reviews
         public HttpResponseMessage Post(ReviewRequestModel model)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    Review r = Reviews.CreateReview(model.Title, model.Description, User.Identity.Id);
-            //    return Created(ConvertReview(r));
-            //}
-            //return ValidationErrors();
-            throw new NotImplementedException();
+            if (ModelState.IsValid)
+            {
+                Review r = Reviews.CreateReview(model.Title, model.Description, User.Identity.UserId);
+                return Created(new
+                {
+                    Id = r.Id,
+                    Href = Url.Resource(r)
+                });
+            }
+            return ValidationErrors();
         }
     }
 }

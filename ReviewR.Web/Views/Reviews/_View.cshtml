@@ -4,7 +4,7 @@
     <ul class="nav nav-tabs">
         <!-- ko foreach: iterations -->
         <li data-bind="css: { active: active }">
-            <a class="iteration-tab" href="#" data-bind="click: activate, text: order() + 1, css: { unpublished: !published() }"></a>
+            <a class="iteration-tab" href="#" data-bind="attr: { href: '/reviews/' + $parent.id() + '/iterations/' + (order() + 1) }, text: order() + 1, css: { unpublished: !published() }"></a>
         </li>
         <!-- /ko -->
         <li><a href="#" data-bind="click: newIteration"><i class="icon-plus"></i></a></li>

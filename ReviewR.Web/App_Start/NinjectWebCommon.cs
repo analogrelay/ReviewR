@@ -23,7 +23,7 @@ namespace ReviewR.Web.App_Start
         /// <summary>
         /// Starts the application
         /// </summary>
-        public static void Start() 
+        public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
@@ -54,6 +54,7 @@ namespace ReviewR.Web.App_Start
         private static IKernel CreateKernel()
         {
             var kernel = new StandardKernel();
+            ReviewRApplication.Services = kernel;
             kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
             kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
             
@@ -68,11 +69,9 @@ namespace ReviewR.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<AuthenticationHandler>().ToSelf();
             kernel.Bind<TokenService>().ToSelf();
             kernel.Bind<AuthenticationService>().ToSelf();
             kernel.Bind<IDataRepository>().To<DefaultDataRepository>();
-            kernel.Bind<DelegatingHandler>().To<AuthenticationHandler>();
             kernel.Bind<DiffService>().ToSelf();
             kernel.Bind<ISettings>().To<WebSettings>();
         }        

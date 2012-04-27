@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Web;
 using ReviewR.Web.Models;
 using ReviewR.Web.Models.Data;
+using ReviewR.Web.Services;
 
 namespace ReviewR.Web.Models
 {
@@ -31,10 +32,25 @@ namespace ReviewR.Web.Models
 
     public class ReviewRIdentity : IIdentity
     {
+        private string _hash;
+        private string _emailWhenHashGenerated;
+
         public int UserId { get; set; }
-        public bool RememberMe { get; set; }
         public string DisplayName { get; set; }
         public string Email { get; set; }
+        public string EmailHash
+        {
+            get
+            {
+                if (!String.Equals(_emailWhenHashGenerated, Email, StringComparison.Ordinal))
+                {
+                    _hash = Utils.GetGravatarHash(Email);
+                    _emailWhenHashGenerated = Email;
+                }
+                return _hash;
+            }
+        }
+
         public HashSet<string> Roles { get; set; }
 
         public static ReviewRIdentity FromUser(User u)

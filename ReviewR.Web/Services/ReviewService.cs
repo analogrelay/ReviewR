@@ -29,14 +29,15 @@ namespace ReviewR.Web.Services
                 UserId = ownerId,
                 Iterations = new List<Iteration>() {
                     new Iteration()
-                }
+                },
+                CreatedOn = DateTimeOffset.UtcNow
             };
             Data.Reviews.Add(r);
             Data.SaveChanges();
             return r;
         }
 
-        public virtual IEnumerable<Review> GetReviewsCreatedBy(int userId)
+        public virtual IEnumerable<Review> GetReviewsCreatedBy(long userId)
         {
             return Data.Reviews
                        .Where(r => r.UserId == userId);
