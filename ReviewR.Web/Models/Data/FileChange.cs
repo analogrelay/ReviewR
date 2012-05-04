@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 
@@ -25,5 +26,8 @@ namespace ReviewR.Web.Models.Data
     
         public virtual Iteration Iteration { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+
+        [NotMapped]
+        public string DisplayFileName { get { return String.IsNullOrEmpty(NewFileName) ? FileName : NewFileName; } }
     }
 }

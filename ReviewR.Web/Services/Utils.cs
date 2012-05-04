@@ -30,12 +30,12 @@ namespace ReviewR.Web.Services
                 .ToLower();
         }
 
-        public static string DecodeCookieToJson(HttpContextBase context)
+        public static SessionToken GetActiveSessionToken(HttpContextBase context)
         {
             HttpCookie cookie = context.Request.Cookies[ReviewRApiController.CookieName];
+            SessionToken token = null;
             if (cookie != null)
             {
-                SessionToken token;
                 try
                 {
                     token = Tokens.UnprotectToken(HttpUtility.UrlDecode(cookie.Value), ReviewRApiController.Purpose);
@@ -44,6 +44,15 @@ namespace ReviewR.Web.Services
                 {
                     return null;
                 }
+            }
+            return token;
+        }
+
+        public static string DecodeCookieToJson(HttpContextBase context)
+        {
+            SessionToken token = GetActiveSessionToken(context);
+            if (token != null)
+            {
                 return JsonConvert.SerializeObject(token.User.Identity, new JsonSerializerSettings()
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver()

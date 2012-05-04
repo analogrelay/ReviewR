@@ -24,34 +24,34 @@ namespace ReviewR.Web.Api.Controllers
         public HttpResponseMessage Get(int id)
         {
             Review review = Reviews.GetReview(id);
+
             if (review == null)
             {
                 return NotFound();
             }
-            else if (review.UserId != User.Identity.UserId && !review.Participants.Any(p => p.UserId == User.Identity.UserId))
-            {
-                return Forbidden();
-            }
             else
             {
+                // Filter iterations if this user isn't the owner
+                bool owner = review.UserId == User.Identity.UserId;
+                IEnumerable<Iteration> iters = review.Iterations;
+                if (!owner)
+                {
+                    iters = review.Iterations.Where(i => i.Published);
+                }
+
                 return Ok(new ReviewDetailResponseModel()
                 {
                     Id = review.Id,
                     Title = review.Name,
                     Author = UserModel.FromUser(review.Creator),
                     Description = review.Description,
-                    Iterations = review.Iterations.OrderBy(i => i.StartedOn).Select((i, idx) => new IterationModel()
+                    Iterations = iters.OrderBy(i => i.StartedOn).Select((i, idx) => new IterationModel()
                     {
                         Id = i.Id,
                         Order = idx,
                         Description = i.Description
                     }),
-                    Participants = review.Participants.Select(p => new ParticipantModel()
-                    {
-                        User = UserModel.FromUser(p.User),
-                        Status = p.Status,
-                        Required = p.Required
-                    })
+                    Owner = owner
                 });
             }
         }

@@ -13,7 +13,7 @@
     };
 
     // Modals
-    function DiffLine(init) {
+    function DiffLineViewModel(init) {
         init = init || {};
         var self = this;
 
@@ -27,7 +27,7 @@
         return self;
     }
 
-    function Diff(init) {
+    function DiffViewModel(init) {
         init = init || {};
         var self = this;
 
@@ -42,7 +42,7 @@
         return self;
     }
 
-    function Folder(init) {
+    function FolderViewModel(init) {
         init = init || {};
         var self = this;
 
@@ -53,7 +53,7 @@
         return self;
     }
 
-    function File(owner, init) {
+    function FileViewModel(owner, init) {
         init = init || {};
         var self = this;
         var _owner = owner;
@@ -61,49 +61,61 @@
             _owner = new ViewReviewViewModel();
         }
 
+        var fullPath = init.fullPath;
+        if (fullPath[0] === '/') {
+            fullPath = fullPath.substr(1);
+        }
+
         // Fields
         self.id = ko.observable(init.id);
         self.fileName = ko.observable(init.fileName);
+        self.fullPath = ko.observable(fullPath);
         self.changeType = ko.observable(init.changeType);
         self.diff = ko.observable();
         self.active = ko.computed(function () {
             return (_owner.activeFile() && _owner.activeFile().id() === self.id());
         });
 
+        // Computed
+        self.viewUrl = ko.computed(function () {
+            return '/reviews/' + _owner.id() + '/iterations/' + (_owner.activeIteration().order() + 1) + '/' + self.fullPath() + '/r';
+        });
+
         self.activate = function () {
-            view.activeFile(self);
+            _owner.activeFile(self);
             if (!self.diff()) {
-                //$.ajax({
-                //    url: '~/api/v1/changes/' + self.id(),
-                //    type: 'get',
-                //    statusCode: {
-                //        404: function () {
-                //            rR.utils.fail('todo: tell user the iteration does not exist');
-                //            rR.bus.navigate.publish('');
-                //        },
-                //        403: function () {
-                //            rR.utils.fail("todo: tell user they aren't on this review");
-                //            rR.bus.navigate.publish('');
-                //        },
-                //        200: function (data) {
-                //            self.diff(diff({
-                //                id: data.id,
-                //                fileName: data.fileName,
-                //                deletions: data.deletions,
-                //                insertions: data.insertions,
-                //                binary: data.binary,
-                //                lines: data.lines.map(function (l) { return line(l) })
-                //            }));
-                //        }
-                //    }
-                //});
+                $.ajax({
+                    url: '~/api/v1/changes/' + self.id(),
+                    type: 'get',
+                    statusCode: {
+                        404: function () {
+                            sy.utils.fail('todo: tell user the iteration does not exist');
+                            sy.bus.navigate.publish('');
+                        },
+                        403: function () {
+                            sy.utils.fail("todo: tell user they aren't on this review");
+                            sy.bus.navigate.publish('');
+                        },
+                        200: function (data) {
+                            self.diff(new DiffViewModel({
+                                id: data.id,
+                                fileName: data.fileName,
+                                fullPath: data.fullPath,
+                                deletions: data.deletions,
+                                insertions: data.insertions,
+                                binary: data.binary,
+                                lines: data.lines.map(function (l) { return new DiffLineViewModel(l) })
+                            }));
+                        }
+                    }
+                });
             }
         }
 
         return self;
     }
 
-    function Iteration(owner, init) {
+    function IterationViewModel(owner, init) {
         /// <param name="owner" type="ViewReviewViewModel" />
         init = init || {};
         var self = this;
@@ -123,7 +135,9 @@
             return _owner.activeIteration() && _owner.activeIteration().id() === self.id();
         });
 
-        self.activate = function () {
+        var _startPath;
+        self.activate = function (startPath) {
+            _startPath = startPath;
             _owner.activeIteration(self);
         }
 
@@ -150,10 +164,14 @@
                     200: function (data) {
                         self.folders.removeAll();
                         for (var i = 0; i < data.length; i++) {
-                            self.folders.push(new Folder({
+                            self.folders.push(new FolderViewModel({
                                 name: data[i].name,
-                                files: data[i].files.map(function(f) { return new File(_owner, f); })
+                                files: data[i].files.map(function(f) { return new FileViewModel(_owner, f); })
                             }));
+                        }
+                        if (_startPath) {
+                            _owner.selectFile(_startPath);
+                            _startPath = null;
                         }
                     }
                 }
@@ -193,15 +211,12 @@
                             var oldOrder = self.order();
                             _owner.iterations.remove(self);
                             if (_owner.iterations().length > 0) {
-                                var order = oldOrder;
-                                if (order > _owner.iterations().length - 1) {
-                                    order = _owner.iterations().length - 1;
+                                var next = oldOrder;
+                                if (next > _owner.iterations().length - 1) {
+                                    next = _owner.iterations().length - 1;
                                 }
-                                if (order === oldOrder) {
-                                    _owner.iterations()[order].activate();
-                                } else {
-                                    sy.bus.navigate.publish('reviews/' + _owner.id() + '/iterations/' + (order + 1));
-                                }
+                                var iter = _owner.iterations()[next];
+                                sy.bus.navigate.publish('reviews/' + _owner.id() + '/iterations/' + iter.id());
                             } else {
                                 sy.bus.navigate.publish('reviews/' + _owner.id());
                             }
@@ -217,7 +232,7 @@
     function ViewReviewViewModel(init) {
         var self = this;
 
-        var startIter = (init.startIter - 1) || 0;
+        var startIter = init.startIter;
 
         self.id = ko.observable(init.id);
         self.description = ko.observable(init.description || '');
@@ -242,37 +257,58 @@
                 type: 'get',
                 statusCode: {
                     401: function () {
-                        rR.utils.fail('todo: prompt user for login');
-                        rR.bus.navigate.publish('');
+                        sy.utils.fail('todo: prompt user for login');
+                        sy.bus.navigate.publish('');
                     },
                     403: function () {
-                        rR.utils.fail("todo: tell user they aren't on this review");
-                        rR.bus.navigate.publish('');
+                        sy.utils.fail("todo: tell user they aren't on this review");
+                        sy.bus.navigate.publish('');
                     },
                     200: function (data) {
                         self.title(data.title);
                         self.description(data.description);
                         self.author(new rR.models.User(data.author));
                         self.iterations.removeAll();
-                        for (var i = 0; i < data.iterations.length; i++) { self.iterations.push(new Iteration(self, data.iterations[i])); }
+                        for (var i = 0; i < data.iterations.length; i++) { self.iterations.push(new IterationViewModel(self, data.iterations[i])); }
                         if (self.iterations().length > 0) {
-                            if (startIter > self.iterations().length - 1) {
-                                alert('No such iteration!');
-                                startIter = 0;
+                            if (startIter) {
+                                self.selectIteration(startIter, init.startPath);
+                            } else {
+                                self.iterations()[0].activate(init.startPath);
                             }
-                            self.selectIteration(startIter + 1);
                         }
                     }
                 }
             });
         };
 
-        self.selectIteration = function (order) {
-            order = order - 1;
-            if (order < 0 || order > self.iterations().length - 1) {
-                alert('Unknown iteration!');
+        self.selectIteration = function (id, startPath) {
+            var iter;
+            for (var i = 0; i < self.iterations().length; i++) {
+                if (self.iterations()[i].id() == id) {
+                    iter = self.iterations()[i];
+                    break;
+                }
             }
-            self.iterations()[order].activate();
+            if (!iter) {
+                alert('Unknown iteration!');
+            } else {
+                iter.activate(startPath);
+            }
+        }
+
+        self.selectFile = function (path) {
+            var iter = self.activeIteration();
+
+            // TODO: jslinq?
+            for (var i = 0; i < iter.folders().length; i++) {
+                for (var j = 0; j < iter.folders()[i].files().length; j++) {
+                    if (iter.folders()[i].files()[j].fullPath() === path) {
+                        iter.folders()[i].files()[j].activate();
+                        return;
+                    }
+                }
+            }
         }
 
         self.newIteration = function () {
@@ -289,12 +325,12 @@
                     201: function (data) {
                         var lastIter = self.iterations()[self.iterations().length - 1];
                         var order = lastIter ? lastIter.order() + 1 : 0;
-                        var iter = new Iteration(self, {
+                        var iter = new IterationViewModel(self, {
                             id: data.id,
                             order: order
                         });
                         self.iterations.push(iter);
-                        sy.bus.navigate.publish('reviews/' + self.id() + '/iterations/' + (iter.order() + 1));
+                        sy.bus.navigate.publish('reviews/' + self.id() + '/iterations/' + iter.id());
                     }
                 }
             });
@@ -345,19 +381,30 @@
             _activeReview = new ViewReviewViewModel();
         }
 
-        function openReview(id, order) {
-            _activeReview = new ViewReviewViewModel({ id: id, startIter: order });
+        function openReview(id, order, path) {
+            _activeReview = new ViewReviewViewModel({ id: id, startIter: order, startPath: path });
             self.openPage('view', _activeReview);
         }
 
         self.page('view', ViewReviewViewModel);
         self.dialog('upload', UploadFileViewModel);
 
-        self.route('Iteration', 'reviews/:reviewId/iterations/:order', function (reviewId, order) {
+        self.route('File', 'reviews/:reviewId/iterations/:iterId/*path/r', function (reviewId, iterId, path) {
             if (!_activeReview || _activeReview.id() !== reviewId) {
-                openReview(reviewId, order);
+                openReview(reviewId, iterId, path);
             } else {
-                _activeReview.selectIteration(order);
+                if (_activeReview.activeIteration().id() !== iterId) {
+                    _activeReview.selectIteration(iterId);
+                }
+                _activeReview.selectFile(path);
+            }
+        });
+
+        self.route('Iteration', 'reviews/:reviewId/iterations/:iterId', function (reviewId, iterId) {
+            if (!_activeReview || _activeReview.id() !== reviewId) {
+                openReview(reviewId, iterId);
+            } else {
+                _activeReview.selectIteration(iterId);
             }
         });
 

@@ -49,7 +49,8 @@ namespace ReviewR.Web.Services
             {
                 return null;
             }
-            var identifier = JsonConvert.DeserializeAnonymousType(await resp.Content.ReadAsStringAsync(), new
+            string content = await resp.Content.ReadAsStringAsync();
+            var identifier = JsonConvert.DeserializeAnonymousType(content, new
             {
                 profile = new
                 {

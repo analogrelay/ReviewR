@@ -28,7 +28,7 @@ namespace ReviewR.Web.Services
                 Description = description,
                 UserId = ownerId,
                 Iterations = new List<Iteration>() {
-                    new Iteration()
+                    new Iteration() { StartedOn = DateTimeOffset.UtcNow }
                 },
                 CreatedOn = DateTimeOffset.UtcNow
             };
@@ -37,10 +37,17 @@ namespace ReviewR.Web.Services
             return r;
         }
 
-        public virtual IEnumerable<Review> GetReviewsCreatedBy(long userId)
+        public virtual IEnumerable<Review> GetReviewsCreatedBy(int userId)
         {
             return Data.Reviews
                        .Where(r => r.UserId == userId);
+        }
+
+        public IEnumerable<Review> GetReviewsAssignedTo(int userId)
+        {
+            // For now, all reviews not created by a user are assigned to that user
+            return Data.Reviews
+                       .Where(r => r.UserId != userId);
         }
 
         public virtual Review GetReview(int id)
@@ -69,7 +76,7 @@ namespace ReviewR.Web.Services
             Iteration i = new Iteration()
             {
                 Published = false,
-                StartedOn = DateTimeOffset.UtcNow
+                StartedOn = DateTimeOffset.UtcNow,
             };
             r.Iterations.Add(i);
             Data.SaveChanges();

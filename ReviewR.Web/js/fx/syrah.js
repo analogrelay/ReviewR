@@ -132,11 +132,15 @@
                 self.router.navigate(url);
             });
 
-            syrah.bus.register('exec', ['action']);
+            syrah.bus.register('exec', ['action', 'args']);
             syrah.bus.exec.subscribe(function (action) {
                 var act = _actions[action];
                 syrah.utils.assert(act, 'no such action: ' + action);
-                act();
+                var args = [];
+                if (arguments.length > 1) {
+                    args = Array.prototype.slice.apply(arguments, [1]);
+                }
+                act.apply(this, args);
             });
 
             syrah.bus.register('dialog.dismiss');
@@ -249,7 +253,7 @@
                 return self;
             }
 
-            self.page = function (id, modelConstructor, templateId) {
+            self.page = function (id, modelConstructor, options) {
                 /// <signature>
                 ///     <param name="id" type="String">The id of the page, also used as the id of the template</param>
                 ///     <param name="modelConstructor" type="Function">A function which, when called with 'new', creates the view model for this page</param>
@@ -257,12 +261,12 @@
                 /// <signature>
                 ///     <param name="id" type="String">The id of the page, NOT used as the id of the template</param>
                 ///     <param name="modelConstructor" type="Function">A function which, when called with 'new', creates the view model for this page</param>
-                ///     <param name="templateId" type="String">The id of the template to render for this page</param>
+                ///     <param name="options" type="Object">The options for this page</param>
                 /// </signature>
-                return addView(self.pages, id, modelConstructor, templateId);
+                return addView(self.pages, id, modelConstructor, options);
             }
 
-            self.dialog = function (id, modelConstructor, templateId) {
+            self.dialog = function (id, modelConstructor, options) {
                 /// <signature>
                 ///     <param name="id" type="String">The id of the page, also used as the id of the template</param>
                 ///     <param name="modelConstructor" type="Function">A function which, when called with 'new', creates the view model for this page</param>
@@ -270,20 +274,21 @@
                 /// <signature>
                 ///     <param name="id" type="String">The id of the page, NOT used as the id of the template</param>
                 ///     <param name="modelConstructor" type="Function">A function which, when called with 'new', creates the view model for this page</param>
-                ///     <param name="templateId" type="String">The id of the template to render for this page</param>
+                ///     <param name="options" type="Object">The options for this dialog</param>
                 /// </signature>
-                return addView(self.dialogs, id, modelConstructor, templateId);
+                return addView(self.dialogs, id, modelConstructor, options);
             }
 
-            function addView(container, id, modelConstructor, templateId) {
+            function addView(container, id, modelConstructor, options) {
                 if (container.hasOwnProperty(id)) {
                     throw 'a view named ' + id + ' has already been defined by this module';
                 }
-
+                options = options || {};
+                var templateId = options.templateId;
                 if (templateId === undefined) {
                     templateId = id;
                 }
-                var view = new syrah.rendering.View(_moduleName + '.' + templateId, modelConstructor);
+                var view = new syrah.rendering.View(_moduleName + '.' + templateId, modelConstructor, options);
                 container[id] = view;
                 return view;
             }

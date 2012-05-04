@@ -1,0 +1,23 @@
+﻿<form data-bind="submit: submit">
+    <header class="modal-header">
+        <h1>We require more <del>resources</del>information.</h1>
+        <p>Your authentication provider didn't give us all the info we need. Please fill it in here!</p>
+    </header>
+    <div class="modal-body">
+        <div class="alert alert-error" data-bind="visible: hasMessage, text: errorMessage"></div>
+        <div class="form form-horizontal">
+            <ol>
+                <!-- ko if: needName -->
+                @Controls.Text("Display Name:", "displayName", validation: true)
+                <!-- /ko -->
+                <!-- ko if: needEmail -->
+                @Controls.Text("Email Address:", "email", validation: true)
+                <!-- /ko -->
+            </ol>
+        </div>
+    </div>
+    <footer class="modal-footer">
+        <button class="btn pull-right" data-bind="click: close" type="button">Close</button>
+        <button class="btn btn-primary pull-right">Save</button>
+    </footer>
+</form>

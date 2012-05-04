@@ -9,6 +9,6 @@ namespace ReviewR.Web.Models.Response
     {
         public string Description { get; set; }
         public IEnumerable<IterationModel> Iterations { get; set; }
-        public IEnumerable<ParticipantModel> Participants { get; set; }
+        public bool Owner { get; set; }
     }
 }

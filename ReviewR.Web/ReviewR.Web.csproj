@@ -163,6 +163,7 @@
     <Compile Include="Api\MyController.cs" />
     <Compile Include="Api\ReviewsController.cs" />
     <Compile Include="Api\SessionsController.cs" />
+    <Compile Include="App_Start\DbAdminAuthorizationModule.cs" />
     <Compile Include="App_Start\NinjectWeb.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\Routes.cs" />
@@ -682,10 +683,9 @@
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Views\Auth\_Register.cshtml" />
     <Content Include="App_Code\Controls.cshtml" />
     <Content Include="App_Code\Composition.cshtml" />
-    <None Include="Views\Auth\_Login.cshtml" />
+    <None Include="Views\Auth\_MoreData.cshtml" />
     <Content Include="Views\Home\_Dashboard.cshtml" />
     <Content Include="Views\Reviews\_View.cshtml" />
     <None Include="Views\Home\_Index.cshtml" />

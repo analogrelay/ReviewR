@@ -15,6 +15,6 @@
         <li data-bind="if: loading()">Loading...</li>
     </ul>
 </div>
-<p data-bind="if: rR.app.currentUser().loggedIn()">
+<div class="appbar well" data-bind="if: rR.app.currentUser().loggedIn()">
     <button type="button" class="btn btn-primary" data-bind="click: showNewReview"><i class="icon-plus icon-white"></i> New Review</button>
-</p>
+</div>

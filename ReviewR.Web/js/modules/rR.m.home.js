@@ -47,8 +47,9 @@
         
         self.title = ko.observable('').required('Title is required');
         self.description = ko.observable('');
+        self.customError = ko.observable();
         ko.validation.addValidation(self);
-        
+
         self.createReview = function () {
             self.validate();
             if (self.isValid()) {

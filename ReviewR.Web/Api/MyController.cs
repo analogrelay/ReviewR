@@ -26,10 +26,12 @@ namespace ReviewR.Web.Api
         public DashboardResponseModel GetReviews()
         {
             // Get all reviews created by this user
-            IEnumerable<Review> reviews = Reviews.GetReviewsCreatedBy(User.Identity.UserId).ToArray();
+            IEnumerable<Review> myReviews = Reviews.GetReviewsCreatedBy(User.Identity.UserId).ToArray();
+            IEnumerable<Review> assignedReviews = Reviews.GetReviewsAssignedTo(User.Identity.UserId).ToArray();
             return new DashboardResponseModel()
             {
-                Created = reviews.Select(ConvertReview)
+                Created = myReviews.Select(ConvertReview),
+                Assigned = assignedReviews.Select(ConvertReview)
             };
         }
 

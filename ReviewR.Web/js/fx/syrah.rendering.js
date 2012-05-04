@@ -3,17 +3,18 @@
 (function (undefined) {
     "use strict";
     namespace.define('syrah.rendering', function (ns) {
-        ns.View = function (templateId, modelConstructor) {
+        ns.View = function (templateId, modelConstructor, options) {
             var self = this;
             self.injected = new signals.Signal();
             self.removed = new signals.Signal();
             self.templateId = templateId;
             self.modelConstructor = modelConstructor;
+            self.options = options;
         }
 
-        ns.Page = function (templateId, modelConstructor) {
+        ns.Page = function (templateId, modelConstructor, options) {
             var self = this;
-            syrah.rendering.View.apply(this, [templateId, modelConstructor]);
+            syrah.rendering.View.apply(this, [templateId, modelConstructor, options]);
             self.obscured = new syrah.Signal();
             self.revealed = new syrah.Signal();
         }

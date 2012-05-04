@@ -30,7 +30,7 @@ namespace ReviewR.Web.Api
             {
                 return NotFound();
             }
-            else if (iter.Review.UserId != User.Identity.UserId && !iter.Review.Participants.Any(p => p.UserId == User.Identity.UserId))
+            else if (iter.Review.UserId != User.Identity.UserId && !iter.Published)
             {
                 return Forbidden();
             }
@@ -40,7 +40,8 @@ namespace ReviewR.Web.Api
                 Files = g.Select(f => new
                 {
                     Id = f.Id,
-                    FileName = (String.IsNullOrEmpty(f.NewFileName) ? f.FileName : f.NewFileName).Substring(g.Key.Length + 1),
+                    FileName = f.DisplayFileName.Substring(g.Key.Length + 1),
+                    FullPath = f.DisplayFileName,
                     ChangeType = f.ChangeType
                 })
             }));
