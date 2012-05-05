@@ -27,5 +27,13 @@ namespace VibrantUtils
                 throw new ArgumentNullException(paramName);
             }
         }
+
+        public static void InRange(bool condition, string paramName)
+        {
+            if (!condition)
+            {
+                throw new ArgumentOutOfRangeException(paramName);
+            }
+        }
     }
 }

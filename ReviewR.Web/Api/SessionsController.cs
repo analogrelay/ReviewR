@@ -62,7 +62,7 @@ namespace ReviewR.Web.Api
             displayName = displayName ?? id.DisplayName;
 
             IList<string> missingFields = new List<string>();
-            User user = Auth.Login(id.Provider, id.Value);
+            User user = Auth.Login(id.Provider, id.Identifier);
             if (user == null)
             {
                 // Can we find a user with that email?
@@ -78,7 +78,7 @@ namespace ReviewR.Web.Api
                         }
 
                         // Associate this credential with the user
-                        Auth.AddCredential(user.Id, id.Provider, id.Value);
+                        Auth.AddCredential(user.Id, id.Provider, id.Identifier);
                         return Tuple.Create(user, (IList<string>)null);
                     }
                 }
@@ -99,7 +99,7 @@ namespace ReviewR.Web.Api
                 }
 
                 // Nothing is missing, so we can just create the user
-                user = Auth.Register(id, email, displayName);
+                user = Auth.Register(id.Provider, id.Identifier, email, displayName);
             }
             return Tuple.Create(user, (IList<string>)null);
         }

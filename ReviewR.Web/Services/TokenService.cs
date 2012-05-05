@@ -17,20 +17,22 @@ namespace ReviewR.Web.Services
     public class TokenService
     {
         public IDataRepository Data { get; set; }
-        
+
+        protected TokenService() { }
+
         public TokenService(IDataRepository data)
         {
             Data = data;
         }
 
-        public SessionToken UnprotectToken(string token, string purpose)
+        public virtual SessionToken UnprotectToken(string token, string purpose)
         {
             byte[] data = Convert.FromBase64String(token);
             byte[] encodedToken = MachineKey.Unprotect(data, purpose);
             return SessionToken.FromEncodedToken(encodedToken);
         }
 
-        public string ProtectToken(SessionToken token, string purpose)
+        public virtual string ProtectToken(SessionToken token, string purpose)
         {
             byte[] encoded = token.EncodeToken();
             byte[] encrypted = MachineKey.Protect(encoded, purpose);

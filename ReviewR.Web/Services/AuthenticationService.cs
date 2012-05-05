@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Security;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
+using Newtonsoft.Json.Linq;
+using ReviewR.Web.Infrastructure;
 using ReviewR.Web.Models;
 using ReviewR.Web.Models.Data;
 using VibrantUtils;
-using ReviewR.Web.Infrastructure;
-using Newtonsoft.Json;
-using System.Security.Cryptography;
 
 namespace ReviewR.Web.Services
 {
@@ -34,52 +30,23 @@ namespace ReviewR.Web.Services
 
         public virtual User GetUserByEmail(string email)
         {
+            Requires.NotNullOrEmpty(email, "email");
+
             return Data.Users.Where(u => u.Email == email).FirstOrDefault();
         }
 
-        public async virtual Task<UserInfo> ResolveAuthTokenAsync(string authenticationToken)
+        public virtual Task<UserInfo> ResolveAuthTokenAsync(string authenticationToken)
         {
-            HttpResponseMessage resp = await ExchangeToken(authenticationToken);
-
-            if (!resp.IsSuccessStatusCode)
-            {
-                return null;
-            }
-            string content = await resp.Content.ReadAsStringAsync();
-            var identifier = JsonConvert.DeserializeAnonymousType(content, new
-            {
-                profile = new
-                {
-                    name = new
-                    {
-                        formatted = ""
-                    },
-                    identifier = "",
-                    providerName = "",
-                    displayName = "",
-                    verifiedEmail = ""
-                }
-            });
-            
-            if (identifier == null || identifier.profile == null)
-            {
-                return null;
-            }
-
-            string name = identifier.profile.displayName;
-            if (identifier.profile.name != null && !String.IsNullOrEmpty(identifier.profile.name.formatted))
-            {
-                name = identifier.profile.name.formatted;
-            }
-            return new UserInfo(
-                identifier.profile.providerName,
-                identifier.profile.identifier,
-                name,
-                identifier.profile.verifiedEmail);
+            // Do arg checking before we start the async task
+            Requires.NotNullOrEmpty(authenticationToken, "authenticationToken");
+            return DoResolveAuthTokenAsync(authenticationToken);
         }
 
         public virtual User Login(string provider, string identifier)
         {
+            Requires.NotNullOrEmpty(provider, "provider");
+            Requires.NotNullOrEmpty(identifier, "identifier");
+
             // Try to get a user for this identifier
             Credential cred = Data.Credentials
                                   .Include("User")
@@ -92,8 +59,13 @@ namespace ReviewR.Web.Services
             return cred.User;
         }
 
-        public virtual User Register(UserInfo identifier, string email, string displayName)
+        public virtual User Register(string provider, string identifier, string email, string displayName)
         {
+            Requires.NotNullOrEmpty(provider, "provider");
+            Requires.NotNullOrEmpty(identifier, "identifier");
+            Requires.NotNullOrEmpty(email, "email");
+            Requires.NotNullOrEmpty(displayName, "displayName");
+
             // Create the user
             User u = new User()
             {
@@ -102,8 +74,8 @@ namespace ReviewR.Web.Services
                 Credentials = new List<Credential>() {
                     new Credential()
                     {
-                        Provider = identifier.Provider,
-                        Identifier = identifier.Value
+                        Provider = provider,
+                        Identifier = identifier
                     }
                 }
             };
@@ -114,6 +86,10 @@ namespace ReviewR.Web.Services
 
         public virtual void AddCredential(int userId, string provider, string identifier)
         {
+            Requires.InRange(userId > 0, "userId");
+            Requires.NotNullOrEmpty(provider, "provider");
+            Requires.NotNullOrEmpty(identifier, "identifier");
+
             Data.Credentials.Add(new Credential()
             {
                 UserId = userId,
@@ -130,6 +106,41 @@ namespace ReviewR.Web.Services
                 "https://rpxnow.com/api/v2/auth_info?apiKey={0}&token={1}",
                 Settings.Get("Janrain:ApiKey"),
                 token), HttpCompletionOption.ResponseContentRead);
+        }
+
+        private async Task<UserInfo> DoResolveAuthTokenAsync(string authenticationToken)
+        {
+            HttpResponseMessage resp = await ExchangeToken(authenticationToken);
+
+            if (!resp.IsSuccessStatusCode)
+            {
+                return null;
+            }
+            string content = await resp.Content.ReadAsStringAsync();
+            dynamic json = JObject.Parse(content);
+
+            if (json == null || json.profile == null)
+            {
+                return null;
+            }
+            
+            string name = json.profile.displayName;
+            if (json.profile.name != null)
+            {
+                string formatted = json.profile.name.formatted;
+                if (!String.IsNullOrEmpty(formatted))
+                {
+                    name = json.profile.name.formatted;
+                }
+            }
+            string provider = json.profile.providerName;
+            string id = json.profile.identifier;
+            string verifiedEmail = json.profile.verifiedEmail;
+            return new UserInfo(
+                provider,
+                id,
+                name,
+                verifiedEmail);
         }
     }
 }
