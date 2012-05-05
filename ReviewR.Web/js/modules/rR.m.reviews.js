@@ -12,10 +12,59 @@
         Removed: 2
     };
 
-    // Modals
-    function DiffLineViewModel(init) {
+    // Models
+    function CommentViewModel(init, owner, line) {
         init = init || {};
         var self = this;
+        var _owner = owner;
+        var _line = line;
+
+        // Fields
+        self.id = ko.observable(init.id);
+        self.body = ko.observable(init.body || '');
+        self.author = ko.observable();
+        self.postedOn = ko.observable();
+        self.isAuthor = ko.observable(init.isAuthor || false);
+
+        if (init.postedOn) {
+            self.postedOn(new Date(init.postedOn));
+        }
+
+        self.displayPostedOn = ko.computed(function () {
+            return $.timeago(self.postedOn());
+        });
+
+        if (init.author) {
+            self.author(new rR.models.UserReference(init.author));
+        }
+
+        self.deleteComment = function () {
+            $.ajax({
+                url: '~/api/v1/comments/' + self.id(),
+                type: 'delete',
+            })
+                .success(function () {
+                    _line.comments.remove(self);
+                })
+                .statusCode({
+                    404: function () {
+                        alert('no such comment!');
+                    },
+                    403: function () {
+                        alert('hey! you can\'t delete someone else\'s comment!');
+                    }
+                });
+        };
+    }
+
+    function DiffLineViewModel(init, owner) {
+        init = init || {};
+        var self = this;
+
+        var _owner = owner;
+        if (window.hasOwnProperty('intellisense')) {
+            _owner = new ViewReviewViewModel();
+        }
 
         // Fields
         self.type = ko.observable(init.type);
@@ -23,11 +72,53 @@
         self.index = ko.observable(init.index);
         self.leftLine = ko.observable(init.leftLine);
         self.rightLine = ko.observable(init.rightLine);
+        self.comments = ko.observableArray([]);
+        self.newCommentBody = ko.observable();
+
+        if (init.comments) {
+            for (var i = 0; i < init.comments.length; i++) {
+                self.comments.push(new CommentViewModel(init.comments[i], _owner, self));
+            }
+        }
+
+        // Layout fields
+        self.addingComment = ko.observable(false);
+
+        self.startComment = function () {
+            self.addingComment(true);
+        }
+
+        self.cancelComment = function () {
+            self.newCommentBody('');
+            self.addingComment(false);
+        }
+
+        self.postComment = function () {
+            $.ajax({
+                url: '~/api/v1/comments',
+                type: 'post',
+                data: { line: self.index(), changeId: _owner.activeFile().id(), body: self.newCommentBody() }
+            })
+                .success(function(data) {
+                    self.comments.push(new CommentViewModel(data, _owner, self));
+                })
+                .statusCode({
+                    404: function () {
+                        sy.utils.fail('todo: tell user the iteration does not exist');
+                        sy.bus.navigate.publish('');
+                    },
+                    403: function () {
+                        sy.utils.fail("todo: tell user they aren't on this review");
+                        sy.bus.navigate.publish('');
+                    }
+                });
+            self.newCommentBody('');
+        }
 
         return self;
     }
 
-    function DiffViewModel(init) {
+    function DiffViewModel(init, file) {
         init = init || {};
         var self = this;
 
@@ -78,7 +169,7 @@
 
         // Computed
         self.viewUrl = ko.computed(function () {
-            return '/reviews/' + _owner.id() + '/iterations/' + (_owner.activeIteration().order() + 1) + '/' + self.fullPath() + '/r';
+            return '/reviews/' + _owner.id() + '/iterations/' + _owner.activeIteration().id() + '/' + self.fullPath() + '/r';
         });
 
         self.activate = function () {
@@ -104,7 +195,7 @@
                                 deletions: data.deletions,
                                 insertions: data.insertions,
                                 binary: data.binary,
-                                lines: data.lines.map(function (l) { return new DiffLineViewModel(l) })
+                                lines: data.lines.map(function (l) { return new DiffLineViewModel(l, _owner) })
                             }));
                         }
                     }
@@ -138,6 +229,7 @@
         var _startPath;
         self.activate = function (startPath) {
             _startPath = startPath;
+            _owner.selectFile();
             _owner.activeIteration(self);
         }
 
@@ -179,13 +271,41 @@
         };
 
         self.publish = function () {
-            alert('todo: update server');
-            self.published(true);
+            $.ajax({
+                url: '~/api/v1/iterations/' + self.id(),
+                type: 'put',
+                data: { published: true }
+            })
+             .success(function(data) {
+                 self.published(true);
+             })
+             .statusCode({
+                 404: function () {
+                     rR.utils.fail('todo: tell user no such iteration');
+                 },
+                 403: function () {
+                     rR.utils.fail("todo: tell user they aren't the author of this review");
+                 }
+             });
         };
 
         self.unpublish = function () {
-            alert('todo: update server');
-            self.published(false);
+            $.ajax({
+                url: '~/api/v1/iterations/' + self.id(),
+                type: 'put',
+                data: { published: false }
+            })
+             .success(function(data) {
+                 self.published(false);
+             })
+             .statusCode({
+                 404: function () {
+                     rR.utils.fail('todo: tell user no such iteration');
+                 },
+                 403: function () {
+                     rR.utils.fail("todo: tell user they aren't the author of this review");
+                 }
+             });
         };
 
         self.addFiles = function () {
@@ -238,6 +358,7 @@
         self.description = ko.observable(init.description || '');
         self.iterations = ko.observableArray(init.iterations || []);
         self.participants = ko.observableArray(init.participants || []);
+        self.owner = ko.observable(init.owner);
         self.title = ko.observable(init.title || '');
         self.author = ko.observable(init.author);
         self.activeFile = ko.observable(init.activeFile);
@@ -268,6 +389,7 @@
                         self.title(data.title);
                         self.description(data.description);
                         self.author(new rR.models.User(data.author));
+                        self.owner(data.owner);
                         self.iterations.removeAll();
                         for (var i = 0; i < data.iterations.length; i++) { self.iterations.push(new IterationViewModel(self, data.iterations[i])); }
                         if (self.iterations().length > 0) {
@@ -298,6 +420,11 @@
         }
 
         self.selectFile = function (path) {
+            if (!path) {
+                self.activeFile(null);
+                return;
+            }
+
             var iter = self.activeIteration();
 
             // TODO: jslinq?

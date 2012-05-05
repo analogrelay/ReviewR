@@ -39,6 +39,16 @@ namespace ReviewR.Web.Models.Response
             };
         }
 
+        public static UserModel FromUser(ReviewRPrincipal p)
+        {
+            return new UserModel()
+            {
+                Id = p.Identity.UserId,
+                DisplayName = p.Identity.DisplayName,
+                Email = p.Identity.Email
+            };
+        }
+
         public override bool Equals(object obj)
         {
             UserModel other = obj as UserModel;

@@ -78,26 +78,35 @@ namespace ReviewR.Web.Api
             }
         }
 
-        public HttpResponseMessage Put(int id, string diff)
+        public HttpResponseMessage Put(int id, string diff, bool? published)
         {
-            if (String.IsNullOrEmpty(diff))
+            // TODO: Organize this a bit better so that we only fetch the iteration once if the request does a batch update
+            if (published.HasValue)
             {
-                return BadRequest();
+                bool? result = Reviews.SetIterationPublished(id, published.Value, User.Identity.UserId);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                else if(!result.Value)
+                {
+                    return Forbidden();
+                }
             }
-
-            bool? result = Reviews.AddDiffToIteration(id, diff, User.Identity.UserId);
-            if (result == null)
+            
+            if (!String.IsNullOrEmpty(diff))
             {
-                return NotFound();
+                bool? result = Reviews.AddDiffToIteration(id, diff, User.Identity.UserId);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                else if(!result.Value)
+                {
+                    return Forbidden();
+                }
             }
-            else if (result.Value)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return Forbidden();
-            }
+            return NoContent();
         }
 
         private static string GetDirectoryName(FileChange f)

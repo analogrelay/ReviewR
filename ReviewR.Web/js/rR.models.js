@@ -4,23 +4,30 @@
 
     namespace.define('rR.models', function (ns) {
         // User View model
-        ns.User = function(init) {
+        ns.UserReference = function (init) {
             init = init || {};
             var self = this;
 
-            // Fields
-            self.token = '';
             self.id = ko.observable(init.id || 0);
             self.email = ko.observable(init.email || '');
             self.emailHash = ko.observable(init.emailHash || '');
             self.displayName = ko.observable(init.displayName || '');
+            self.gravatarUrl = ko.computed(function () {
+                return 'http://www.gravatar.com/avatar/' + self.emailHash() + '?s=16';
+            });
+        }
+
+        ns.User = function(init) {
+            init = init || {};
+            var self = this;
+            rR.models.UserReference.apply(this, [init]);
+
+            // Fields
+            self.token = '';
             self.roles = ko.observableArray(init.roles || []);
             self.loggedIn = ko.observable(init.loggedIn || false);
             self.isAdmin = ko.computed(function () {
                 return $.inArray('Admin', self.roles()) > -1;
-            });
-            self.gravatarUrl = ko.computed(function () {
-                return 'http://www.gravatar.com/avatar/' + self.emailHash() + '?s=16';
             });
 
             return self;

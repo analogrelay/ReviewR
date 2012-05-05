@@ -159,6 +159,7 @@
       <Link>Common\Requires.cs</Link>
     </Compile>
     <Compile Include="Api\ChangesController.cs" />
+    <Compile Include="Api\CommentsController.cs" />
     <Compile Include="Api\IterationsController.cs" />
     <Compile Include="Api\MyController.cs" />
     <Compile Include="Api\ReviewsController.cs" />
@@ -227,6 +228,7 @@
     <Compile Include="Migrations\201204261934160_RemoveDatabaseTokens.Designer.cs">
       <DependentUpon>201204261934160_RemoveDatabaseTokens.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Response\CommentModel.cs" />
     <Compile Include="Models\SessionToken.cs" />
     <Compile Include="Models\Data\Credential.cs" />
     <Compile Include="Models\Data\Iteration.cs" />
@@ -675,6 +677,7 @@
     <Content Include="Scripts\jquery-ui-1.8.19.min.js" />
     <Content Include="Scripts\jquery.fileupload.js" />
     <Content Include="Scripts\jquery.iframe-transport.js" />
+    <Content Include="Scripts\jquery.timeago.js" />
     <Content Include="Scripts\knockout.debug.js" />
     <Content Include="Scripts\knockout.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />

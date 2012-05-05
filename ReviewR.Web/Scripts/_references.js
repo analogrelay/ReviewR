@@ -3,6 +3,7 @@
 /// <reference path="knockout.js" />
 /// <reference path="jquery-ui-1.8.19.js" />
 /// <reference path="modernizr-2.5.3.js" />
+/// <reference path="jquery.timeago.js" />
 
 /// <reference path="../js/fx/knockout.validation.js" />
 /// <reference path="../js/fx/namespace.js" />

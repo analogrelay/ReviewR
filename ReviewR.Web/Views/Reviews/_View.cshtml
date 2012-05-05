@@ -7,7 +7,7 @@
             <a class="iteration-tab" href="#" data-bind="attr: { href: '/reviews/' + $parent.id() + '/iterations/' + id() }, text: order() + 1, css: { unpublished: !published() }"></a>
         </li>
         <!-- /ko -->
-        <li><a href="#" data-bind="click: newIteration"><i class="icon-plus"></i></a></li>
+        <li data-bind="if: owner"><a href="#" data-bind="click: newIteration"><i class="icon-plus"></i></a></li>
     </ul>
     <div data-bind="if: activeIteration()">
         <p class="alert alert-warning" data-bind="visible: !activeIteration().published()"><i class="icon-flag"></i> This iteration has not been published.</p>
@@ -20,7 +20,7 @@
                     <p>
                         This iteration has no files. 
                     </p>
-                    <button class="btn btn-success" data-bind="click: addFiles"><i class="icon-plus icon-white"></i> Add Files...</button>
+                    <button class="btn btn-success" data-bind="click: addFiles, visible: $root.owner"><i class="icon-plus icon-white"></i> Add Files...</button>
                     <!-- /ko -->
                     <!-- ko if: folders().length > 0 -->
                     <ul class="nav nav-list">
@@ -61,7 +61,38 @@
                                     <i data-bind="css: {'icon-plus': type() === 1, 'icon-minus': type() === 2, 'icon-map-marker': type() === 3}"></i>
                                 </td>
                                 <td class="diff-line">
+                                    <a href="#" data-bind="click: startComment" class="diff-add-comment-button"><i class="icon-comment"></i></a>
                                     <pre data-bind="text: text"></pre>
+                                </td>
+                            </tr>
+                            <tr data-bind="if: addingComment() || comments().length > 0">
+                                <td class="diff-linenum"></td>
+                                <td class="diff-linenum"></td>
+                                <td class="diff-linenum"></td>
+                                <td class="diff-comments-host">
+                                    <ul class="diff-comments" data-bind="foreach: comments">
+                                        <li>
+                                            <p class="diff-comment-meta">
+                                                <abbr class="pull-right label" data-bind="text: displayPostedOn()"></abbr>
+                                                <a class="user-badge" data-bind="attr: { href: '/users/' + author().id() }">
+                                                    <img data-bind="attr: { src: author().gravatarUrl(), alt: author().email() }" />
+                                                    <span data-bind="text: author().displayName()"></span>
+                                                </a> 
+                                            </p>
+                                            <div class="pull-right diff-comment-actions" data-bind="if: isAuthor()">
+                                                <button type="button" class="btn btn-danger" data-bind="click: deleteComment"><i class="icon-remove icon-white"></i> Delete</button>
+                                            </div>
+                                            <p class="diff-comment-body" data-bind="text: body()"></p>
+                                        </li>
+                                    </ul>
+                                    <div data-bind="if: !addingComment()">
+                                        <button type="button" class="btn btn-success" data-bind="click: startComment"><i class="icon-comment icon-white"></i> Add Comment</button>
+                                    </div>
+                                    <form class="diff-comment-form" data-bind="submit: postComment, visible: addingComment">
+                                        <textarea class="diff-comment-edit" data-bind="value: newCommentBody" />
+                                        <button type="submit" class="btn btn-success"><i class="icon-plus icon-white"></i> Post Comment</button>
+                                        <button type="button" class="btn" data-bind="click: cancelComment"><i class="icon-remove"></i> Close Form</button>
+                                    </form>
                                 </td>
                             </tr>
                         </tbody>
@@ -73,10 +104,10 @@
             </div>
         </div>
         <div class="appbar well">
-            <button class="btn btn-danger pull-right" data-bind="click: activeIteration().remove"><i class="icon-trash icon-white"></i> Delete Iteration</button>
-            <button class="btn btn-primary" data-bind="visible: !activeIteration().published(), click: activeIteration().publish"><i class="icon-share icon-white"></i> Publish</button>
-            <button class="btn btn-success" data-bind="visible: !activeIteration().published(), click: activeIteration().addFiles"><i class="icon-plus icon-white"></i> Add Files...</button>
-            <button class="btn btn-info" data-bind="visible: activeIteration().published(), click: activeIteration().unpublish"><i class="icon-share icon-white"></i> Unpublish</button>
+            <button class="btn btn-danger pull-right" data-bind="visible: $root.owner(), click: activeIteration().remove"><i class="icon-trash icon-white"></i> Delete Iteration</button>
+            <button class="btn btn-primary" data-bind="visible: $root.owner() && !activeIteration().published(), click: activeIteration().publish"><i class="icon-share icon-white"></i> Publish</button>
+            <button class="btn btn-success" data-bind="visible: $root.owner() && !activeIteration().published(), click: activeIteration().addFiles"><i class="icon-plus icon-white"></i> Add Files...</button>
+            <button class="btn btn-info" data-bind="visible: $root.owner() && activeIteration().published(), click: activeIteration().unpublish"><i class="icon-share icon-white"></i> Unpublish</button>
         </div>
     </div>
 </header>

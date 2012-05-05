@@ -138,8 +138,63 @@ namespace ReviewR.Web.Services
             return Data.Changes
                        .Include("Iteration.Review")
                        .Include("Iteration.Review.Participants")
+                       .Include("Comments")
                        .Where(c => c.Id == id)
                        .FirstOrDefault();
+        }
+
+        public bool? SetIterationPublished(int id, bool published, int userId)
+        {
+            Iteration i = Data.Iterations
+                              .Include("Review")
+                              .Where(iter => iter.Id == id)
+                              .FirstOrDefault();
+            if (i == null)
+            {
+                return null;
+            }
+            else if (i.Review.UserId != userId)
+            {
+                return false;
+            }
+            i.Published = published;
+            Data.SaveChanges();
+            return true;
+        }
+
+        public Comment CreateComment(int changeId, int line, string body, int userId)
+        {
+            FileChange chg = Data.Changes.Where(c => c.Id == changeId).FirstOrDefault();
+            if (chg == null)
+            {
+                return null;
+            }
+            Comment cmt = new Comment()
+            {
+                Content = body,
+                DiffLineIndex = line,
+                UserId = userId,
+                PostedOn = DateTime.UtcNow
+            };
+            chg.Comments.Add(cmt);
+            Data.SaveChanges();
+            return cmt;
+        }
+
+        public bool? DeleteComment(int id, int userId)
+        {
+            Comment cmt = Data.Comments.Where(c => c.Id == id).FirstOrDefault();
+            if (cmt == null)
+            {
+                return null;
+            }
+            if (cmt.UserId != userId)
+            {
+                return false;
+            }
+            Data.Comments.Remove(cmt);
+            Data.SaveChanges();
+            return true;
         }
     }
 }

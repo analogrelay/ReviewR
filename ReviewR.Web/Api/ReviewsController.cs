@@ -49,6 +49,7 @@ namespace ReviewR.Web.Api.Controllers
                     {
                         Id = i.Id,
                         Order = idx,
+                        Published = i.Published,
                         Description = i.Description
                     }),
                     Owner = owner

@@ -6,6 +6,7 @@ using System.Web;
 using ReviewR.Web.Infrastructure;
 using ReviewR.Web.Models;
 using ReviewR.Web.Models.Data;
+using ReviewR.Web.Models.Response;
 using ReviewR.Web.Services;
 
 namespace ReviewR.Web.Api
@@ -28,11 +29,27 @@ namespace ReviewR.Web.Api
             {
                 return NotFound();
             }
-            else if (!IsAuthorized(change))
+            DiffFileModel file = Diff.CreateViewModelFromUnifiedDiff(change.FileName, change.Diff);
+            AttachComments(change, file);
+            return Ok(file);
+        }
+
+        private void AttachComments(FileChange change, DiffFileModel file)
+        {
+            foreach (var groups in change.Comments.GroupBy(c => c.DiffLineIndex))
             {
-                return Forbidden();
+                foreach (var comment in groups.OrderBy(c => c.PostedOn))
+                {
+                    file.Lines[groups.Key.Value].Comments.Add(new CommentModel()
+                    {
+                        Id = comment.Id,
+                        Author = UserModel.FromUser(comment.User),
+                        Body = comment.Content,
+                        IsAuthor = comment.UserId == User.Identity.UserId,
+                        PostedOn = comment.PostedOn.ToLocalTime()
+                    });
+                }
             }
-            return Ok(Diff.CreateViewModelFromUnifiedDiff(change.FileName, change.Diff));
         }
 
         private bool IsAuthorized(FileChange change)
