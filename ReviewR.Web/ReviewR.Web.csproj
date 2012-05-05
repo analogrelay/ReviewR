@@ -628,6 +628,7 @@
     <Content Include="js\modules\rR.m.home.js" />
     <Content Include="js\fx\knockout.validation.js" />
     <Content Include="js\modules\rR.m.auth.js" />
+    <Content Include="js\modules\rR.m.users.js" />
     <Content Include="js\rR.models.js" />
     <Content Include="js\rR.app.js" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
