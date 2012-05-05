@@ -39,11 +39,7 @@ namespace ReviewR.Web.Services
 
         public async virtual Task<UserInfo> ResolveAuthTokenAsync(string authenticationToken)
         {
-            HttpClient client = new HttpClient();
-            HttpResponseMessage resp = await client.GetAsync(String.Format(
-                "https://rpxnow.com/api/v2/auth_info?apiKey={0}&token={1}",
-                Settings.Get("Janrain:ApiKey"),
-                authenticationToken), HttpCompletionOption.ResponseContentRead);
+            HttpResponseMessage resp = await ExchangeToken(authenticationToken);
 
             if (!resp.IsSuccessStatusCode)
             {
@@ -64,6 +60,12 @@ namespace ReviewR.Web.Services
                     verifiedEmail = ""
                 }
             });
+            
+            if (identifier == null || identifier.profile == null)
+            {
+                return null;
+            }
+
             string name = identifier.profile.displayName;
             if (identifier.profile.name != null && !String.IsNullOrEmpty(identifier.profile.name.formatted))
             {
@@ -119,6 +121,15 @@ namespace ReviewR.Web.Services
                 Identifier = identifier
             });
             Data.SaveChanges();
+        }
+
+        protected internal async virtual Task<HttpResponseMessage> ExchangeToken(string token)
+        {
+            HttpClient client = new HttpClient();
+            return await client.GetAsync(String.Format(
+                "https://rpxnow.com/api/v2/auth_info?apiKey={0}&token={1}",
+                Settings.Get("Janrain:ApiKey"),
+                token), HttpCompletionOption.ResponseContentRead);
         }
     }
 }
