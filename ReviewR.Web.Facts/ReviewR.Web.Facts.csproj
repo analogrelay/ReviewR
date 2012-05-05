@@ -111,6 +111,8 @@
     <Compile Include="MockTokenService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AuthenticationServiceFacts.cs" />
+    <Compile Include="Services\ChangeServiceFacts.cs" />
+    <Compile Include="Services\CommentServiceFacts.cs" />
     <Compile Include="TestMixins.cs" />
   </ItemGroup>
   <ItemGroup>

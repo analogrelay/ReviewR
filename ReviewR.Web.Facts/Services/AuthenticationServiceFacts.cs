@@ -37,6 +37,14 @@ namespace ReviewR.Web.Facts.Services
                 Assert.Same(settings, auth.Settings);
                 Assert.Equal(TimeSpan.FromMinutes(30), auth.Timeout);
             }
+
+            [Fact]
+            public void RequiresNonNullArguments()
+            {
+                ContractAssert.NotNull(() => new AuthenticationService(null, new MockTokenService(), new MockSettings()), "data");
+                ContractAssert.NotNull(() => new AuthenticationService(new MockDataRepository(), null, new MockSettings()), "tokens");
+                ContractAssert.NotNull(() => new AuthenticationService(new MockDataRepository(), new MockTokenService(), null), "settings");
+            }
         }
 
         public class GetUserByEmail
@@ -44,20 +52,20 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresNonNullOrEmptyEmail()
             {
-                ContractAssert.NotNullOrEmpty(s => CreateAuthService().GetUserByEmail(s), "email");
+                ContractAssert.NotNullOrEmpty(s => CreateService().GetUserByEmail(s), "email");
             }
 
             [Fact]
             public void ReturnsNullForNonExistantEmail()
             {
-                Assert.Null(CreateAuthService().GetUserByEmail("bork@bork.bork"));
+                Assert.Null(CreateService().GetUserByEmail("bork@bork.bork"));
             }
 
             [Fact]
             public void ReturnsUserMatchingEmailIfOneExists()
             {
                 // Arrange
-                var auth = CreateAuthService();
+                var auth = CreateService();
                 auth.MockData.Users.Add(new User() { Email = "bork@bork.bork", DisplayName = "Swedish Chef" });
                 auth.MockData.SaveChanges();
 
@@ -74,13 +82,13 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresNonNullOrEmptyAuthToken()
             {
-                ContractAssert.NotNullOrEmpty(s => CreateAuthService().ResolveAuthTokenAsync(s).Wait(), "authenticationToken");
+                ContractAssert.NotNullOrEmpty(s => CreateService().ResolveAuthTokenAsync(s).Wait(), "authenticationToken");
             }
 
             [Fact]
             public void BubblesHttpExceptions()
             {
-                AggregateException agg = Assert.Throws<AggregateException>(() => CreateAuthService().ResolveAuthTokenAsync("abc123").Result);
+                AggregateException agg = Assert.Throws<AggregateException>(() => CreateService().ResolveAuthTokenAsync("abc123").Result);
                 Assert.Equal(1, agg.InnerExceptions.Count);
                 Assert.IsType<HttpRequestException>(agg.InnerExceptions[0]);
             }
@@ -90,7 +98,7 @@ namespace ReviewR.Web.Facts.Services
             {
                 // Arrange
                 const string token = "abc123";
-                var auth = CreateAuthService();
+                var auth = CreateService();
                 var msg = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 auth.TokenExchanges[token] = msg;
 
@@ -103,7 +111,7 @@ namespace ReviewR.Web.Facts.Services
             {
                 // Arrange
                 const string token = "abc123";
-                var auth = CreateAuthService();
+                var auth = CreateService();
                 var msg = new HttpResponseMessage(HttpStatusCode.OK);
                 msg.Content = new StringContent("<glorb>");
                 auth.TokenExchanges[token] = msg;
@@ -119,7 +127,7 @@ namespace ReviewR.Web.Facts.Services
             {
                 // Arrange
                 const string token = "abc123";
-                var auth = CreateAuthService();
+                var auth = CreateService();
                 var msg = new HttpResponseMessage(HttpStatusCode.OK);
                 msg.Content = new StringContent("{ glorb: 'glorp' }");
                 auth.TokenExchanges[token] = msg;
@@ -133,7 +141,7 @@ namespace ReviewR.Web.Facts.Services
             {
                 // Arrange
                 const string token = "abc123";
-                var auth = CreateAuthService();
+                var auth = CreateService();
                 var msg = new HttpResponseMessage(HttpStatusCode.OK);
                 msg.Content = new StringContent(@"{ 
                     profile: {
@@ -160,7 +168,7 @@ namespace ReviewR.Web.Facts.Services
             {
                 // Arrange
                 const string token = "abc123";
-                var auth = CreateAuthService();
+                var auth = CreateService();
                 var msg = new HttpResponseMessage(HttpStatusCode.OK);
                 msg.Content = new StringContent(@"{ 
                     profile: {
@@ -191,15 +199,15 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresNonNullOrEmptyArguments()
             {
-                ContractAssert.NotNullOrEmpty(s => CreateAuthService().Login(s, "foo"), "provider");
-                ContractAssert.NotNullOrEmpty(s => CreateAuthService().Login("foo", s), "identifier");
+                ContractAssert.NotNullOrEmpty(s => CreateService().Login(s, "foo"), "provider");
+                ContractAssert.NotNullOrEmpty(s => CreateService().Login("foo", s), "identifier");
             }
 
             [Fact]
             public void ReturnsNullIfNoCredentialMatches()
             {
                 // Arrange
-                var auth = CreateAuthService();
+                var auth = CreateService();
                 var user = new User() { DisplayName = "Swedish Chef" };
                 var cred = new Credential() { Provider = "flitter", Identifier = "#swbork", User = user };
                 user.Credentials = new List<Credential>() { cred };
@@ -218,7 +226,7 @@ namespace ReviewR.Web.Facts.Services
             public void ReturnsUserMatchingCredential()
             {
                 // Arrange
-                var auth = CreateAuthService();
+                var auth = CreateService();
                 var expected = new User() { DisplayName = "Swedish Chef" };
                 var notexpected = new User() { DisplayName = "Beaker" };
                 var cred = new Credential() { Provider = "bacefook", Identifier = "http://bacefook/bork", User = expected };
@@ -239,7 +247,7 @@ namespace ReviewR.Web.Facts.Services
             public void BothProviderAndIdMustMatch()
             {
                 // Arrange
-                var auth = CreateAuthService();
+                var auth = CreateService();
                 var expected = new User() { DisplayName = "Swedish Chef" };
                 var cred = new Credential() { Provider = "flitter", Identifier = "http://bacefook/bork", User = expected };
                 expected.Credentials = new List<Credential>() { cred };
@@ -260,17 +268,17 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresNonNullOrEmptyArguments()
             {
-                ContractAssert.NotNullOrEmpty(s => CreateAuthService().Register(s, "id", "bar", "foo"), "provider");
-                ContractAssert.NotNullOrEmpty(s => CreateAuthService().Register("p", s, "bar", "foo"), "identifier");
-                ContractAssert.NotNullOrEmpty(s => CreateAuthService().Register("p", "i", s, "foo"), "email");
-                ContractAssert.NotNullOrEmpty(s => CreateAuthService().Register("p", "i", "foo", s), "displayName");
+                ContractAssert.NotNullOrEmpty(s => CreateService().Register(s, "id", "bar", "foo"), "provider");
+                ContractAssert.NotNullOrEmpty(s => CreateService().Register("p", s, "bar", "foo"), "identifier");
+                ContractAssert.NotNullOrEmpty(s => CreateService().Register("p", "i", s, "foo"), "email");
+                ContractAssert.NotNullOrEmpty(s => CreateService().Register("p", "i", "foo", s), "displayName");
             }
 
             [Fact]
             public void ReturnsCreatedUserAndCredential()
             {
                 // Arrange
-                var auth = CreateAuthService();
+                var auth = CreateService();
 
                 // Act
                 User ret = auth.Register("provider", "identifier", "email", "displayName");
@@ -290,7 +298,7 @@ namespace ReviewR.Web.Facts.Services
             public void AddsUserAndCredentialToDatabase()
             {
                 // Arrange
-                var auth = CreateAuthService();
+                var auth = CreateService();
 
                 // Act
                 auth.Register("provider", "identifier", "email", "displayName");
@@ -311,17 +319,16 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresNonNullOrEmptyArguments()
             {
-                var argex = Assert.Throws<ArgumentOutOfRangeException>(() => CreateAuthService().AddCredential(-1, "p", "i"));
-                Assert.Equal("userId", argex.ParamName);
-                ContractAssert.NotNullOrEmpty(s => CreateAuthService().AddCredential(1, s, "i"), "provider");
-                ContractAssert.NotNullOrEmpty(s => CreateAuthService().AddCredential(1, "p", s), "identifier");
+                ContractAssert.InvalidArgument<ArgumentOutOfRangeException>(() => CreateService().AddCredential(-1, "p", "i"), "userId");
+                ContractAssert.NotNullOrEmpty(s => CreateService().AddCredential(1, s, "i"), "provider");
+                ContractAssert.NotNullOrEmpty(s => CreateService().AddCredential(1, "p", s), "identifier");
             }
 
             [Fact]
             public void AddsCredentialToDatabase()
             {
                 // Arrange
-                var auth = CreateAuthService();
+                var auth = CreateService();
 
                 // Act
                 auth.AddCredential(42, "provider", "identifier");
@@ -334,7 +341,7 @@ namespace ReviewR.Web.Facts.Services
             }
         }
 
-        private static TestableAuthenticationService CreateAuthService()
+        private static TestableAuthenticationService CreateService()
         {
             return new TestableAuthenticationService();
         }

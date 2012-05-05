@@ -15,6 +15,12 @@ namespace VibrantUtils
             VerifyArgEx(argEx, paramName);
         }
 
+        public static void InvalidArgument<T>(Action op, string paramName) where T : ArgumentException
+        {
+            T argEx = Assert.Throws<T>(() => op());
+            VerifyArgEx(argEx, paramName);
+        }
+
         public static void NotNullOrEmpty(Action<string> op, string paramName)
         {
             VerifyNotNullOrEmpty(Assert.Throws<ArgumentException>(() => op(null)), paramName);

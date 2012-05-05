@@ -22,6 +22,10 @@ namespace ReviewR.Web.Services
 
         public AuthenticationService(IDataRepository data, TokenService tokens, ISettings settings)
         {
+            Requires.NotNull(data, "data");
+            Requires.NotNull(tokens, "tokens");
+            Requires.NotNull(settings, "settings");
+
             Data = data;
             Tokens = tokens;
             Settings = settings;

@@ -19,9 +19,17 @@ namespace VibrantUtils
 
         public new bool Equals(object x, object y)
         {
+            if (x is string && y is string)
+            {
+                return String.Equals((string)x, (string)y, StringComparison.Ordinal);
+            }
             if (x is IEnumerable && y is IEnumerable)
             {
                 return Enumerable.SequenceEqual(((IEnumerable)x).OfType<object>(), ((IEnumerable)y).OfType<object>(), new PropertyEqualityComparer());
+            }
+            if (x is ValueType && y is ValueType)
+            {
+                return Object.Equals(x, y);
             }
             return (x == null && y == null) || (x != null && y != null && (!TypeEquality || x.GetType().IsAssignableFrom(y.GetType())) && (Object.Equals(x, y) || MemberwiseEqual(x, y)));
         }
