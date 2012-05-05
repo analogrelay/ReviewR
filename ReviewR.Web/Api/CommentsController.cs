@@ -12,21 +12,21 @@ namespace ReviewR.Web.Api
 {
     public class CommentsController : ReviewRApiController
     {
-        public ReviewService Reviews { get; set; }
+        public CommentService Comments { get; set; }
 
-        public CommentsController(ReviewService reviews)
+        public CommentsController(CommentService comments)
         {
-            Reviews = reviews;
+            Comments = comments;
         }
 
         public HttpResponseMessage Delete(int id)
         {
-            bool? result = Reviews.DeleteComment(id, User.Identity.UserId);
-            if (result == null)
+            var result = Comments.DeleteComment(id, User.Identity.UserId);
+            if (result == DatabaseActionResult.ObjectNotFound)
             {
                 return NotFound();
             }
-            else if (!result.Value)
+            else if (result == DatabaseActionResult.Forbidden)
             {
                 return Forbidden();
             }
@@ -35,7 +35,7 @@ namespace ReviewR.Web.Api
 
         public HttpResponseMessage Post(int changeId, int line, string body)
         {
-            Comment cmt = Reviews.CreateComment(changeId, line, body, User.Identity.UserId);
+            Comment cmt = Comments.CreateComment(changeId, line, body, User.Identity.UserId);
             if (cmt == null)
             {
                 return NotFound();

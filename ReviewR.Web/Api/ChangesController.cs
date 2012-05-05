@@ -13,18 +13,18 @@ namespace ReviewR.Web.Api
 {
     public class ChangesController : ReviewRApiController
     {
-        public ReviewService Reviews { get; set; }
+        public ChangeService Changes { get; set; }
         public DiffService Diff { get; set; }
 
-        public ChangesController(ReviewService reviews, DiffService diff)
+        public ChangesController(ChangeService changes, DiffService diff)
         {
-            Reviews = reviews;
+            Changes = changes;
             Diff = diff;
         }
 
         public HttpResponseMessage Get(int id)
         {
-            FileChange change = Reviews.GetChange(id);
+            FileChange change = Changes.GetChange(id);
             if (change == null)
             {
                 return NotFound();

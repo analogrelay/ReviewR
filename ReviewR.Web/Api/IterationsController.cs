@@ -14,18 +14,18 @@ namespace ReviewR.Web.Api
 {
     public class IterationsController : ReviewRApiController
     {
-        public ReviewService Reviews { get; set; }
+        public IterationService Iterations { get; set; }
         public DiffService Diff { get; set; }
 
-        public IterationsController(ReviewService reviews, DiffService diff)
+        public IterationsController(IterationService iterations, DiffService diff)
         {
-            Reviews = reviews;
+            Iterations = iterations;
             Diff = diff;
         }
 
         public HttpResponseMessage Get(int id)
         {
-            Iteration iter = Reviews.GetIteration(id);
+            Iteration iter = Iterations.GetIteration(id);
             if (iter == null)
             {
                 return NotFound();
@@ -49,7 +49,7 @@ namespace ReviewR.Web.Api
 
         public HttpResponseMessage Post(int reviewId)
         {
-            Iteration iter = Reviews.AddIteration(reviewId, User.Identity.UserId);
+            Iteration iter = Iterations.AddIteration(reviewId, User.Identity.UserId);
             if (iter == null)
             {
                 return Forbidden();
@@ -63,19 +63,16 @@ namespace ReviewR.Web.Api
 
         public HttpResponseMessage Delete(int id)
         {
-            bool? result = Reviews.DeleteIteration(id, User.Identity.UserId);
-            if (result == null)
+            var result = Iterations.DeleteIteration(id, User.Identity.UserId);
+            if (result == DatabaseActionResult.ObjectNotFound)
             {
                 return NotFound();
             }
-            else if (result.Value)
-            {
-                return NoContent();
-            }
-            else
+            else if (result == DatabaseActionResult.Forbidden)
             {
                 return Forbidden();
             }
+            return NoContent();
         }
 
         public HttpResponseMessage Put(int id, string diff, bool? published)
@@ -83,12 +80,12 @@ namespace ReviewR.Web.Api
             // TODO: Organize this a bit better so that we only fetch the iteration once if the request does a batch update
             if (published.HasValue)
             {
-                bool? result = Reviews.SetIterationPublished(id, published.Value, User.Identity.UserId);
-                if (result == null)
+                var result = Iterations.SetIterationPublished(id, published.Value, User.Identity.UserId);
+                if (result == DatabaseActionResult.ObjectNotFound)
                 {
                     return NotFound();
                 }
-                else if(!result.Value)
+                else if (result == DatabaseActionResult.Forbidden)
                 {
                     return Forbidden();
                 }
@@ -96,12 +93,12 @@ namespace ReviewR.Web.Api
             
             if (!String.IsNullOrEmpty(diff))
             {
-                bool? result = Reviews.AddDiffToIteration(id, diff, User.Identity.UserId);
-                if (result == null)
+                var result = Iterations.AddDiffToIteration(id, diff, User.Identity.UserId);
+                if (result == DatabaseActionResult.ObjectNotFound)
                 {
                     return NotFound();
                 }
-                else if(!result.Value)
+                else if (result == DatabaseActionResult.Forbidden)
                 {
                     return Forbidden();
                 }

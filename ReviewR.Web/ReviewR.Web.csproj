@@ -294,9 +294,13 @@
     <Compile Include="Models\ReviewRPrincipal.cs" />
     <Compile Include="Models\UserIdentifier.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
+    <Compile Include="Services\ChangeService.cs" />
+    <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\CreateUserResult.cs" />
+    <Compile Include="Services\DatabaseActionResult.cs" />
     <Compile Include="Services\DiffConverter.cs" />
     <Compile Include="Services\DiffService.cs" />
+    <Compile Include="Services\IterationService.cs" />
     <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Services\TokenService.cs" />
     <Compile Include="Services\Utils.cs" />
