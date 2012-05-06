@@ -45,10 +45,10 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresValidArguments()
             {
-                ContractAssert.InvalidArgument<ArgumentOutOfRangeException>(() => CreateService().CreateComment(-1, 0, "b", 0), "changeId");
-                ContractAssert.InvalidArgument<ArgumentOutOfRangeException>(() => CreateService().CreateComment(0, -1, "b", 0), "line");
+                ContractAssert.OutOfRange(() => CreateService().CreateComment(-1, 0, "b", 0), "changeId");
+                ContractAssert.OutOfRange(() => CreateService().CreateComment(0, -1, "b", 0), "line");
                 ContractAssert.NotNullOrEmpty(s => CreateService().CreateComment(0, 0, s, 0), "body");
-                ContractAssert.InvalidArgument<ArgumentOutOfRangeException>(() => CreateService().CreateComment(0, 0, "b", -1), "userId");
+                ContractAssert.OutOfRange(() => CreateService().CreateComment(0, 0, "b", -1), "userId");
             }
 
             [Fact]
@@ -102,8 +102,8 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresValidArguments()
             {
-                ContractAssert.InvalidArgument<ArgumentOutOfRangeException>(() => CreateService().DeleteComment(-1, 0), "id");
-                ContractAssert.InvalidArgument<ArgumentOutOfRangeException>(() => CreateService().DeleteComment(0, -1), "userId");
+                ContractAssert.OutOfRange(() => CreateService().DeleteComment(-1, 0), "id");
+                ContractAssert.OutOfRange(() => CreateService().DeleteComment(0, -1), "userId");
             }
 
             [Fact]
@@ -119,7 +119,7 @@ namespace ReviewR.Web.Facts.Services
                 var result = comments.DeleteComment(comment.Id + 42, 0);
 
                 // Assert
-                Assert.Equal(result, DatabaseActionResult.ObjectNotFound);
+                Assert.Equal(result, DatabaseActionOutcome.ObjectNotFound);
             }
 
             [Fact]
@@ -135,7 +135,7 @@ namespace ReviewR.Web.Facts.Services
                 var result = comments.DeleteComment(comment.Id, 24);
 
                 // Assert
-                Assert.Equal(result, DatabaseActionResult.Forbidden);
+                Assert.Equal(result, DatabaseActionOutcome.Forbidden);
             }
 
             [Fact]
@@ -153,7 +153,7 @@ namespace ReviewR.Web.Facts.Services
                 var result = comments.DeleteComment(comment1.Id, 42);
 
                 // Assert
-                Assert.Equal(result, DatabaseActionResult.Success);
+                Assert.Equal(result, DatabaseActionOutcome.Success);
                 Assert.DoesNotContain(comment1, comments.Data.Comments);
                 Assert.Contains(comment2, comments.Data.Comments);
             }

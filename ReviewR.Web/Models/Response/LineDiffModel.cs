@@ -8,7 +8,7 @@ using ReviewR.Web.Models.Response;
 
 namespace ReviewR.Web.Models
 {
-    public class DiffLineModel
+    public class LineDiffModel
     {
         public LineDiffType Type { get; set; }
         public string Text { get; set; }
@@ -17,7 +17,7 @@ namespace ReviewR.Web.Models
         public int? RightLine { get; set; }
         public ICollection<CommentModel> Comments { get; set; }
 
-        public DiffLineModel()
+        public LineDiffModel()
         {
             Comments = new List<CommentModel>();
         }

@@ -25,7 +25,7 @@ namespace ReviewR.Web.Facts.Services
             {
                 // Arrange
                 var data = new MockDataRepository();
-                var tokens = new TokenService(data);
+                var tokens = new TokenService();
                 var settings = new MockSettings();
 
                 // Act
@@ -319,7 +319,7 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresNonNullOrEmptyArguments()
             {
-                ContractAssert.InvalidArgument<ArgumentOutOfRangeException>(() => CreateService().AddCredential(-1, "p", "i"), "userId");
+                ContractAssert.OutOfRange(() => CreateService().AddCredential(-1, "p", "i"), "userId");
                 ContractAssert.NotNullOrEmpty(s => CreateService().AddCredential(1, s, "i"), "provider");
                 ContractAssert.NotNullOrEmpty(s => CreateService().AddCredential(1, "p", s), "identifier");
             }

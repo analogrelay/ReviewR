@@ -49,26 +49,32 @@ namespace ReviewR.Web.Api
 
         public HttpResponseMessage Post(int reviewId)
         {
-            Iteration iter = Iterations.AddIteration(reviewId, User.Identity.UserId);
-            if (iter == null)
+            var result = Iterations.AddIteration(reviewId, User.Identity.UserId);
+            switch (result.Outcome)
             {
-                return Forbidden();
+                case DatabaseActionOutcome.ObjectNotFound:
+                    return NotFound();
+                case DatabaseActionOutcome.Forbidden:
+                    return Forbidden();
+                case DatabaseActionOutcome.Success:
+                    return Created(new
+                    {
+                        Id = result.Object.Id,
+                        Href = Url.Resource(result.Object)
+                    });
+                default:
+                    throw new HttpException("Unknown error!");
             }
-            return Created(new
-            {
-                Id = iter.Id,
-                Href = Url.Resource(iter)
-            });
         }
 
         public HttpResponseMessage Delete(int id)
         {
             var result = Iterations.DeleteIteration(id, User.Identity.UserId);
-            if (result == DatabaseActionResult.ObjectNotFound)
+            if (result == DatabaseActionOutcome.ObjectNotFound)
             {
                 return NotFound();
             }
-            else if (result == DatabaseActionResult.Forbidden)
+            else if (result == DatabaseActionOutcome.Forbidden)
             {
                 return Forbidden();
             }
@@ -81,11 +87,11 @@ namespace ReviewR.Web.Api
             if (published.HasValue)
             {
                 var result = Iterations.SetIterationPublished(id, published.Value, User.Identity.UserId);
-                if (result == DatabaseActionResult.ObjectNotFound)
+                if (result == DatabaseActionOutcome.ObjectNotFound)
                 {
                     return NotFound();
                 }
-                else if (result == DatabaseActionResult.Forbidden)
+                else if (result == DatabaseActionOutcome.Forbidden)
                 {
                     return Forbidden();
                 }
@@ -94,11 +100,11 @@ namespace ReviewR.Web.Api
             if (!String.IsNullOrEmpty(diff))
             {
                 var result = Iterations.AddDiffToIteration(id, diff, User.Identity.UserId);
-                if (result == DatabaseActionResult.ObjectNotFound)
+                if (result == DatabaseActionOutcome.ObjectNotFound)
                 {
                     return NotFound();
                 }
-                else if (result == DatabaseActionResult.Forbidden)
+                else if (result == DatabaseActionOutcome.Forbidden)
                 {
                     return Forbidden();
                 }

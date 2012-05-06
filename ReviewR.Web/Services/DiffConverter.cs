@@ -32,7 +32,7 @@ namespace ReviewR.Web.Services
             {
                 // Modification
                 chg.ChangeType = Data.FileChangeType.Modified;
-                chg.FileName = CleanFileName(fileDiff.ModifiedFile);
+                chg.FileName = CleanFileName(fileDiff.OriginalFile);
                 chg.NewFileName = CleanFileName(fileDiff.ModifiedFile);
             }
 

@@ -98,7 +98,7 @@ namespace ReviewR.Web.Infrastructure
         {
             if (User != null)
             {
-                _sessionToken = new SessionToken(User, DateTimeOffset.UtcNow.AddDays(30));
+                _sessionToken = new SessionToken(User, DateTime.UtcNow.AddDays(30));
                 return _sessionTokenString = Tokens.ProtectToken(_sessionToken, Purpose);
             }
             return null;

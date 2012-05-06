@@ -10,7 +10,7 @@ namespace ReviewR.Web.Models.Data
         public int Id { get; set; }
         public int ReviewId { get; set; }
         public string Description { get; set; }
-        public DateTimeOffset StartedOn { get; set; }
+        public DateTime StartedOn { get; set; }
         public bool Published { get; set; }
 
         public virtual Review Review { get; set; }

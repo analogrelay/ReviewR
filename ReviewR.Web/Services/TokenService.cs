@@ -11,32 +11,40 @@ using Newtonsoft.Json;
 using ReviewR.Web.Infrastructure;
 using ReviewR.Web.Models;
 using ReviewR.Web.Models.Data;
+using VibrantUtils;
 
 namespace ReviewR.Web.Services
 {
     public class TokenService
     {
-        public IDataRepository Data { get; set; }
-
-        protected TokenService() { }
-
-        public TokenService(IDataRepository data)
-        {
-            Data = data;
-        }
-
         public virtual SessionToken UnprotectToken(string token, string purpose)
         {
+            Requires.NotNullOrEmpty(token, "token");
+            Requires.NotNullOrEmpty(purpose, "purpose");
+
             byte[] data = Convert.FromBase64String(token);
-            byte[] encodedToken = MachineKey.Unprotect(data, purpose);
+            byte[] encodedToken = Unprotect(data, purpose);
             return SessionToken.FromEncodedToken(encodedToken);
         }
 
         public virtual string ProtectToken(SessionToken token, string purpose)
         {
+            Requires.NotNull(token, "token");
+            Requires.NotNullOrEmpty(purpose, "purpose");
+
             byte[] encoded = token.EncodeToken();
-            byte[] encrypted = MachineKey.Protect(encoded, purpose);
+            byte[] encrypted = Protect(encoded, purpose);
             return Convert.ToBase64String(encrypted);
+        }
+
+        protected virtual byte[] Protect(byte[] data, string purpose)
+        {
+            return MachineKey.Protect(data, purpose);
+        }
+
+        protected virtual byte[] Unprotect(byte[] data, string purpose)
+        {
+            return MachineKey.Unprotect(data, purpose);
         }
     }
 }

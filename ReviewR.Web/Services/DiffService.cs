@@ -34,8 +34,11 @@ namespace ReviewR.Web.Services
             return parsedDiff.Files.Select(Converter.ConvertFile).ToList();
         }
 
-        public virtual DiffFileModel CreateViewModelFromUnifiedDiff(string fileName, string diff)
+        public virtual FileDiffModel ParseFileDiff(string fileName, string diff)
         {
+            Requires.NotNullOrEmpty(fileName, "fileName");
+            Requires.NotNullOrEmpty(diff, "diff");
+
             IEnumerable<DiffHunk> hunks;
             using (TextReader rdr = new StringReader(diff))
             {
@@ -43,16 +46,16 @@ namespace ReviewR.Web.Services
             }
 
             // Flatten out to lines
-            IList<DiffLineModel> lines = new List<DiffLineModel>();
+            IList<LineDiffModel> lines = new List<LineDiffModel>();
             int lineIndex = 0;
             foreach (var hunk in hunks)
             {
                 int leftLine = hunk.OriginalLocation.Line;
                 int rightLine = hunk.ModifiedLocation.Line;
-                lines.Add(new DiffLineModel() { Index = lineIndex++, Type = LineDiffType.HunkHeader, Text = hunk.ToString() });
+                lines.Add(new LineDiffModel() { Index = lineIndex++, Type = LineDiffType.HunkHeader, Text = hunk.ToString() });
                 foreach (var line in hunk.Lines)
                 {
-                    DiffLineModel newLine = new DiffLineModel()
+                    LineDiffModel newLine = new LineDiffModel()
                     {
                         Index = lineIndex++,
                         Type = line.Type,
@@ -75,7 +78,7 @@ namespace ReviewR.Web.Services
                 }
             }
 
-            return new DiffFileModel()
+            return new FileDiffModel()
             {
                 FileName = Converter.CleanFileName(fileName),
                 Binary = false,

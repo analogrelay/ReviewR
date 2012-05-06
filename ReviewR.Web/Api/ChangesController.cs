@@ -29,12 +29,12 @@ namespace ReviewR.Web.Api
             {
                 return NotFound();
             }
-            DiffFileModel file = Diff.CreateViewModelFromUnifiedDiff(change.FileName, change.Diff);
+            FileDiffModel file = Diff.ParseFileDiff(change.FileName, change.Diff);
             AttachComments(change, file);
             return Ok(file);
         }
 
-        private void AttachComments(FileChange change, DiffFileModel file)
+        private void AttachComments(FileChange change, FileDiffModel file)
         {
             foreach (var groups in change.Comments.GroupBy(c => c.DiffLineIndex))
             {

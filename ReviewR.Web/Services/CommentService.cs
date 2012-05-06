@@ -43,7 +43,7 @@ namespace ReviewR.Web.Services
             return cmt;
         }
 
-        public virtual DatabaseActionResult DeleteComment(int id, int userId)
+        public virtual DatabaseActionOutcome DeleteComment(int id, int userId)
         {
             Requires.InRange(id >= 0, "id");
             Requires.InRange(userId >= 0, "userId");
@@ -51,15 +51,15 @@ namespace ReviewR.Web.Services
             Comment cmt = Data.Comments.Where(c => c.Id == id).FirstOrDefault();
             if (cmt == null)
             {
-                return DatabaseActionResult.ObjectNotFound;
+                return DatabaseActionOutcome.ObjectNotFound;
             }
             if (cmt.UserId != userId)
             {
-                return DatabaseActionResult.Forbidden;
+                return DatabaseActionOutcome.Forbidden;
             }
             Data.Comments.Remove(cmt);
             Data.SaveChanges();
-            return DatabaseActionResult.Success;
+            return DatabaseActionOutcome.Success;
         }
     }
 }

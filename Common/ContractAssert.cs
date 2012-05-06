@@ -15,6 +15,11 @@ namespace VibrantUtils
             VerifyArgEx(argEx, paramName);
         }
 
+        public static void OutOfRange(Action op, string paramName)
+        {
+            InvalidArgument<ArgumentOutOfRangeException>(op, paramName);
+        }
+
         public static void InvalidArgument<T>(Action op, string paramName) where T : ArgumentException
         {
             T argEx = Assert.Throws<T>(() => op());

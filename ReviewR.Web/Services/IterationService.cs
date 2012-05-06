@@ -4,67 +4,85 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using ReviewR.Web.Models.Data;
+using VibrantUtils;
 
 namespace ReviewR.Web.Services
 {
     public class IterationService
     {
         public IDataRepository Data { get; set; }
-        public ReviewService Reviews { get; set; }
         public DiffService Diff { get; set; }
 
         protected IterationService() { }
-        public IterationService(IDataRepository data, ReviewService reviews, DiffService diff)
+        public IterationService(IDataRepository data, DiffService diff)
         {
+            Requires.NotNull(data, "data");
+            Requires.NotNull(diff, "diff");
+
             Data = data;
-            Reviews = reviews;
             Diff = diff;
         }
 
-        public virtual Iteration AddIteration(int reviewId, int currentUserId)
+        public virtual DatabaseActionResult<Iteration> AddIteration(int reviewId, int currentUserId)
         {
-            Review r = Reviews.GetReview(reviewId);
-            if (r.UserId != currentUserId)
+            Requires.InRange(reviewId >= 0, "reviewId");
+            Requires.InRange(currentUserId >= 0, "currentUserId");
+
+            Review review = Data.Reviews
+                                .Include("Iterations")
+                                .Where(r => r.Id == reviewId)
+                                .FirstOrDefault();
+            if (review == null)
             {
-                return null;
+                return DatabaseActionResult<Iteration>.NotFound();
+            }
+            else if (review.UserId != currentUserId)
+            {
+                return DatabaseActionResult<Iteration>.Forbidden();
             }
             Iteration i = new Iteration()
             {
                 Published = false,
-                StartedOn = DateTimeOffset.UtcNow,
+                StartedOn = DateTime.UtcNow,
             };
-            r.Iterations.Add(i);
+            review.Iterations.Add(i);
             Data.SaveChanges();
-            return i;
+            return DatabaseActionResult<Iteration>.Success(i);
         }
 
-        public virtual DatabaseActionResult DeleteIteration(int iterationId, int currentUserId)
+        public virtual DatabaseActionOutcome DeleteIteration(int iterationId, int currentUserId)
         {
+            Requires.InRange(iterationId >= 0, "iterationId");
+            Requires.InRange(currentUserId >= 0, "currentUserId");
+
             Iteration iter = GetIteration(iterationId);
             if (iter == null)
             {
-                return DatabaseActionResult.ObjectNotFound;
+                return DatabaseActionOutcome.ObjectNotFound;
             }
             else if (iter.Review.UserId != currentUserId)
             {
-                return DatabaseActionResult.Forbidden;
+                return DatabaseActionOutcome.Forbidden;
             }
-            iter.Review.Iterations.Remove(iter);
             Data.Iterations.Remove(iter);
             Data.SaveChanges();
-            return DatabaseActionResult.Success;
+            return DatabaseActionOutcome.Success;
         }
 
-        public virtual DatabaseActionResult AddDiffToIteration(int id, string diff, int currentUserId)
+        public virtual DatabaseActionOutcome AddDiffToIteration(int id, string diff, int currentUserId)
         {
+            Requires.InRange(id >= 0, "id");
+            Requires.NotNullOrEmpty(diff, "diff");
+            Requires.InRange(currentUserId >= 0, "currentUserId");
+
             Iteration iter = GetIteration(id);
             if (iter == null)
             {
-                return DatabaseActionResult.ObjectNotFound;
+                return DatabaseActionOutcome.ObjectNotFound;
             }
             else if (iter.Review.UserId != currentUserId)
             {
-                return DatabaseActionResult.Forbidden;
+                return DatabaseActionOutcome.Forbidden;
             }
 
             ICollection<FileChange> changes;
@@ -77,11 +95,13 @@ namespace ReviewR.Web.Services
                 iter.Files.Add(change);
             }
             Data.SaveChanges();
-            return DatabaseActionResult.Success;
+            return DatabaseActionOutcome.Success;
         }
 
         public virtual Iteration GetIteration(int iterationId)
         {
+            Requires.InRange(iterationId >= 0, "iterationId");
+
             return Data.Iterations
                        .Include("Review")
                        .Include("Review.Participants")
@@ -89,23 +109,26 @@ namespace ReviewR.Web.Services
                        .FirstOrDefault();
         }
 
-        public virtual DatabaseActionResult SetIterationPublished(int id, bool published, int userId)
+        public virtual DatabaseActionOutcome SetIterationPublished(int id, bool published, int userId)
         {
+            Requires.InRange(id >= 0, "id");
+            Requires.InRange(userId >= 0, "userId");
+
             Iteration i = Data.Iterations
                               .Include("Review")
                               .Where(iter => iter.Id == id)
                               .FirstOrDefault();
             if (i == null)
             {
-                return DatabaseActionResult.ObjectNotFound;
+                return DatabaseActionOutcome.ObjectNotFound;
             }
             else if (i.Review.UserId != userId)
             {
-                return DatabaseActionResult.Forbidden;
+                return DatabaseActionOutcome.Forbidden;
             }
             i.Published = published;
             Data.SaveChanges();
-            return DatabaseActionResult.Success;
+            return DatabaseActionOutcome.Success;
         }
     }
 }

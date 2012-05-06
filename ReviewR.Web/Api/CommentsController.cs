@@ -22,11 +22,11 @@ namespace ReviewR.Web.Api
         public HttpResponseMessage Delete(int id)
         {
             var result = Comments.DeleteComment(id, User.Identity.UserId);
-            if (result == DatabaseActionResult.ObjectNotFound)
+            if (result == DatabaseActionOutcome.ObjectNotFound)
             {
                 return NotFound();
             }
-            else if (result == DatabaseActionResult.Forbidden)
+            else if (result == DatabaseActionOutcome.Forbidden)
             {
                 return Forbidden();
             }

@@ -45,7 +45,7 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresNonNegativeId()
             {
-                ContractAssert.InvalidArgument<ArgumentOutOfRangeException>(() => CreateService().GetChange(-1), "id");
+                ContractAssert.OutOfRange(() => CreateService().GetChange(-1), "id");
             }
 
             [Fact]

@@ -235,10 +235,9 @@
     <Compile Include="Models\Data\Participant.cs" />
     <Compile Include="Models\Data\ParticipantStatus.cs" />
     <Compile Include="Models\Request\ReviewRequestModel.cs" />
-    <Compile Include="Models\Response\DiffFileModel.cs" />
-    <Compile Include="Models\Response\DiffLineModel.cs" />
+    <Compile Include="Models\Response\FileDiffModel.cs" />
+    <Compile Include="Models\Response\LineDiffModel.cs" />
     <Compile Include="Models\Response\IterationModel.cs" />
-    <Compile Include="Models\Response\ParticipantModel.cs" />
     <Compile Include="Models\Response\UserModel.cs" />
     <Compile Include="Models\Response\DashboardResponseModel.cs" />
     <Compile Include="Models\Response\ReviewDetailResponseModel.cs" />
@@ -296,7 +295,6 @@
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\ChangeService.cs" />
     <Compile Include="Services\CommentService.cs" />
-    <Compile Include="Services\CreateUserResult.cs" />
     <Compile Include="Services\DatabaseActionResult.cs" />
     <Compile Include="Services\DiffConverter.cs" />
     <Compile Include="Services\DiffService.cs" />
