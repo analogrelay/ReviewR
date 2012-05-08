@@ -483,11 +483,11 @@
                     data: { diff: self.diff() },
                     statusCode: {
                         404: function () {
-                            rR.utils.fail("todo: tell user that this iteration doesn't exist");
+                            sy.utils.fail("todo: tell user that this iteration doesn't exist");
                             sy.bus.dialog.dismiss.publish();
                         },
                         403: function () {
-                            rR.utils.fail("todo: tell user they aren't on this review");
+                            sy.utils.fail("todo: tell user they aren't on this review");
                             sy.bus.navigate.publish('');
                         },
                         204: function () {

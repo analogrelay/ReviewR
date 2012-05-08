@@ -35,3 +35,4 @@ TestResults/
 
 # Api Keys and such are put in *.private.cs files
 *.private.cs
+*/js/_ref/
