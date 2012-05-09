@@ -41,7 +41,7 @@ namespace ReviewR.Web.Infrastructure
                     p => p.Value.Errors.Select(e => e.ErrorMessage)).ToArray());
         }
 
-        public async override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
+        public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
         {
             // Check for an auth token
             string authCookie = controllerContext.Request.Headers.GetAuthCookie();
@@ -67,29 +67,30 @@ namespace ReviewR.Web.Infrastructure
                     controllerContext.Request.Properties[HttpPropertyKeys.UserPrincipalKey] = User;
                 }
             }
-            
+
             // Run the action
-            HttpResponseMessage resp = await base.ExecuteAsync(controllerContext, cancellationToken);
-            
-            // If we had a request token in the cookie but don't now...
-            string path = GetSiteRoot(controllerContext.Request.RequestUri);
-            if (!String.IsNullOrEmpty(authCookie) && User == null)
+            return base.ExecuteAsync(controllerContext, cancellationToken).ContinueWith(t =>
             {
-                // Clear the cookie
-                resp.Headers.ClearCookie(CookieName, path);
-            }
-            // Otherwise if we have a user now...
-            else if (User != null)
-            {
-                // Issue a new token as an Auth cookie
-                var tokenStr = IssueSessionToken();
-                if (_sessionToken != null && !String.IsNullOrEmpty(tokenStr))
+                var resp = t.Result;
+                // If we had a request token in the cookie but don't now...
+                string path = GetSiteRoot(controllerContext.Request.RequestUri);
+                if (!String.IsNullOrEmpty(authCookie) && User == null)
                 {
-                    resp.Headers.SetAuthCookie(tokenStr, path, _sessionToken.Expires);
+                    // Clear the cookie
+                    resp.Headers.ClearCookie(CookieName, path);
                 }
-            }
-            
-            return resp;
+                // Otherwise if we have a user now...
+                else if (User != null)
+                {
+                    // Issue a new token as an Auth cookie
+                    var tokenStr = IssueSessionToken();
+                    if (_sessionToken != null && !String.IsNullOrEmpty(tokenStr))
+                    {
+                        resp.Headers.SetAuthCookie(tokenStr, path, _sessionToken.Expires);
+                    }
+                }
+                return resp;
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         private string GetSiteRoot(Uri uri)

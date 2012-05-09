@@ -94,7 +94,7 @@ namespace ReviewR.Web.Facts.Services
             }
 
             [Fact]
-            public async Task ReturnsNullOnFailureErrorCode()
+            public Task ReturnsNullOnFailureErrorCode()
             {
                 // Arrange
                 const string token = "abc123";
@@ -103,7 +103,10 @@ namespace ReviewR.Web.Facts.Services
                 auth.TokenExchanges[token] = msg;
 
                 // Act/Assert
-                Assert.Null(await auth.ResolveAuthTokenAsync(token));
+                return auth.ResolveAuthTokenAsync(token).ContinueWith(t =>
+                {
+                    Assert.Null(t.Result);
+                }, TaskContinuationOptions.OnlyOnRanToCompletion);
             }
 
             [Fact]
@@ -123,7 +126,7 @@ namespace ReviewR.Web.Facts.Services
             }
 
             [Fact]
-            public async Task ReturnsNullIfProfileMissing()
+            public Task ReturnsNullIfProfileMissing()
             {
                 // Arrange
                 const string token = "abc123";
@@ -133,11 +136,13 @@ namespace ReviewR.Web.Facts.Services
                 auth.TokenExchanges[token] = msg;
 
                 // Act/Assert
-                Assert.Null(await auth.ResolveAuthTokenAsync(token));
+                return auth.ResolveAuthTokenAsync(token).ContinueWith(t => {
+                    Assert.Null(t.Result);
+                }, TaskContinuationOptions.OnlyOnRanToCompletion);
             }
 
             [Fact]
-            public async Task ReturnsDataFromProfile()
+            public Task ReturnsDataFromProfile()
             {
                 // Arrange
                 const string token = "abc123";
@@ -154,17 +159,20 @@ namespace ReviewR.Web.Facts.Services
                 auth.TokenExchanges[token] = msg;
 
                 // Act
-                UserInfo info = await auth.ResolveAuthTokenAsync(token);
+                return auth.ResolveAuthTokenAsync(token).ContinueWith(t =>
+                {
+                    var info = t.Result;
 
-                // Assert
-                Assert.Equal("bacefook", info.Provider);
-                Assert.Equal("http://bacefook/bork", info.Identifier);
-                Assert.Equal("Swedish Chef", info.DisplayName);
-                Assert.Equal("bork@bork.bork", info.Email);
+                    // Assert
+                    Assert.Equal("bacefook", info.Provider);
+                    Assert.Equal("http://bacefook/bork", info.Identifier);
+                    Assert.Equal("Swedish Chef", info.DisplayName);
+                    Assert.Equal("bork@bork.bork", info.Email);
+                });
             }
 
             [Fact]
-            public async Task UsesFormattedNameAsDisplayNameIfPresent()
+            public Task UsesFormattedNameAsDisplayNameIfPresent()
             {
                 // Arrange
                 const string token = "abc123";
@@ -184,13 +192,16 @@ namespace ReviewR.Web.Facts.Services
                 auth.TokenExchanges[token] = msg;
 
                 // Act
-                UserInfo info = await auth.ResolveAuthTokenAsync(token);
+                return auth.ResolveAuthTokenAsync(token).ContinueWith(t =>
+                {
+                    var info = t.Result;
 
-                // Assert
-                Assert.Equal("bacefook", info.Provider);
-                Assert.Equal("http://bacefook/bork", info.Identifier);
-                Assert.Equal("Swedish Chef", info.DisplayName);
-                Assert.Equal("bork@bork.bork", info.Email);
+                    // Assert
+                    Assert.Equal("bacefook", info.Provider);
+                    Assert.Equal("http://bacefook/bork", info.Identifier);
+                    Assert.Equal("Swedish Chef", info.DisplayName);
+                    Assert.Equal("bork@bork.bork", info.Email);
+                }, TaskContinuationOptions.OnlyOnRanToCompletion);
             }
         }
 

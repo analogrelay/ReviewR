@@ -103,48 +103,54 @@ namespace ReviewR.Web.Services
             Data.SaveChanges();
         }
 
-        protected internal async virtual Task<HttpResponseMessage> ExchangeToken(string token)
+        protected internal virtual Task<HttpResponseMessage> ExchangeToken(string token)
         {
             HttpClient client = new HttpClient();
-            return await client.GetAsync(String.Format(
+            return client.GetAsync(String.Format(
                 "https://rpxnow.com/api/v2/auth_info?apiKey={0}&token={1}",
                 Settings.Get("Janrain:ApiKey"),
                 token), HttpCompletionOption.ResponseContentRead);
         }
 
-        private async Task<UserInfo> DoResolveAuthTokenAsync(string authenticationToken)
+        private Task<UserInfo> DoResolveAuthTokenAsync(string authenticationToken)
         {
-            HttpResponseMessage resp = await ExchangeToken(authenticationToken);
-
-            if (!resp.IsSuccessStatusCode)
+            return ExchangeToken(authenticationToken).ContinueWith(t =>
             {
-                return null;
-            }
-            string content = await resp.Content.ReadAsStringAsync();
-            dynamic json = JObject.Parse(content);
-
-            if (json == null || json.profile == null)
-            {
-                return null;
-            }
-            
-            string name = json.profile.displayName;
-            if (json.profile.name != null)
-            {
-                string formatted = json.profile.name.formatted;
-                if (!String.IsNullOrEmpty(formatted))
+                var resp = t.Result;
+                if (!resp.IsSuccessStatusCode)
                 {
-                    name = json.profile.name.formatted;
+                    return null;
                 }
-            }
-            string provider = json.profile.providerName;
-            string id = json.profile.identifier;
-            string verifiedEmail = json.profile.verifiedEmail;
-            return new UserInfo(
-                provider,
-                id,
-                name,
-                verifiedEmail);
+                return t.Result.Content.ReadAsStringAsync().ContinueWith(ts =>
+                {
+                    string content = ts.Result;
+
+                    dynamic json = JObject.Parse(content);
+
+                    if (json == null || json.profile == null)
+                    {
+                        return null;
+                    }
+
+                    string name = json.profile.displayName;
+                    if (json.profile.name != null)
+                    {
+                        string formatted = json.profile.name.formatted;
+                        if (!String.IsNullOrEmpty(formatted))
+                        {
+                            name = json.profile.name.formatted;
+                        }
+                    }
+                    string provider = json.profile.providerName;
+                    string id = json.profile.identifier;
+                    string verifiedEmail = json.profile.verifiedEmail;
+                    return new UserInfo(
+                        provider,
+                        id,
+                        name,
+                        verifiedEmail);
+                }, TaskContinuationOptions.OnlyOnRanToCompletion);
+            }).Unwrap();
         }
     }
 }

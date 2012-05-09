@@ -21,33 +21,35 @@ namespace ReviewR.Web.Api
         }
 
         [AllowAnonymous]
-        public async Task<HttpResponseMessage> Post(string authToken, string email, string displayName)
+        public Task<HttpResponseMessage> Post(string authToken, string email, string displayName)
         {
-            UserInfo id = await Auth.ResolveAuthTokenAsync(authToken);
-
-            // Try to find or create a user with this identifier
-            var resp = GetOrCreateUser(id, email, displayName);
-            if (resp == null)
+            return Auth.ResolveAuthTokenAsync(authToken).ContinueWith(t =>
             {
-                return Conflict();
-            }
+                var id = t.Result;
+                // Try to find or create a user with this identifier
+                var resp = GetOrCreateUser(id, email, displayName);
+                if (resp == null)
+                {
+                    return Conflict();
+                }
 
-            var user = resp.Item1;
-            if (user == null)
-            {
-                // Respond with a list of missing fields
-                return BadRequest(new { missingFields = resp.Item2 });
-            }
+                var user = resp.Item1;
+                if (user == null)
+                {
+                    // Respond with a list of missing fields
+                    return BadRequest(new { missingFields = resp.Item2 });
+                }
 
-            // Log in the user
-            User = ReviewRPrincipal.FromUser(user);
+                // Log in the user
+                User = ReviewRPrincipal.FromUser(user);
 
-            // Return the token and user data
-            return Created(new
-            {
-                user = User.Identity,
-                token = SessionToken
-            });
+                // Return the token and user data
+                return Created(new
+                {
+                    user = User.Identity,
+                    token = SessionToken
+                });
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         public void Delete()
