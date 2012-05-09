@@ -66,8 +66,10 @@ namespace ReviewR.Web.Services
                     {
                         token = Tokens.UnprotectToken(HttpUtility.UrlDecode(cookie.Value), ReviewRApiController.Purpose);
                     }
-                    catch (NotSupportedException) { return null; }
-                    catch (InvalidDataException) { return null; }
+                    catch (Exception) {
+                        // Token is invalid, just clear it
+                        return null;
+                    }
                 }
                 return token;
             }

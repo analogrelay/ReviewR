@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ReviewR.Web</RootNamespace>
     <AssemblyName>ReviewR.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -48,13 +48,16 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DynamicData.EFCodeFirstProvider, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DynamicData.EFCodeFirstProvider, Version=0.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DynamicData.EFCodeFirstProvider.0.3.0.0\lib\net40\DynamicData.EFCodeFirstProvider.dll</HintPath>
+      <HintPath>..\packages\DynamicData.EFCodeFirstProvider.0.4.1.0\lib\net40\DynamicData.EFCodeFirstProvider.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.5.0.0-beta2\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.5.0.0-beta2\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Net4">
+      <HintPath>..\packages\Microsoft.CompilerServices.AsyncTargetingPack.1.0.0\lib\net40\Microsoft.CompilerServices.AsyncTargetingPack.Net4.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -63,7 +66,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.5\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -228,12 +231,22 @@
     <Compile Include="Migrations\201204261934160_RemoveDatabaseTokens.Designer.cs">
       <DependentUpon>201204261934160_RemoveDatabaseTokens.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201205082330467_ChangeDateTimeOffsetsToDateTimes.cs" />
+    <Compile Include="Migrations\201205082330467_ChangeDateTimeOffsetsToDateTimes.Designer.cs">
+      <DependentUpon>201205082330467_ChangeDateTimeOffsetsToDateTimes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201205082357191_FixMigrations.cs" />
+    <Compile Include="Migrations\201205082357191_FixMigrations.Designer.cs">
+      <DependentUpon>201205082357191_FixMigrations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201205090002035_GoBackToTablePerHierarchyForFileChange.cs" />
+    <Compile Include="Migrations\201205090002035_GoBackToTablePerHierarchyForFileChange.Designer.cs">
+      <DependentUpon>201205090002035_GoBackToTablePerHierarchyForFileChange.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Response\CommentModel.cs" />
     <Compile Include="Models\SessionToken.cs" />
     <Compile Include="Models\Data\Credential.cs" />
     <Compile Include="Models\Data\Iteration.cs" />
-    <Compile Include="Models\Data\Participant.cs" />
-    <Compile Include="Models\Data\ParticipantStatus.cs" />
     <Compile Include="Models\Request\ReviewRequestModel.cs" />
     <Compile Include="Models\Response\FileDiffModel.cs" />
     <Compile Include="Models\Response\LineDiffModel.cs" />
@@ -680,8 +693,8 @@
     <Content Include="Scripts\jquery.fileupload.js" />
     <Content Include="Scripts\jquery.iframe-transport.js" />
     <Content Include="Scripts\jquery.timeago.js" />
-    <Content Include="Scripts\knockout.debug.js" />
-    <Content Include="Scripts\knockout.js" />
+    <Content Include="Scripts\knockout-2.1.0.debug.js" />
+    <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\signals.js" />
     <Content Include="Scripts\signals.min.js" />

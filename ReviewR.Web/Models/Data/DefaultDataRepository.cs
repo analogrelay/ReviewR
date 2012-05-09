@@ -15,7 +15,6 @@ namespace ReviewR.Web.Models.Data
         IEntitySet<Review> Reviews { get; }
         IEntitySet<FileChange> Changes { get; }
         IEntitySet<Comment> Comments { get; }
-        IEntitySet<Participant> Participants { get; }
         IEntitySet<Iteration> Iterations { get; }
         IEntitySet<Credential> Credentials { get; }
         int SaveChanges();
@@ -30,7 +29,6 @@ namespace ReviewR.Web.Models.Data
         public virtual IEntitySet<Review> Reviews { get; private set; }
         public virtual IEntitySet<FileChange> Changes { get; private set; }
         public virtual IEntitySet<Comment> Comments { get; private set; }
-        public virtual IEntitySet<Participant> Participants { get; private set; }
         public virtual IEntitySet<Iteration> Iterations { get; private set; }
         public virtual IEntitySet<Credential> Credentials { get; private set; }
 
@@ -43,7 +41,6 @@ namespace ReviewR.Web.Models.Data
             Reviews = new DbSetAdaptor<Review>(_db.Reviews);
             Changes = new DbSetAdaptor<FileChange>(_db.Changes);
             Comments = new DbSetAdaptor<Comment>(_db.Comments);
-            Participants = new DbSetAdaptor<Participant>(_db.Participants);
             Iterations = new DbSetAdaptor<Iteration>(_db.Iterations);
             Credentials = new DbSetAdaptor<Credential>(_db.Credentials);
         }
@@ -61,7 +58,6 @@ namespace ReviewR.Web.Models.Data
         public virtual DbSet<Review> Reviews { get; set; }
         public virtual DbSet<FileChange> Changes  { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
-        public virtual DbSet<Participant> Participants { get; set; }
         public virtual DbSet<Iteration> Iterations { get; set; }
         public virtual DbSet<Credential> Credentials { get; set; }
 
@@ -71,10 +67,6 @@ namespace ReviewR.Web.Models.Data
                         .HasMany<Role>(u => u.Roles)
                         .WithMany(r => r.Users)
                         .Map(m => m.ToTable("UserRoles"));
-            modelBuilder.Entity<User>()
-                        .HasMany<Participant>(u => u.Participants)
-                        .WithRequired(p => p.User)
-                        .WillCascadeOnDelete(false);
         }
     }
 }

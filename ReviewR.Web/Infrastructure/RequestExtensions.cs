@@ -29,14 +29,17 @@ namespace ReviewR.Web.Infrastructure
                        .SingleOrDefault();
         }
 
-        public static void SetAuthCookie(this HttpResponseHeaders self, string token, string path, DateTimeOffset expires)
+        public static void SetAuthCookie(this HttpResponseHeaders self, string token, string path, DateTimeOffset? expires)
         {
             CookieHeaderValue cookie = new CookieHeaderValue(ReviewRApiController.CookieName, token)
             {
-                Expires = expires,
                 HttpOnly = true,
                 Path = path
             };
+            if (expires.HasValue)
+            {
+                cookie.Expires = expires.Value;
+            }
             self.AddCookies(new[] { cookie });
         }
 

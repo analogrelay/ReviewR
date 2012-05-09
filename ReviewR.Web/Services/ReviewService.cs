@@ -65,8 +65,6 @@ namespace ReviewR.Web.Services
 
             return Data.Reviews
                        .Include("Iterations")
-                       .Include("Participants")
-                       .Include("Participants.User")
                        .Include("Creator")
                        .Where(r => r.Id == id)
                        .FirstOrDefault();

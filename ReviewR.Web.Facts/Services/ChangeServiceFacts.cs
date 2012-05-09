@@ -53,7 +53,7 @@ namespace ReviewR.Web.Facts.Services
             {
                 // Arrange
                 var changes = CreateService();
-                var added = new FileChange() { FileName = "florb" };
+                var added = new FileAddition() { FileName = "florb" };
                 changes.MockData.Changes.Add(added);
                 changes.MockData.SaveChanges();
 
@@ -69,7 +69,7 @@ namespace ReviewR.Web.Facts.Services
             {
                 // Arrange
                 var changes = CreateService();
-                var added = new FileChange() { FileName = "florb" };
+                var added = new FileAddition() { FileName = "florb" };
                 changes.MockData.Changes.Add(added);
                 changes.MockData.SaveChanges();
 

@@ -29,7 +29,7 @@ namespace ReviewR.Web.Facts.Diff
             {
                 // Arrange
                 var service = CreateService();
-                var expected = new FileChange();
+                var expected = new FileAddition();
                 var input = new StringReader("abc");
                 var set = new DiffSet(new FileDiff("Orig", "Mod"));
                 service.MockReader.Setup(r => r.Read(input)).Returns(set);

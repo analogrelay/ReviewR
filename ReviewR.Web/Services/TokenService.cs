@@ -22,8 +22,7 @@ namespace ReviewR.Web.Services
             Requires.NotNullOrEmpty(token, "token");
             Requires.NotNullOrEmpty(purpose, "purpose");
 
-            byte[] data = Convert.FromBase64String(token);
-            byte[] encodedToken = Unprotect(data, purpose);
+            byte[] encodedToken = Unprotect(token, purpose);
             return SessionToken.FromEncodedToken(encodedToken);
         }
 
@@ -33,18 +32,17 @@ namespace ReviewR.Web.Services
             Requires.NotNullOrEmpty(purpose, "purpose");
 
             byte[] encoded = token.EncodeToken();
-            byte[] encrypted = Protect(encoded, purpose);
-            return Convert.ToBase64String(encrypted);
+            return Protect(encoded, purpose);
         }
 
-        protected virtual byte[] Protect(byte[] data, string purpose)
+        protected virtual string Protect(byte[] data, string purpose)
         {
-            return MachineKey.Protect(data, purpose);
+            return MachineKey.Encode(data, MachineKeyProtection.All);
         }
 
-        protected virtual byte[] Unprotect(byte[] data, string purpose)
+        protected virtual byte[] Unprotect(string data, string purpose)
         {
-            return MachineKey.Unprotect(data, purpose);
+            return MachineKey.Decode(data, MachineKeyProtection.All);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace ReviewR.Web.Facts.Services
             {
                 // Arrange
                 var comments = CreateService();
-                var chg = new FileChange() { FileName = "foo" };
+                var chg = new FileAddition() { FileName = "foo" };
                 comments.MockData.Changes.Add(chg);
                 comments.MockData.SaveChanges();
 
@@ -73,7 +73,7 @@ namespace ReviewR.Web.Facts.Services
                 // Arrange
                 DateTime start = DateTime.UtcNow;
                 var comments = CreateService();
-                var chg = new FileChange() { FileName = "foo" };
+                var chg = new FileAddition() { FileName = "foo" };
                 chg.Comments = new List<Comment>();
                 comments.MockData.Changes.Add(chg);
                 comments.MockData.SaveChanges();

@@ -14,7 +14,6 @@ namespace ReviewR.Web.Models.Data
         public DateTime CreatedOn { get; set; }
 
         public virtual User Creator { get; set; }
-        public virtual ICollection<Participant> Participants { get; set; }
         public virtual ICollection<Iteration> Iterations { get; set; }
     }
 }

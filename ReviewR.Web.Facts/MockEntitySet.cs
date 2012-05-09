@@ -27,7 +27,8 @@ namespace ReviewR.Web.Facts
 
         public IEntityQuery<T> Include(string path)
         {
-            // Don't do anything special here.
+            // Don't do anything special here. Just verify the include path
+            VerifyObjectPath(typeof(T), path);
             return this;
         }
 
@@ -84,6 +85,21 @@ namespace ReviewR.Web.Facts
                 }
             }
             _pending.Clear();
+        }
+
+        private static void VerifyObjectPath(Type type, string path)
+        {
+            string[] components = path.Split('.');
+            Type current = type;
+            foreach(string component in components)
+            {
+                PropertyInfo prop = current.GetProperty(component, BindingFlags.Public | BindingFlags.Instance);
+                if (prop == null)
+                {
+                    throw new InvalidOperationException("Invalid Include Path: " + path);
+                }
+                current = prop.PropertyType;
+            }
         }
     }
 }

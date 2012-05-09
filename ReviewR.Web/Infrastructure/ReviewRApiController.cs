@@ -26,7 +26,7 @@ namespace ReviewR.Web.Infrastructure
 
         public string SessionToken
         {
-            get { return _sessionTokenString ?? IssueSessionToken(); }
+            get { return _sessionTokenString; }
         }
 
         public ReviewRPrincipal User { get; set; }
@@ -55,8 +55,9 @@ namespace ReviewR.Web.Infrastructure
                 {
                     token = Tokens.UnprotectToken(_sessionTokenString, Purpose);
                 }
-                catch (NotSupportedException)
+                catch (Exception)
                 {
+                    // Token is invalid, just clear it
                 }
 
                 if (token != null)
@@ -80,8 +81,12 @@ namespace ReviewR.Web.Infrastructure
             // Otherwise if we have a user now...
             else if (User != null)
             {
-                // Issue a token
-                resp.Headers.SetAuthCookie(SessionToken, path, _sessionToken.Expires);
+                // Issue a new token as an Auth cookie
+                var tokenStr = IssueSessionToken();
+                if (_sessionToken != null && !String.IsNullOrEmpty(tokenStr))
+                {
+                    resp.Headers.SetAuthCookie(tokenStr, path, _sessionToken.Expires);
+                }
             }
             
             return resp;

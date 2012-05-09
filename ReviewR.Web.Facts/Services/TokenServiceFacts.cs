@@ -117,25 +117,26 @@ namespace ReviewR.Web.Facts.Services
         {
             public bool ProtectVersion { get; set; }
 
-            protected override byte[] Protect(byte[] data, string purpose)
+            protected override string Protect(byte[] data, string purpose)
             {
                 // High security, eh? ;)
                 // Just to fiddle with the deserialization and our error handling, we'll leave the token version alone (first 4 bytes)
                 if (ProtectVersion)
                 {
-                    return data.Select(b => (byte)(((int)b + purpose.GetHashCode()) % 256)).ToArray();
+                    return Convert.ToBase64String(data.Select(b => (byte)(((int)b + purpose.GetHashCode()) % 256)).ToArray());
                 }
                 else
                 {
-                    return Enumerable.Concat(
+                    return Convert.ToBase64String(Enumerable.Concat(
                         data.Take(4),
                         data.Skip(4).Select(b => (byte)(((int)b + purpose.GetHashCode()) % 256))
-                    ).ToArray();
+                    ).ToArray());
                 }
             }
 
-            protected override byte[] Unprotect(byte[] data, string purpose)
+            protected override byte[] Unprotect(string encoded, string purpose)
             {
+                byte[] data = Convert.FromBase64String(encoded);
                 if (ProtectVersion)
                 {
                     return data.Select(b => (byte)(((int)b - purpose.GetHashCode()) % 256)).ToArray();

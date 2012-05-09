@@ -207,7 +207,7 @@ namespace ReviewR.Web.Facts.Services
                 iters.MockData.Iterations.Add(iter);
                 iters.MockData.SaveChanges();
 
-                var expectedChanges = new List<FileChange>() { new FileChange() };
+                var expectedChanges = new List<FileChange>() { new FileAddition() };
                 iters.MockDiff.Setup(d => d.CreateFromGitDiff(It.Is<TextReader>(tr => tr.ReadToEnd() == "thediff")))
                               .Returns(expectedChanges)
                               .Verifiable();

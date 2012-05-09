@@ -54,9 +54,7 @@ namespace ReviewR.Web.Api
 
         private bool IsAuthorized(FileChange change)
         {
-            Review r = change.Iteration.Review;
-            return r.UserId == User.Identity.UserId ||
-                   r.Participants.Any(p => p.UserId == User.Identity.UserId);
+            return true;
         }
     }
 }

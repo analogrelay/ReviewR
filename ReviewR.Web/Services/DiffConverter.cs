@@ -15,25 +15,31 @@ namespace ReviewR.Web.Services
             Requires.NotNull(fileDiff, "fileDiff");
 
             // Figure out the change type
-            Data.FileChange chg = new Data.FileChange();
+            Data.FileChange chg;
             if (String.Equals(fileDiff.ModifiedFile, "/dev/null"))
             {
                 // Deletion
-                chg.ChangeType = Data.FileChangeType.Removed;
-                chg.FileName = CleanFileName(fileDiff.OriginalFile);
+                chg = new Data.FileRemoval()
+                {
+                    FileName = CleanFileName(fileDiff.OriginalFile)
+                };
             }
             else if (String.Equals(fileDiff.OriginalFile, "/dev/null"))
             {
                 // Addition
-                chg.ChangeType = Data.FileChangeType.Added;
-                chg.FileName = CleanFileName(fileDiff.ModifiedFile);
+                chg = new Data.FileAddition()
+                {
+                    FileName = CleanFileName(fileDiff.ModifiedFile)
+                };
             }
             else
             {
                 // Modification
-                chg.ChangeType = Data.FileChangeType.Modified;
-                chg.FileName = CleanFileName(fileDiff.OriginalFile);
-                chg.NewFileName = CleanFileName(fileDiff.ModifiedFile);
+                chg = new Data.FileModification()
+                {
+                    FileName = CleanFileName(fileDiff.OriginalFile),
+                    NewFileName = CleanFileName(fileDiff.ModifiedFile)
+                };
             }
 
             // Fill the lines

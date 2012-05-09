@@ -104,7 +104,6 @@ namespace ReviewR.Web.Services
 
             return Data.Iterations
                        .Include("Review")
-                       .Include("Review.Participants")
                        .Where(i => i.Id == iterationId)
                        .FirstOrDefault();
         }

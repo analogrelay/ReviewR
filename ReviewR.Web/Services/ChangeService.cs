@@ -25,7 +25,6 @@ namespace ReviewR.Web.Services
 
             return Data.Changes
                        .Include("Iteration.Review")
-                       .Include("Iteration.Review.Participants")
                        .Include("Comments")
                        .Where(c => c.Id == id)
                        .FirstOrDefault();

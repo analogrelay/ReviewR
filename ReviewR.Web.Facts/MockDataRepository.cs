@@ -18,7 +18,6 @@ namespace ReviewR.Web.Facts
         private MockEntitySet<Review> _reviews;
         private MockEntitySet<FileChange> _changes;
         private MockEntitySet<Comment> _comments;
-        private MockEntitySet<Participant> _participants;
         private MockEntitySet<Iteration> _iterations;
         private MockEntitySet<Credential> _credentials;
 
@@ -27,7 +26,6 @@ namespace ReviewR.Web.Facts
         public IEntitySet<Review> Reviews { get { return _reviews; } }
         public IEntitySet<FileChange> Changes { get { return _changes; } }
         public IEntitySet<Comment> Comments { get { return _comments; } }
-        public IEntitySet<Participant> Participants { get { return _participants; } }
         public IEntitySet<Iteration> Iterations { get { return _iterations; } }
         public IEntitySet<Credential> Credentials { get { return _credentials; } }
 
@@ -40,7 +38,6 @@ namespace ReviewR.Web.Facts
             _reviews = new MockEntitySet<Review>(this);
             _changes = new MockEntitySet<FileChange>(this);
             _comments = new MockEntitySet<Comment>(this);
-            _participants = new MockEntitySet<Participant>(this);
             _iterations = new MockEntitySet<Iteration>(this);
             _credentials = new MockEntitySet<Credential>(this);
         }
