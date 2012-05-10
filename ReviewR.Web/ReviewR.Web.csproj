@@ -699,10 +699,10 @@
     <Content Include="Scripts\_references.js" />
     <Content Include="App_Code\Controls.cshtml" />
     <Content Include="App_Code\Composition.cshtml" />
-    <None Include="Views\Auth\_MoreData.cshtml" />
+    <Content Include="Views\Auth\_MoreData.cshtml" />
     <Content Include="Views\Home\_Dashboard.cshtml" />
     <Content Include="Views\Reviews\_View.cshtml" />
-    <None Include="Views\Home\_Index.cshtml" />
+    <Content Include="Views\Home\_Index.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -717,7 +717,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Index.cshtml" />
+    <Content Include="Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ReviewR.Diff\ReviewR.Diff.csproj">

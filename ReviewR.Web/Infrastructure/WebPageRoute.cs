@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Routing;
 using System.Web.WebPages;
 
@@ -30,7 +32,16 @@ namespace ReviewR.Web.Infrastructure
 
         public IHttpHandler GetHttpHandler(RequestContext requestContext)
         {
-            return WebPageHttpHandler.CreateFromVirtualPath(TargetPagePath);
+            IHttpHandler handler = WebPageHttpHandler.CreateFromVirtualPath(TargetPagePath);
+            if (handler == null)
+            {
+                if (!HostingEnvironment.VirtualPathProvider.FileExists(TargetPagePath))
+                {
+                    throw new FileNotFoundException("No such page: " + TargetPagePath);
+                }
+                throw new InvalidOperationException("Unable to create WebPage from virtual path: " + TargetPagePath);
+            }
+            return handler;
         }
     }
 }
