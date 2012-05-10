@@ -168,7 +168,6 @@
     <Compile Include="App_Start\NinjectWeb.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\Routes.cs" />
-    <Compile Include="App_Start\SpaRouter.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Common\HashCodeCombiner.cs" />
     <Compile Include="DynamicData\DynamicData\FieldTemplates\Code.ascx.cs">
@@ -195,7 +194,7 @@
     <Compile Include="Infrastructure\RequestExtensions.cs" />
     <Compile Include="Infrastructure\ReviewRApiController.cs" />
     <Compile Include="Infrastructure\Settings.private.cs" Condition="Exists('Infrastructure\Settings.private.cs')" />
-    <Compile Include="Infrastructure\SpaRoute.cs" />
+    <Compile Include="Infrastructure\WebPageRoute.cs" />
     <Compile Include="Infrastructure\Temp\JsonContractResolver.cs" />
     <Compile Include="Infrastructure\Temp\BetterJsonMediaTypeFormatter.cs" />
     <Compile Include="Infrastructure\Temp\XHRRequestHeaderMapping.cs" />
