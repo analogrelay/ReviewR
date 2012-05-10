@@ -45,9 +45,6 @@
         };
 
         ns.start = function (rootUrl, environment, pageHost, dialogHost) {
-            if (!Modernizr.localstorage) {
-                alert('Sorry, this app requires a browser which supports local storage :(');
-            }
             rR.app = new rR.App(rootUrl, environment, pageHost, dialogHost);
 
             for (var i = 0; i < _modules.length; i++) {

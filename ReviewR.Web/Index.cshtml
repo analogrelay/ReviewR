@@ -6,6 +6,7 @@
         requestUrl.Authority,
         Href("~/"));
     var env = System.Web.Configuration.WebConfigurationManager.AppSettings["Environment"];
+    var ver = typeof(ReviewR.Web.ReviewRApplication).Assembly.GetName().Version.ToString();
 }
 <!DOCTYPE html>
 <html data-root="~/" data-absroot="@absroot" data-environment="@env" data-token="@ReviewR.Web.Services.Utils.DecodeCookieToJson(Context)">
@@ -53,9 +54,8 @@
                 </div>
             </div>
         </header>
-        <p class="alert alert-error" data-bind="ifnot: isProd">
-            This is a MAJOR prototype, don't expect data to stay around. Databases may be wiped
-            WITHOUT notification and ALL data will be removed.
+        <p class="alert">
+            This is ReviewR @env v@(ver). This is a development version. Data may be wiped without notice.
         </p>
         <div id="syrah-page-host"></div>
         <div class="modal fade" id="syrah-dialog-host"></div>
