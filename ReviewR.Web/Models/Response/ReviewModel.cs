@@ -6,7 +6,7 @@ using System.Web.Http.ModelBinding;
 
 namespace ReviewR.Web.Models.Response
 {
-    public class ReviewResponseModel
+    public class ReviewModel
     {
         public int Id { get; set; }
         public string Title { get; set; }

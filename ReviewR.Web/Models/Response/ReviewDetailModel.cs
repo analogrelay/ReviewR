@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ReviewR.Web.Models.Response
 {
-    public class ReviewDetailResponseModel : ReviewResponseModel
+    public class ReviewDetailModel : ReviewModel
     {
         public string Description { get; set; }
         public IEnumerable<IterationModel> Iterations { get; set; }
