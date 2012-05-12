@@ -105,6 +105,7 @@
     </Compile>
     <Compile Include="Api\ApiTestData.cs" />
     <Compile Include="Api\ChangesControllerFacts.cs" />
+    <Compile Include="Api\CommentsControllerFacts.cs" />
     <Compile Include="Services\TokenServiceFacts.cs" />
     <Compile Include="Services\ReviewServiceFacts.cs" />
     <Compile Include="Services\IterationServiceFacts.cs" />

@@ -7,6 +7,7 @@ using ReviewR.Web.Infrastructure;
 using ReviewR.Web.Models.Data;
 using ReviewR.Web.Models.Response;
 using ReviewR.Web.Services;
+using VibrantUtils;
 
 namespace ReviewR.Web.Api
 {
@@ -14,13 +15,18 @@ namespace ReviewR.Web.Api
     {
         public CommentService Comments { get; set; }
 
+        protected CommentsController() { }
         public CommentsController(CommentService comments)
         {
+            Requires.NotNull(comments, "comments");
+
             Comments = comments;
         }
 
         public HttpResponseMessage Delete(int id)
         {
+            Requires.InRange(id >= 0, "id");
+
             var result = Comments.DeleteComment(id, User.Identity.UserId);
             if (result == DatabaseActionOutcome.ObjectNotFound)
             {
@@ -35,6 +41,10 @@ namespace ReviewR.Web.Api
 
         public HttpResponseMessage Post(int changeId, int line, string body)
         {
+            Requires.InRange(changeId >= 0, "changeId");
+            Requires.InRange(line >= 0, "line");
+            Requires.NotNullOrEmpty(body, "body");
+
             Comment cmt = Comments.CreateComment(changeId, line, body, User.Identity.UserId);
             if (cmt == null)
             {
