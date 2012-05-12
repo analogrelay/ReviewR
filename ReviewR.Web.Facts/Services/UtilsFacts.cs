@@ -21,7 +21,7 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresValidArguments()
             {
-                ContractAssert.NotNullOrEmpty(s => Utils.GetGravatarHash(s), "email");
+                ContractAssert.NotNullOrEmpty(s => Utils.GetGravatarHash(s), "email", ignoreTrace: true);
             }
 
             [Fact]
@@ -36,7 +36,7 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresValidArguments()
             {
-                ContractAssert.NotNull(() => Utils.GetActiveSessionToken(null), "context");
+                ContractAssert.NotNull(() => Utils.GetActiveSessionToken(null), "context", ignoreTrace: true);
             }
 
             [Fact]
@@ -93,7 +93,7 @@ namespace ReviewR.Web.Facts.Services
             [Fact]
             public void RequiresValidArguments()
             {
-                ContractAssert.NotNull(() => Utils.DecodeCookieToJson(null), "context");
+                ContractAssert.NotNull(() => Utils.DecodeCookieToJson(null), "context", ignoreTrace: true);
             }
 
             [Fact]

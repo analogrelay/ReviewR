@@ -103,8 +103,8 @@
     <Compile Include="..\Common\Requires.cs">
       <Link>Common\Requires.cs</Link>
     </Compile>
-    <Compile Include="Controllers\SessionsControllerFacts.cs" />
-    <Compile Include="Controllers\UsersControllerFacts.cs" />
+    <Compile Include="Api\ApiTestData.cs" />
+    <Compile Include="Api\ChangesControllerFacts.cs" />
     <Compile Include="Services\TokenServiceFacts.cs" />
     <Compile Include="Services\ReviewServiceFacts.cs" />
     <Compile Include="Services\IterationServiceFacts.cs" />
@@ -135,6 +135,7 @@
       <Name>ReviewR.Web</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <Import Project="$(MSBuildProjectDirectory)\..\Build\Test.targets" />

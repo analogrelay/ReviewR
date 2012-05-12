@@ -8,6 +8,7 @@ using ReviewR.Web.Models;
 using ReviewR.Web.Models.Data;
 using ReviewR.Web.Models.Response;
 using ReviewR.Web.Services;
+using VibrantUtils;
 
 namespace ReviewR.Web.Api
 {
@@ -16,14 +17,20 @@ namespace ReviewR.Web.Api
         public ChangeService Changes { get; set; }
         public DiffService Diff { get; set; }
 
+        protected ChangesController() { }
         public ChangesController(ChangeService changes, DiffService diff)
         {
+            Requires.NotNull(changes, "changes");
+            Requires.NotNull(diff, "diff");
+
             Changes = changes;
             Diff = diff;
         }
 
         public HttpResponseMessage Get(int id)
         {
+            Requires.InRange(id >= 0, "id");
+
             FileChange change = Changes.GetChange(id);
             if (change == null)
             {
@@ -36,25 +43,26 @@ namespace ReviewR.Web.Api
 
         private void AttachComments(FileChange change, FileDiffModel file)
         {
-            foreach (var groups in change.Comments.GroupBy(c => c.DiffLineIndex))
+            if (change.Comments != null)
             {
-                foreach (var comment in groups.OrderBy(c => c.PostedOn))
+                foreach (var groups in change.Comments.GroupBy(c => c.DiffLineIndex))
                 {
-                    file.Lines[groups.Key.Value].Comments.Add(new CommentModel()
+                    if (groups.Key.Value >= 0 && groups.Key.Value < file.Lines.Count)
                     {
-                        Id = comment.Id,
-                        Author = UserModel.FromUser(comment.User),
-                        Body = comment.Content,
-                        IsAuthor = comment.UserId == User.Identity.UserId,
-                        PostedOn = comment.PostedOn.ToLocalTime()
-                    });
+                        foreach (var comment in groups.OrderBy(c => c.PostedOn))
+                        {
+                            file.Lines[groups.Key.Value].Comments.Add(new CommentModel()
+                            {
+                                Id = comment.Id,
+                                Author = UserModel.FromUser(comment.User),
+                                Body = comment.Content,
+                                IsAuthor = comment.UserId == User.Identity.UserId,
+                                PostedOn = comment.PostedOn.ToLocalTime()
+                            });
+                        }
+                    }
                 }
             }
-        }
-
-        private bool IsAuthorized(FileChange change)
-        {
-            return true;
         }
     }
 }
