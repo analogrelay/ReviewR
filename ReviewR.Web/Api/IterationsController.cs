@@ -10,22 +10,20 @@ using ReviewR.Web.Models.Data;
 using ReviewR.Web.Services;
 using System.IO;
 using VibrantUtils;
+using System.Web.Http;
 
 namespace ReviewR.Web.Api
 {
     public class IterationsController : ReviewRApiController
     {
         public IterationService Iterations { get; set; }
-        public DiffService Diff { get; set; }
-
+        
         protected IterationsController() { }
-        public IterationsController(IterationService iterations, DiffService diff)
+        public IterationsController(IterationService iterations)
         {
             Requires.NotNull(iterations, "iterations");
-            Requires.NotNull(diff, "diff");
 
             Iterations = iterations;
-            Diff = diff;
         }
 
         public HttpResponseMessage Get(int id)
@@ -56,26 +54,30 @@ namespace ReviewR.Web.Api
 
         public HttpResponseMessage Post(int reviewId)
         {
+            Requires.InRange(reviewId >= 0, "reviewId");
+
             var result = Iterations.AddIteration(reviewId, User.Identity.UserId);
-            switch (result.Outcome)
+            if (result.Outcome == DatabaseActionOutcome.ObjectNotFound)
             {
-                case DatabaseActionOutcome.ObjectNotFound:
-                    return NotFound();
-                case DatabaseActionOutcome.Forbidden:
-                    return Forbidden();
-                case DatabaseActionOutcome.Success:
-                    return Created(new
-                    {
-                        Id = result.Object.Id,
-                        Href = Url.Resource(result.Object)
-                    });
-                default:
-                    throw new HttpException("Unknown error!");
+                return NotFound();
             }
+            else if (result.Outcome == DatabaseActionOutcome.Forbidden)
+            {
+                return Forbidden();
+            }
+            return Created(new IterationModel()
+            {
+                Id = result.Object.Id,
+                Description = result.Object.Description,
+                Published = result.Object.Published,
+                Order = null
+            });
         }
 
         public HttpResponseMessage Delete(int id)
         {
+            Requires.InRange(id >= 0, "id");
+
             var result = Iterations.DeleteIteration(id, User.Identity.UserId);
             if (result == DatabaseActionOutcome.ObjectNotFound)
             {
@@ -88,35 +90,51 @@ namespace ReviewR.Web.Api
             return NoContent();
         }
 
-        public HttpResponseMessage Put(int id, string diff, bool? published)
+        [AcceptVerbs("PUT", "PATCH")]
+        public HttpResponseMessage PutPublished(int id, bool published)
         {
-            // TODO: Organize this a bit better so that we only fetch the iteration once if the request does a batch update
-            if (published.HasValue)
+            Requires.InRange(id >= 0, "id");
+
+            var result = Iterations.SetIterationPublished(id, published, User.Identity.UserId);
+            if (result.Outcome == DatabaseActionOutcome.ObjectNotFound)
             {
-                var result = Iterations.SetIterationPublished(id, published.Value, User.Identity.UserId);
-                if (result == DatabaseActionOutcome.ObjectNotFound)
-                {
-                    return NotFound();
-                }
-                else if (result == DatabaseActionOutcome.Forbidden)
-                {
-                    return Forbidden();
-                }
+                return NotFound();
             }
-            
-            if (!String.IsNullOrEmpty(diff))
+            else if (result.Outcome == DatabaseActionOutcome.Forbidden)
             {
-                var result = Iterations.AddDiffToIteration(id, diff, User.Identity.UserId);
-                if (result == DatabaseActionOutcome.ObjectNotFound)
-                {
-                    return NotFound();
-                }
-                else if (result == DatabaseActionOutcome.Forbidden)
-                {
-                    return Forbidden();
-                }
+                return Forbidden();
             }
-            return NoContent();
+            return Ok(new IterationModel()
+            {
+                Id = result.Object.Id,
+                Description = result.Object.Description,
+                Published = result.Object.Published,
+                Order = null
+            });
+        }
+
+        [AcceptVerbs("PUT", "PATCH")]
+        public HttpResponseMessage PutDiff(int id, string diff)
+        {
+            Requires.InRange(id >= 0, "id");
+            Requires.NotNullOrEmpty(diff, "diff");
+
+            var result = Iterations.AddDiffToIteration(id, diff, User.Identity.UserId);
+            if (result.Outcome == DatabaseActionOutcome.ObjectNotFound)
+            {
+                return NotFound();
+            }
+            else if (result.Outcome == DatabaseActionOutcome.Forbidden)
+            {
+                return Forbidden();
+            }
+            return Ok(new IterationModel()
+            {
+                Id = result.Object.Id,
+                Description = result.Object.Description,
+                Published = result.Object.Published,
+                Order = null
+            });
         }
 
         private static string GetDirectoryName(FileChange f)

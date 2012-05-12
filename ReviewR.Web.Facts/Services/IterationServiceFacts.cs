@@ -182,7 +182,7 @@ namespace ReviewR.Web.Facts.Services
                 iters.MockData.SaveChanges();
 
                 // Act
-                Assert.Equal(DatabaseActionOutcome.ObjectNotFound, iters.AddDiffToIteration(iter.Id + 42, "diff", 42));
+                Assert.Equal(DatabaseActionOutcome.ObjectNotFound, iters.AddDiffToIteration(iter.Id + 42, "diff", 42).Outcome);
             }
 
             [Fact]
@@ -195,7 +195,7 @@ namespace ReviewR.Web.Facts.Services
                 iters.MockData.SaveChanges();
 
                 // Act
-                Assert.Equal(DatabaseActionOutcome.Forbidden, iters.AddDiffToIteration(iter.Id, "diff", 24));
+                Assert.Equal(DatabaseActionOutcome.Forbidden, iters.AddDiffToIteration(iter.Id, "diff", 24).Outcome);
             }
 
             [Fact]
@@ -216,8 +216,9 @@ namespace ReviewR.Web.Facts.Services
                 var result = iters.AddDiffToIteration(iter.Id, "thediff", 42);
 
                 // Assert
-                Assert.Equal(DatabaseActionOutcome.Success, result);
+                Assert.Equal(DatabaseActionOutcome.Success, result.Outcome);
                 Assert.Equal(1, iter.Files.Count);
+                Assert.Same(iter, result.Object);
                 Assert.Same(iter.Files.Single(), expectedChanges.Single());
                 iters.MockDiff.Verify();
             }
@@ -277,7 +278,7 @@ namespace ReviewR.Web.Facts.Services
                 iters.MockData.SaveChanges();
 
                 // Act
-                Assert.Equal(DatabaseActionOutcome.ObjectNotFound, iters.SetIterationPublished(iter.Id + 42, true, 42));
+                Assert.Equal(DatabaseActionOutcome.ObjectNotFound, iters.SetIterationPublished(iter.Id + 42, true, 42).Outcome);
             }
 
             [Fact]
@@ -290,7 +291,7 @@ namespace ReviewR.Web.Facts.Services
                 iters.MockData.SaveChanges();
 
                 // Act
-                Assert.Equal(DatabaseActionOutcome.Forbidden, iters.SetIterationPublished(iter.Id, true, 24));
+                Assert.Equal(DatabaseActionOutcome.Forbidden, iters.SetIterationPublished(iter.Id, true, 24).Outcome);
             }
 
             [Fact]
@@ -306,7 +307,8 @@ namespace ReviewR.Web.Facts.Services
                 var result = iters.SetIterationPublished(iter.Id, true, 42);
 
                 // Assert
-                Assert.Equal(DatabaseActionOutcome.Success, result);
+                Assert.Equal(DatabaseActionOutcome.Success, result.Outcome);
+                Assert.Same(iter, result.Object);
                 Assert.True(iter.Published);
             }
         }

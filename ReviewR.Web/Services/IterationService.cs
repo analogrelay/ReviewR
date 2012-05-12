@@ -69,7 +69,7 @@ namespace ReviewR.Web.Services
             return DatabaseActionOutcome.Success;
         }
 
-        public virtual DatabaseActionOutcome AddDiffToIteration(int id, string diff, int currentUserId)
+        public virtual DatabaseActionResult<Iteration> AddDiffToIteration(int id, string diff, int currentUserId)
         {
             Requires.InRange(id >= 0, "id");
             Requires.NotNullOrEmpty(diff, "diff");
@@ -78,11 +78,11 @@ namespace ReviewR.Web.Services
             Iteration iter = GetIteration(id);
             if (iter == null)
             {
-                return DatabaseActionOutcome.ObjectNotFound;
+                return DatabaseActionResult<Iteration>.NotFound();
             }
             else if (iter.Review.UserId != currentUserId)
             {
-                return DatabaseActionOutcome.Forbidden;
+                return DatabaseActionResult<Iteration>.Forbidden();
             }
 
             ICollection<FileChange> changes;
@@ -95,7 +95,7 @@ namespace ReviewR.Web.Services
                 iter.Files.Add(change);
             }
             Data.SaveChanges();
-            return DatabaseActionOutcome.Success;
+            return DatabaseActionResult<Iteration>.Success(iter);
         }
 
         public virtual Iteration GetIteration(int iterationId)
@@ -108,7 +108,7 @@ namespace ReviewR.Web.Services
                        .FirstOrDefault();
         }
 
-        public virtual DatabaseActionOutcome SetIterationPublished(int id, bool published, int userId)
+        public virtual DatabaseActionResult<Iteration> SetIterationPublished(int id, bool published, int userId)
         {
             Requires.InRange(id >= 0, "id");
             Requires.InRange(userId >= 0, "userId");
@@ -119,15 +119,15 @@ namespace ReviewR.Web.Services
                               .FirstOrDefault();
             if (i == null)
             {
-                return DatabaseActionOutcome.ObjectNotFound;
+                return DatabaseActionResult<Iteration>.NotFound();
             }
             else if (i.Review.UserId != userId)
             {
-                return DatabaseActionOutcome.Forbidden;
+                return DatabaseActionResult<Iteration>.Forbidden();
             }
             i.Published = published;
             Data.SaveChanges();
-            return DatabaseActionOutcome.Success;
+            return DatabaseActionResult<Iteration>.Success(i);
         }
     }
 }

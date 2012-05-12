@@ -54,8 +54,9 @@ namespace VibrantUtils
                 StackTrace stack = new StackTrace(argumentException);
                 var frame = stack.GetFrames().SkipWhile(f => f.GetMethod().DeclaringType.FullName == typeof(Requires).FullName).FirstOrDefault();
                 var actual = frame.GetMethod();
-                Assert.NotNull(actual);
-                Assert.Equal(expected.DeclaringType.FullName + "." + expected.Name, actual.DeclaringType.FullName + "." + actual.Name);
+                Assert.True(actual != null, "Unable to find stack frame.");
+                Assert.True(String.Equals(expected.DeclaringType.FullName + "." + expected.Name, actual.DeclaringType.FullName + "." + actual.Name),
+                            "Expected exception was thrown at an unexpected site. If this is intentional, pass ignoreTrace = true to ContractAssert method");
             }
 
             Assert.Equal(paramName, argumentException.ParamName);
