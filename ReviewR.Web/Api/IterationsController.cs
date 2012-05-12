@@ -9,6 +9,7 @@ using ReviewR.Web.Models.Request;
 using ReviewR.Web.Models.Data;
 using ReviewR.Web.Services;
 using System.IO;
+using VibrantUtils;
 
 namespace ReviewR.Web.Api
 {
@@ -17,14 +18,20 @@ namespace ReviewR.Web.Api
         public IterationService Iterations { get; set; }
         public DiffService Diff { get; set; }
 
+        protected IterationsController() { }
         public IterationsController(IterationService iterations, DiffService diff)
         {
+            Requires.NotNull(iterations, "iterations");
+            Requires.NotNull(diff, "diff");
+
             Iterations = iterations;
             Diff = diff;
         }
 
         public HttpResponseMessage Get(int id)
         {
+            Requires.InRange(id >= 0, "id");
+
             Iteration iter = Iterations.GetIteration(id);
             if (iter == null)
             {
@@ -34,17 +41,17 @@ namespace ReviewR.Web.Api
             {
                 return Forbidden();
             }
-            return Ok(iter.Files.GroupBy(GetDirectoryName).Select(g => new
+            return Ok(iter.Files.GroupBy(GetDirectoryName).Select(g => new FolderModel
             {
-                Name = g.Key,
-                Files = g.Select(f => new
+                Name = g.Key ?? "/",
+                Files = g.Select(f => new FileModel
                 {
                     Id = f.Id,
-                    FileName = f.DisplayFileName.Substring(g.Key.Length + 1),
+                    FileName = g.Key == null ? f.DisplayFileName : f.DisplayFileName.Substring(g.Key.Length + 1),
                     FullPath = f.DisplayFileName,
                     ChangeType = f.ChangeType
-                })
-            }));
+                }).ToArray()
+            }).ToArray());
         }
 
         public HttpResponseMessage Post(int reviewId)
@@ -120,7 +127,7 @@ namespace ReviewR.Web.Api
             {
                 return fileName.Substring(0, lastSlash);
             }
-            return fileName;
+            return null;
         }
     }
 }

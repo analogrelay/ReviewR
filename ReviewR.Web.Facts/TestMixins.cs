@@ -20,8 +20,7 @@ namespace ReviewR.Web.Facts
         public static object GetObjectContent(this HttpResponseMessage self)
         {
             ObjectContent c = self.Content as ObjectContent;
-            Assert.NotNull(c);
-            return c.ReadAsync().Result;
+            return c == null ? null : c.ReadAsync().Result;
         }
 
         public static int GetLastId(this IDataRepository self)

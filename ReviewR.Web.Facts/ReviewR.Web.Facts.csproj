@@ -103,9 +103,12 @@
     <Compile Include="..\Common\Requires.cs">
       <Link>Common\Requires.cs</Link>
     </Compile>
+    <Compile Include="Api\ApiCommonTests.cs" />
     <Compile Include="Api\ApiTestData.cs" />
     <Compile Include="Api\ChangesControllerFacts.cs" />
     <Compile Include="Api\CommentsControllerFacts.cs" />
+    <Compile Include="Api\IterationsControllerFacts.cs" />
+    <Compile Include="Api\ITestableController.cs" />
     <Compile Include="Services\TokenServiceFacts.cs" />
     <Compile Include="Services\ReviewServiceFacts.cs" />
     <Compile Include="Services\IterationServiceFacts.cs" />

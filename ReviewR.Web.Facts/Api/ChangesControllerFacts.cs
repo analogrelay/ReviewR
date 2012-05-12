@@ -52,18 +52,7 @@ namespace ReviewR.Web.Facts.Api
             [Fact]
             public void Returns404AndNoContentWhenNoChangeWithId()
             {
-                // Arrange
-                var c = CreateController();
-                var add = new FileAddition();
-                c.MockData.Changes.Add(add);
-                c.MockData.SaveChanges();
-
-                // Act
-                var result = c.Get(add.Id + 42);
-
-                // Assert
-                Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
-                Assert.Null(result.Content);
+                ApiCommonTests.GetReturns404WhenNoObjectWithId<FileChange>(CreateController(), new FileAddition());
             }
 
             [Fact]
@@ -185,7 +174,7 @@ namespace ReviewR.Web.Facts.Api
             return c;
         }
 
-        private class TestableChangesController : ChangesController
+        private class TestableChangesController : ChangesController, ITestableController
         {
             public MockDataRepository MockData { get; set; }
             public Mock<DiffService> MockDiff { get; set; }
