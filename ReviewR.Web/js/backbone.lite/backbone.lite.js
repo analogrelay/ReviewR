@@ -6,9 +6,9 @@
 // Modifications by Andrew Nurse, also available under an MIT License
 // * Trim down to just routing, history and events.
 // * Track current route handler on Router and allow it to be re-evaluated.
-
-(function (window, undefined) {
-    window.Backbone = {};
+// * Convert to an AMD module.
+define(['window'], function (window) {
+    var exports = {};
     // Backbone.Events
     // -----------------
 
@@ -24,7 +24,7 @@
     //     object.on('expand', function(){ alert('expanded'); });
     //     object.trigger('expand');
     //
-    var Events = Backbone.Events = {
+    var Events = exports.Events = {
 
         // Bind one or more space separated events, `events`, to a `callback`
         // function. Passing `"all"` will bind the callback to all events fired.
@@ -123,7 +123,7 @@
 
     // Routers map faux-URLs to actions, and fire events when routes are
     // matched. Creating a new one sets its `routes` hash, if not set statically.
-    var Router = Backbone.Router = function (options) {
+    var Router = exports.Router = function (options) {
         options || (options = {});
         if (options.routes) this.routes = options.routes;
         this._bindRoutes();
@@ -215,7 +215,7 @@
 
     // Handles cross-browser history management, based on URL fragments. If the
     // browser does not support `onhashchange`, falls back to polling.
-    var History = Backbone.History = function () {
+    var History = exports.History = function () {
         this.handlers = [];
         _.bindAll(this, 'checkUrl');
     };
@@ -404,4 +404,4 @@
             }
         }
     });
-})(window);
+});

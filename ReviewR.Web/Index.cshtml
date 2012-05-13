@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="~/Content/themes/base/jquery.ui.all.css" />
     <link rel="stylesheet" type="text/css" href="~/Content/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
+    <script src="~/js/modernizr-2.5.3.js"></script>
 </head>
 <body>
     <div id="root">
@@ -61,7 +62,8 @@
         <div class="modal fade" id="syrah-dialog-host"></div>
     </div>
     <!-- Load scripts -->
-    <script src="~/Scripts/jquery-1.7.2.js"></script>
+    <script src="~/js/requirejs/require.js" data-main="js/boot"></script>
+    @*<script src="~/Scripts/jquery-1.7.2.js"></script>
     <script src="~/Scripts/jquery-ui-1.8.19.js"></script>
     <script src="~/Scripts/jquery.timeago.js"></script>
     <script src="~/Scripts/underscore.js"></script>
@@ -81,9 +83,9 @@
     <script src="~/js/fx/syrah.routing.js"></script>
     <script src="~/js/fx/syrah.utils.js"></script>
     <script src="~/js/rR.app.js"></script>
-    <script src="~/js/rR.models.js"></script>
-    @Composition.ViewModelScripts("~/js/modules")
-    <script type="text/javascript">
+    <script src="~/js/rR.models.js"></script>*@
+    @*@Composition.ViewModelScripts("~/js/modules")*@
+    @*<script type="text/javascript">
     syrah.bus.register('janrain.ready');
     (function () {
         window.janrainWidgetOnload = function () {
@@ -110,7 +112,7 @@
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(e, s);
     })();
-    </script>
+    </script>*@
     <!-- Templates -->
     @Composition.ViewModelTemplates("~/Views")
 </body>
