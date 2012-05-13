@@ -1,15 +1,27 @@
-﻿@{
+﻿@using System.Text;
+@using ReviewR.Web.Infrastructure;
+@using ReviewR.Web.Services;
+@{
+    var settings = Services.GetService<ISettings>();
+    var auth = Services.GetService<AuthenticationService>();
+    
     Uri requestUrl = Request.Url;
 
-    string absroot = String.Format("{0}://{1}{2}",
-        requestUrl.Scheme,
-        requestUrl.Authority,
-        Href("~/"));
-    var env = System.Web.Configuration.WebConfigurationManager.AppSettings["Environment"];
+    var env = settings.Get("Environment");
     var ver = typeof(ReviewR.Web.ReviewRApplication).Assembly.GetName().Version.ToString();
+    
+    // Set up OAuth client data
+    StringBuilder oauthData = new StringBuilder();
+    foreach(KeyValuePair<string, string> pair in auth.GetClientIds()) {
+        oauthData.Append(" data-oauth-");
+        oauthData.Append(pair.Key);
+        oauthData.Append("=\"");
+        oauthData.Append(pair.Value);
+        oauthData.Append("\"");
+    }
 }
 <!DOCTYPE html>
-<html data-root="~/" data-absroot="@absroot" data-environment="@env" data-token="@ReviewR.Web.Services.Utils.DecodeCookieToJson(Context)">
+<html data-root="@Href("~/")" data-environment="@env" data-token="@ReviewR.Web.Services.Utils.DecodeCookieToJson(Context)" @Html.Raw(oauthData)>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -47,7 +59,7 @@
                                     <li><a href="/" data-bind="click: logout">Logout</a></li>
                                 </ul>
                             </li>
-                            <li data-bind="visible: !currentUser().loggedIn()"><a href="#" class="janrainEngage">
+                            <li data-bind="visible: !currentUser().loggedIn()"><a href="#" data-bind="click: login">
                                 Login</a></li>
                         </ul>
                     </nav>
@@ -83,34 +95,7 @@
     <script src="~/js/rR.app.js"></script>
     <script src="~/js/rR.models.js"></script>
     @Composition.ViewModelScripts("~/js/modules")
-    <script type="text/javascript">
-    syrah.bus.register('janrain.ready');
-    (function () {
-        window.janrainWidgetOnload = function () {
-            syrah.bus.janrain.ready.publish();
-        };
 
-        if (typeof window.janrain !== 'object') window.janrain = {};
-        if (typeof window.janrain.settings !== 'object') window.janrain.settings = {};
-
-        janrain.settings.tokenUrl = $(document.documentElement).data('absroot');
-        janrain.settings.tokenAction = 'event';
-        janrain.ready = true;
-
-        var e = document.createElement('script');
-        e.type = 'text/javascript';
-        e.id = 'janrainAuthWidget';
-
-        if (document.location.protocol === 'https:') {
-            e.src = 'https://rpxnow.com/js/lib/reviewr/engage.js';
-        } else {
-            e.src = 'http://widget-cdn.rpxnow.com/js/lib/reviewr/engage.js';
-        }
-
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(e, s);
-    })();
-    </script>
     <!-- Templates -->
     @Composition.ViewModelTemplates("~/Views")
 </body>

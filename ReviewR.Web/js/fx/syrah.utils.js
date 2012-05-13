@@ -41,5 +41,13 @@
                 }
             }
         };
+
+        ns.getSetting = function (name) {
+            var attrName = 'data-' + name;
+            if (document.documentElement.hasAttribute(attrName)) {
+                return document.documentElement.getAttribute(attrName);
+            }
+            return null;
+        }
     });
 })();

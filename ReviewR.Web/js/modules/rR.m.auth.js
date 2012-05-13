@@ -51,10 +51,40 @@
         }
     }
 
+    function LoginViewModel() {
+        var self = this;
+
+        // Actions
+        self.makeLoginHandler = function (id, name) {
+            return function () {
+                alert('login with ' + name + '(' + id + ')');
+                //// Start OAuth Login with Facebook
+                //var loginResp = doauth('facebook', 'fb', 'https://www.facebook.com/dialog/oauth?' +
+                //    'client_id=__ID__&' +
+                //    'redirect_uri=__LAND__&' +
+                //    'scope=user_about_me,email&' +
+                //    'response_type=token');
+            }
+        };
+    }
+
+    function doauth(endpoint, type, urlTemplate) {
+        var id = sy.utils.getSetting('oauth-' + type);
+        sy.utils.assert(id, 'No such OAuth provider: ' + type);
+        var redirectUrl = rR.app.resolveUrl('~/auth/' + type, true);
+        var resp = window.showModalDialog(urlTemplate.replace(/__ID__/, id).replace(/__LAND__/, redirectUrl));
+        $.ajax({
+            url: '~/api/v1/sessions/' + endpoint,
+            type: 'post',
+            data: resp.args
+        });
+    }
+
     // Set up the module
     var auth = rR.module('auth', function () {
         var self = this;
 
+        self.dialog('login', LoginViewModel);
         self.dialog('moreData', MoreDataViewModel);
 
         self.action('logout', function () {
@@ -62,6 +92,10 @@
                 .done(function () {
                     sy.bus.auth.clearToken.publish();
                 });
+        });
+
+        self.action('login', function () {
+            this.showDialog('login');
         });
 
         self.action('moredata', function (authToken, missingFields) {
@@ -72,32 +106,25 @@
             }));
         });
 
-        self.attached.add(function () {
-            sy.bus.janrain.ready.subscribe(function () {
-                janrain.events.onProviderLoginToken.addHandler(function (tokenResponse) {
-                    $.post(
-                        '~/api/v1/sessions',
-                        { authToken: tokenResponse.token })
-                        .success(function (data) {
-                            // Grab the rest of the user data and send it to the app level login action
-                            sy.bus.auth.setToken.publish(data.user);
+        self.route('landing', 'auth/:type', function (type) {
+            var args = {};
+            if (location.hash) {
+                var hash = location.hash;
+                if (hash[0] === '#') {
+                    hash = location.hash.substr(1);
+                }
+                var pairs = hash.split(/&/);
+                for (var i = 0; i < pairs.length; i++) {
+                    var pair = pairs[i].split(/=/);
+                    args[pair[0]] = pair[1];
+                }
+            }
 
-                            // Dismiss the dialog
-                            janrain.engage.signin.modal.close();
-                        })
-                        .statusCode({
-                            400: function (xhr) {
-                                var data = JSON.parse(xhr.responseText);
-                                janrain.engage.signin.modal.close();
-                                sy.bus.exec.publish('auth.moredata', tokenResponse.token, data.missingFields);
-                            },
-                            500: function () {
-                                alert('There was an error processing your login. Please try again!');
-                                janrain.engage.signin.modal.close();
-                            }
-                        });
-                });
-            });
+            window.returnValue = {
+                type: type,
+                args: args
+            };
+            window.close();
         });
     });
 })(syrah, rR);

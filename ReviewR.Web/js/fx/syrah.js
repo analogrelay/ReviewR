@@ -58,12 +58,16 @@
             self.router = new syrah.routing.Router();
             self.route = self.router.map;
 
-            self.resolveUrl = function (vpath) {
+            self.resolveUrl = function (vpath, full) {
                 /// <param name="vpath" type="String" />
+                var url = vpath;
                 if (vpath[0] === '~' && vpath[1] === '/') {
-                    return _rootUrl + vpath.substr(2);
+                    url = _rootUrl + vpath.substr(2);
                 }
-                return vpath;
+                if (full) {
+                    url = location.protocol + '//' + location.host + url;
+                }
+                return url;
             };
 
             self.action = function (name, handler) {
@@ -116,14 +120,6 @@
             self.closeDialog = function () {
                 _dialogHost.closeDialog();
                 _pageHost.reveal();
-            };
-
-            self.resolveUrl = function (url) {
-                /// <param name="url" type="String" />
-                if (url[0] === '~' && url[1] === '/') {
-                    return _rootUrl + url.substr(2);
-                }
-                return _rootUrl + url;
             };
 
             syrah.bus.register('navigate', ['url']);

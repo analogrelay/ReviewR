@@ -188,11 +188,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\CacheControlAttribute.cs" />
+    <Compile Include="Infrastructure\EnumerableExtensions.cs" />
     <Compile Include="Infrastructure\ExpiresAttribute.cs" />
     <Compile Include="Infrastructure\ISettings.cs" />
+    <Compile Include="Infrastructure\PageBase.cs" />
     <Compile Include="Infrastructure\Pluralizer.cs" />
     <Compile Include="Infrastructure\RequestExtensions.cs" />
     <Compile Include="Infrastructure\ReviewRApiController.cs" />
+    <Compile Include="Infrastructure\ServiceProviderExtensions.cs" />
     <Compile Include="Infrastructure\Settings.private.cs" Condition="Exists('Infrastructure\Settings.private.cs')" />
     <Compile Include="Infrastructure\WebPageRoute.cs" />
     <Compile Include="Infrastructure\Temp\JsonContractResolver.cs" />
@@ -304,6 +307,11 @@
     <Compile Include="Models\ReviewRPrincipal.cs" />
     <Compile Include="Models\UserIdentifier.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
+    <Compile Include="Services\Authenticators\Authenticator.cs" />
+    <Compile Include="Services\Authenticators\MicrosoftAuthenticator.cs" />
+    <Compile Include="Services\Authenticators\TwitterAuthenticator.cs" />
+    <Compile Include="Services\Authenticators\GoogleAuthenticator.cs" />
+    <Compile Include="Services\Authenticators\FacebookAuthenticator.cs" />
     <Compile Include="Services\ChangeService.cs" />
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\DatabaseActionResult.cs" />
@@ -313,6 +321,8 @@
     <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Services\TokenService.cs" />
     <Compile Include="Services\Utils.cs" />
+    <Content Include="Content\images\facebook.png" />
+    <Content Include="Content\images\google.png" />
     <Content Include="Content\metro-orange.css" />
     <Content Include="Content\metro-teal.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -739,6 +749,9 @@
     <Content Include="DynamicData\DynamicData\web.config" />
     <Content Include="DynamicData\Site.master" />
     <Content Include="DynamicData\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Auth\_Login.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

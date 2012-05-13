@@ -13,8 +13,11 @@ namespace ReviewR.Web.Infrastructure
 
     public partial class WebSettings : ISettings
     {
+        private static ISettings _instance = new WebSettings();
+        public static ISettings Instance { get { return _instance; } }
+        
         private Dictionary<string, string> _overrideKeys = new Dictionary<string, string>();
-
+        
         partial void AddDeveloperSettings(Dictionary<string, string> overrideKeys);
 
         public WebSettings()

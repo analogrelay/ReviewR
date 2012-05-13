@@ -15,6 +15,7 @@ namespace ReviewR.Web.App_Start
     using ReviewR.Web.Infrastructure;
     using ReviewR.Web.Models.Data;
     using ReviewR.Web.Services;
+    using ReviewR.Web.Services.Authenticators;
 
     public static class NinjectWebCommon 
     {
@@ -37,6 +38,8 @@ namespace ReviewR.Web.App_Start
             {
                 GlobalConfiguration.Configuration.MessageHandlers.Add(handler);
             }
+
+            ReviewRApplication.Services = bootstrapper.Kernel;
         }
         
         /// <summary>
@@ -74,6 +77,14 @@ namespace ReviewR.Web.App_Start
             kernel.Bind<IDataRepository>().To<DefaultDataRepository>();
             kernel.Bind<DiffService>().ToSelf();
             kernel.Bind<ISettings>().To<WebSettings>();
+            kernel.Bind<Authenticator>()
+                  .To<FacebookAuthenticator>();
+            kernel.Bind<Authenticator>()
+                  .To<GoogleAuthenticator>();
+            kernel.Bind<Authenticator>()
+                  .To<TwitterAuthenticator>();
+            kernel.Bind<Authenticator>()
+                  .To<MicrosoftAuthenticator>();
         }        
     }
 }

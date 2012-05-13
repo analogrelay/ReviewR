@@ -1,0 +1,21 @@
+﻿@using ReviewR.Web.Infrastructure;
+@using ReviewR.Web.Services;
+@{
+    var auth = Services.GetService<AuthenticationService>();
+}
+
+<header class="modal-header">
+    <h1>Log in.</h1>
+    <p>We don't want your password, use one of these guys to log in. It's safe, and we won't post anything without your explicit consent.</p>
+</header>
+<div class="modal-body">
+    <ul id="login-choices">
+        @foreach (var authr in auth.Authenticators.Pairwise())
+        {
+            <li>
+                <button class="btn" disabled="@(!authr.Item1.Active)" data-bind="click: makeLoginHandler('@authr.Item1.Id','@authr.Item1.Name')">@authr.Item1.Name</button>
+                <button class="btn" disabled="@(!authr.Item2.Active)" data-bind="click: makeLoginHandler('@authr.Item2.Id','@authr.Item2.Name')">@authr.Item2.Name</button>
+            </li>
+        }
+    </ul>
+</div>

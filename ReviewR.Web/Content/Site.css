@@ -41,6 +41,10 @@ fieldset.no-legend legend {
         padding: 0;
     }
 
+input, button, select, textarea {
+    font-family: Segoe UI, Segoe WP, Helvetica Neue, Roboto, sans-serif;
+}
+
 /* General */
 h1 {
     padding-bottom: 10px;
@@ -185,6 +189,7 @@ ul.diff-comments {
     padding: 0;
     margin-bottom: 0.5em;
 }
+
     ul.diff-comments li {
         background-color: whiteSmoke;
         border: 1px solid #EEE;
@@ -199,14 +204,14 @@ ul.diff-comments {
             background-color: #ececec;
             padding: 0.50em;
         }
-        
+
         ul.diff-comments li p.diff-comment-body {
             padding: 0.50em;
         }
 
 div.diff-comment-actions {
     margin-right: 0.5em;
-    display: none
+    display: none;
 }
 
 ul.diff-comments li:hover div.diff-comment-actions {
@@ -295,3 +300,19 @@ li.active a.iteration-tab, li.active a.iteration-tab.unpublished {
     padding: 10px;
     padding-top: 0;
 }
+
+ul#login-choices {
+    margin: 0;
+    padding: 0.25em;
+}
+
+    ul#login-choices li {
+        list-style-type: none;
+    }
+
+        ul#login-choices li button {
+            margin: 0.1em;
+            width: 49%;
+            font-size: 14pt;
+            padding: 0.5em;
+        }

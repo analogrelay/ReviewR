@@ -27,6 +27,10 @@
             self.logout = function () {
                 sy.bus.exec.publish('auth.logout');
             };
+            self.login = function () {
+                sy.bus.exec.publish('auth.login');
+            };
+
             sy.bus.register('auth.setToken').subscribe(function(user) {
                 sy.utils.update(self.currentUser(), user);
                 self.currentUser().loggedIn(true);
