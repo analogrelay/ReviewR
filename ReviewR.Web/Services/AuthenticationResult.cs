@@ -20,9 +20,19 @@ namespace ReviewR.Web.Services
             MissingFields = missingFields;
         }
 
-        public static AuthenticationResult Success(User user)
+        public static AuthenticationResult LoggedIn(User user)
         {
-            return new AuthenticationResult(AuthenticationOutcome.Success, user, new List<string>());
+            return new AuthenticationResult(AuthenticationOutcome.LoggedIn, user, new List<string>());
+        }
+
+        public static AuthenticationResult Registered(User user)
+        {
+            return new AuthenticationResult(AuthenticationOutcome.Registered, user, new List<string>());
+        }
+
+        public static AuthenticationResult Associated(User user)
+        {
+            return new AuthenticationResult(AuthenticationOutcome.Associated, user, new List<string>());
         }
 
         public static AuthenticationResult MissingData(IList<string> missingFields)
@@ -33,7 +43,9 @@ namespace ReviewR.Web.Services
 
     public enum AuthenticationOutcome
     {
-        Success,
+        LoggedIn,
+        Registered,
+        Associated,
         MissingFields,
     }
 }

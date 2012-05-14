@@ -37,12 +37,7 @@ namespace ReviewR.Web.Facts.Services.Authenticators
                 var a = CreateAuthenticator();
 
                 // Act
-                return a.CompleteAuthentication("abc").Catch(c =>
-                {
-                    // Assert
-                    Assert.IsType<NotImplementedException>(c.Exception);
-                    return c.Handled();
-                });
+                return a.CompleteAuthentication("abc").ShouldThrow<NotImplementedException>();
             }
 
             [Fact]
@@ -54,11 +49,7 @@ namespace ReviewR.Web.Facts.Services.Authenticators
                     TaskHelpers.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("{ blarg }") });
 
                 // Act
-                return a.CompleteAuthentication("abc").Catch(c => {
-                    // Assert
-                    Assert.IsType<NotImplementedException>(c.Exception);
-                    return c.Handled();
-                });
+                return a.CompleteAuthentication("abc").ShouldThrow<NotImplementedException>();
             }
 
             [Fact]
@@ -70,12 +61,7 @@ namespace ReviewR.Web.Facts.Services.Authenticators
                     TaskHelpers.FromResult(new HttpResponseMessage(HttpStatusCode.InternalServerError));
 
                 // Act
-                return a.CompleteAuthentication("abc").Catch(c =>
-                {
-                    // Assert
-                    Assert.IsType<HttpRequestException>(c.Exception);
-                    return c.Handled();
-                });
+                return a.CompleteAuthentication("abc").ShouldThrow<HttpRequestException>();
             }
 
             [Fact]

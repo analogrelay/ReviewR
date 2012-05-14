@@ -29,5 +29,20 @@ namespace ReviewR.Web.Facts
             Assert.NotNull(d);
             return d.LastId;
         }
+
+        public static Task ShouldThrow<T>(this Task self) where T : Exception
+        {
+            return ShouldThrow<T>(self, _ => { });
+        }
+        public static Task ShouldThrow<T>(this Task self, Action<T> checker) where T : Exception
+        {
+            return self.ContinueWith(t =>
+            {
+                Assert.True(t.IsFaulted);
+                AggregateException aggex = Assert.IsType<AggregateException>(t.Exception);
+                var ex = Assert.IsType<T>(aggex.Flatten().InnerException);
+                checker(ex);
+            });
+        }
     }
 }

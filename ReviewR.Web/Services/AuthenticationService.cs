@@ -38,13 +38,16 @@ namespace ReviewR.Web.Services
 
         public Task<AuthenticationResult> AuthenticateWithProviderAsync(string type, string accessToken)
         {
+            Requires.NotNullOrEmpty(type, "type");
+            Requires.NotNullOrEmpty(accessToken, "accessToken");
+
             // Find the authenticator
             Authenticator auth;
             if (!Authenticators.TryGetValue(type, out auth))
             {
                 return TaskHelpers.FromError<AuthenticationResult>(new NotSupportedException("No such authentication provider: " + type));
             }
-            return auth.CompleteAuthentication(accessToken).Then(u =>
+            return ExchangeToken(accessToken, auth).Then(u =>
             {
                 // Check for a credential for this user
                 Credential cred = Data.Credentials
@@ -53,7 +56,7 @@ namespace ReviewR.Web.Services
                 if (cred != null)
                 {
                     // Done! Return this user
-                    return AuthenticationResult.Success(cred.User);
+                    return AuthenticationResult.LoggedIn(cred.User);
                 }
 
                 // Ok, check for a user by email address
@@ -74,7 +77,7 @@ namespace ReviewR.Web.Services
                         };
                         user.Credentials.Add(cred);
                         Data.SaveChanges();
-                        return AuthenticationResult.Success(user);
+                        return AuthenticationResult.Associated(user);
                     }
                 }
                 else
@@ -94,7 +97,7 @@ namespace ReviewR.Web.Services
                 }
 
                 // Yes! Register a new user and log them in
-                return AuthenticationResult.Success(new User()
+                var newUser = new User()
                 {
                     DisplayName = u.DisplayName,
                     Email = u.Email,
@@ -104,8 +107,16 @@ namespace ReviewR.Web.Services
                             Identifier = u.Identifier
                         }
                     }
-                });
+                };
+                Data.Users.Add(newUser);
+                Data.SaveChanges();
+                return AuthenticationResult.Registered(newUser);
             });
+        }
+
+        protected internal virtual Task<UserInfo> ExchangeToken(string accessToken, Authenticator auth)
+        {
+            return auth.CompleteAuthentication(accessToken);
         }
     }
 }

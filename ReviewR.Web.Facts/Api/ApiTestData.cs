@@ -9,15 +9,7 @@ namespace ReviewR.Web.Facts.Api
 {
     public static class ApiTestData
     {
-        public static User LoggedInUser = new User()
-        {
-            Id = 42,
-            DisplayName = "Swedish Chef",
-            Email = "bork@bork.bork",
-            Roles = new List<Role>(),
-            Reviews = new List<Review>(),
-            Credentials = new List<Credential>()
-        };
+        public static User LoggedInUser = CreateLoggedInUser();
 
         public static User NotLoggedInUser = new User()
         {
@@ -31,5 +23,18 @@ namespace ReviewR.Web.Facts.Api
 
         public static ReviewRPrincipal LoggedIn = new ReviewRPrincipal(ReviewRIdentity.FromUser(LoggedInUser));
         public static ReviewRPrincipal NotLoggedIn = new ReviewRPrincipal(ReviewRIdentity.FromUser(NotLoggedInUser));
+
+        public static User CreateLoggedInUser()
+        {
+            return new User()
+            {
+                Id = 42,
+                DisplayName = "Swedish Chef",
+                Email = "bork@bork.bork",
+                Roles = new List<Role>(),
+                Reviews = new List<Review>(),
+                Credentials = new List<Credential>()
+            };
+        }
     }
 }

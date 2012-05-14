@@ -24,9 +24,13 @@ namespace ReviewR.Web.Api
         [AllowAnonymous]
         public Task<HttpResponseMessage> Post(string id, string token)
         {
-            return Auth.AuthenticateWithProviderAsync(id, token).Then(r =>
+            return Auth.AuthenticateWithProviderAsync(id, token).Then<AuthenticationResult, HttpResponseMessage>(r =>
             {
-                if (r.Outcome == AuthenticationOutcome.Success)
+                if (r.Outcome == AuthenticationOutcome.MissingFields)
+                {
+                    return BadRequest(new { missingFields = r.MissingFields });
+                }
+                else
                 {
                     User = ReviewRPrincipal.FromUser(r.User);
                     return Created(new
@@ -35,11 +39,6 @@ namespace ReviewR.Web.Api
                         token = SessionToken
                     });
                 }
-                else if (r.Outcome == AuthenticationOutcome.MissingFields)
-                {
-                    return BadRequest(new { missingFields = r.MissingFields });
-                }
-                return Conflict();
             });
         }
     }

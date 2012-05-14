@@ -61,6 +61,7 @@
                 var loginResp = doauth('fb', 'https://www.facebook.com/dialog/oauth?' +
                     'client_id=__ID__&' +
                     'redirect_uri=__LAND__&' +
+                    'display=popup&' +
                     'scope=user_about_me,email&' +
                     'response_type=token');
             }
