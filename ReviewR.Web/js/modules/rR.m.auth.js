@@ -57,26 +57,29 @@
         // Actions
         self.makeLoginHandler = function (id, name) {
             return function () {
-                alert('login with ' + name + '(' + id + ')');
-                //// Start OAuth Login with Facebook
-                //var loginResp = doauth('facebook', 'fb', 'https://www.facebook.com/dialog/oauth?' +
-                //    'client_id=__ID__&' +
-                //    'redirect_uri=__LAND__&' +
-                //    'scope=user_about_me,email&' +
-                //    'response_type=token');
+                // Send OAuth token to server
+                var loginResp = doauth('fb', 'https://www.facebook.com/dialog/oauth?' +
+                    'client_id=__ID__&' +
+                    'redirect_uri=__LAND__&' +
+                    'scope=user_about_me,email&' +
+                    'response_type=token');
             }
         };
     }
 
-    function doauth(endpoint, type, urlTemplate) {
+    function doauth(type, urlTemplate, tokenExtractor) {
+        if (!tokenExtractor) {
+            tokenExtractor = function (args) { return { token: args.access_token }; }
+        }
+
         var id = sy.utils.getSetting('oauth-' + type);
         sy.utils.assert(id, 'No such OAuth provider: ' + type);
         var redirectUrl = rR.app.resolveUrl('~/auth/' + type, true);
         var resp = window.showModalDialog(urlTemplate.replace(/__ID__/, id).replace(/__LAND__/, redirectUrl));
         $.ajax({
-            url: '~/api/v1/sessions/' + endpoint,
+            url: '~/api/v1/sessions/' + type,
             type: 'post',
-            data: resp.args
+            data: tokenExtractor(resp.args)
         });
     }
 

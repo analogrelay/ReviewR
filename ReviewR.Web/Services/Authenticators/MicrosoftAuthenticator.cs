@@ -33,11 +33,6 @@ namespace ReviewR.Web.Services.Authenticators
             return appSettings.Get("ms:appid");
         }
 
-        public override string GetSecret(ISettings settings)
-        {
-            throw new NotImplementedException();
-        }
-
         public override Task<UserInfo> CompleteAuthentication(string accessToken)
         {
             throw new NotImplementedException();

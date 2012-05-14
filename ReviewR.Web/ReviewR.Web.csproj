@@ -75,10 +75,6 @@
     <Reference Include="Ninject.Web.Common">
       <HintPath>..\packages\Ninject.Web.Common.3.0.0.7\lib\net40-full\Ninject.Web.Common.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Core, Version=1.7.30402.9028, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NuGet.Core.1.7.0\lib\net40-Client\NuGet.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -188,6 +184,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\CacheControlAttribute.cs" />
+    <Compile Include="Infrastructure\TaskHelpersExtensions.cs" />
     <Compile Include="Infrastructure\EnumerableExtensions.cs" />
     <Compile Include="Infrastructure\ExpiresAttribute.cs" />
     <Compile Include="Infrastructure\ISettings.cs" />
@@ -197,6 +194,7 @@
     <Compile Include="Infrastructure\ReviewRApiController.cs" />
     <Compile Include="Infrastructure\ServiceProviderExtensions.cs" />
     <Compile Include="Infrastructure\Settings.private.cs" Condition="Exists('Infrastructure\Settings.private.cs')" />
+    <Compile Include="Infrastructure\TaskHelpers.cs" />
     <Compile Include="Infrastructure\WebPageRoute.cs" />
     <Compile Include="Infrastructure\Temp\JsonContractResolver.cs" />
     <Compile Include="Infrastructure\Temp\BetterJsonMediaTypeFormatter.cs" />
@@ -306,6 +304,7 @@
     <Compile Include="Models\Data\FileChangeType.cs" />
     <Compile Include="Models\ReviewRPrincipal.cs" />
     <Compile Include="Models\UserIdentifier.cs" />
+    <Compile Include="Services\AuthenticationResult.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\Authenticators\Authenticator.cs" />
     <Compile Include="Services\Authenticators\MicrosoftAuthenticator.cs" />

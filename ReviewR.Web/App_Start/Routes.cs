@@ -22,13 +22,6 @@ namespace ReviewR.Web.App_Start
             );
 
             routes.MapHttpRoute(
-                name: "Sessions",
-                routeTemplate: "api/v1/sessions/{action}",
-                defaults: new { controller = "sessions" },
-                constraints: new { controller = @"[A-Za-z]*" }
-            );
-
-            routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/v1/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional },

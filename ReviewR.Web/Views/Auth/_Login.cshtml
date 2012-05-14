@@ -10,7 +10,7 @@
 </header>
 <div class="modal-body">
     <ul id="login-choices">
-        @foreach (var authr in auth.Authenticators.Pairwise())
+        @foreach (var authr in auth.Authenticators.Values.Pairwise())
         {
             <li>
                 <button class="btn" disabled="@(!authr.Item1.Active)" data-bind="click: makeLoginHandler('@authr.Item1.Id','@authr.Item1.Name')">@authr.Item1.Name</button>
