@@ -1,5 +1,6 @@
 ﻿<header>
     <h1 data-bind="text: title"></h1>
+    <p data-bind="text: description"></p>
     <p data-bind="if: author">Created by <a class="user-badge" data-bind="attr: { href: '@Href("~/users")/' + author().id() }"><img data-bind="attr: { src: author().gravatarUrl }" /> <span data-bind="text: author().displayName"></span></a></p>
     <ul class="nav nav-tabs">
         <!-- ko foreach: iterations -->
