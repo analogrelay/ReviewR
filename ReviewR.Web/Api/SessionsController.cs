@@ -9,6 +9,7 @@ using ReviewR.Web.Models;
 using ReviewR.Web.Models.Data;
 using ReviewR.Web.Models.Response;
 using ReviewR.Web.Services;
+using VibrantUtils;
 
 namespace ReviewR.Web.Api
 {
@@ -16,14 +17,19 @@ namespace ReviewR.Web.Api
     {
         public AuthenticationService Auth { get; set; }
 
+        protected SessionsController() { }
         public SessionsController(AuthenticationService auth)
         {
+            Requires.NotNull(auth, "auth");
             Auth = auth;
         }
 
         [AllowAnonymous]
         public Task<HttpResponseMessage> Post(string id, string token)
         {
+            Requires.NotNullOrEmpty(id, "id");
+            Requires.NotNullOrEmpty(token, "token");
+
             return Auth.AuthenticateWithProviderAsync(id, token).Then<AuthenticationResult, HttpResponseMessage>(r =>
             {
                 if (r.Outcome == AuthenticationOutcome.MissingFields)
@@ -40,6 +46,11 @@ namespace ReviewR.Web.Api
                     });
                 }
             });
+        }
+
+        public void Delete()
+        {
+            User = null;
         }
     }
 }

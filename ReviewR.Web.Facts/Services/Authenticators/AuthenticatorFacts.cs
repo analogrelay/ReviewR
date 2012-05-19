@@ -37,7 +37,7 @@ namespace ReviewR.Web.Facts.Services.Authenticators
                 var a = CreateAuthenticator();
 
                 // Act
-                return a.CompleteAuthentication("abc").ShouldThrow<NotImplementedException>();
+                return a.CompleteAuthentication(new MockSettings(), "abc").ShouldThrow<NotImplementedException>();
             }
 
             [Fact]
@@ -49,7 +49,7 @@ namespace ReviewR.Web.Facts.Services.Authenticators
                     TaskHelpers.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("{ blarg }") });
 
                 // Act
-                return a.CompleteAuthentication("abc").ShouldThrow<NotImplementedException>();
+                return a.CompleteAuthentication(new MockSettings(), "abc").ShouldThrow<NotImplementedException>();
             }
 
             [Fact]
@@ -61,7 +61,7 @@ namespace ReviewR.Web.Facts.Services.Authenticators
                     TaskHelpers.FromResult(new HttpResponseMessage(HttpStatusCode.InternalServerError));
 
                 // Act
-                return a.CompleteAuthentication("abc").ShouldThrow<HttpRequestException>();
+                return a.CompleteAuthentication(new MockSettings(), "abc").ShouldThrow<HttpRequestException>();
             }
 
             [Fact]
@@ -80,7 +80,8 @@ namespace ReviewR.Web.Facts.Services.Authenticators
                     TaskHelpers.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("glarb") });
 
                 // Act
-                return a.CompleteAuthentication("abc").Then(u => {
+                return a.CompleteAuthentication(new MockSettings(), "abc").Then(u =>
+                {
                     // Assert
                     Assert.Equal("test", u.Provider);
                     Assert.Equal("t", u.Identifier);
@@ -108,7 +109,7 @@ namespace ReviewR.Web.Facts.Services.Authenticators
                     TaskHelpers.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("glarb") });
 
                 // Act
-                return a.CompleteAuthentication("blerg").Then(u =>
+                return a.CompleteAuthentication(new MockSettings(), "blerg").Then(u =>
                 {
                     Assert.Equal("http://foo.bar/?flarb=blerg", a.TestMessageHandler.LastCall.Item1.RequestUri.AbsoluteUri);
                     Assert.Equal(HttpMethod.Get, a.TestMessageHandler.LastCall.Item1.Method);
@@ -149,7 +150,7 @@ namespace ReviewR.Web.Facts.Services.Authenticators
                 _parser = parser;
             }
 
-            protected override UserInfo ParseResponse(string jsonResponse)
+            protected internal override UserInfo ParseResponse(string jsonResponse)
             {
                 return _parser == null ? base.ParseResponse(jsonResponse) : _parser(jsonResponse);
             }
@@ -196,6 +197,11 @@ namespace ReviewR.Web.Facts.Services.Authenticators
             public override string GetAppId(ISettings appSettings)
             {
                 return appSettings.Get("t:appid");
+            }
+
+            public override string DialogUrlFormat
+            {
+                get { return "http://dlg"; }
             }
         }
 

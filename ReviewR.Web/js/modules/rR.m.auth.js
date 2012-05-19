@@ -55,15 +55,10 @@
         var self = this;
 
         // Actions
-        self.makeLoginHandler = function (id, name) {
+        self.makeLoginHandler = function (id, url) {
             return function () {
                 // Send OAuth token to server
-                var loginResp = doauth('fb', 'https://www.facebook.com/dialog/oauth?' +
-                    'client_id=__ID__&' +
-                    'redirect_uri=__LAND__&' +
-                    'display=popup&' +
-                    'scope=user_about_me,email&' +
-                    'response_type=token');
+                var loginResp = doauth(id, rR.app.resolveUrl(url));
             }
         };
     }
@@ -73,15 +68,27 @@
             tokenExtractor = function (args) { return { token: args.access_token }; }
         }
 
-        var id = sy.utils.getSetting('oauth-' + type);
-        sy.utils.assert(id, 'No such OAuth provider: ' + type);
         var redirectUrl = rR.app.resolveUrl('~/auth/' + type, true);
-        var resp = window.showModalDialog(urlTemplate.replace(/__ID__/, id).replace(/__LAND__/, redirectUrl));
-        $.ajax({
-            url: '~/api/v1/sessions/' + type,
-            type: 'post',
-            data: tokenExtractor(resp.args)
-        });
+        var resp = window.showModalDialog(urlTemplate.replace(/__LAND__/, redirectUrl));
+        if (resp.success) {
+            $.ajax({
+                url: '~/api/v1/sessions/' + type,
+                type: 'post',
+                data: tokenExtractor(resp.args)
+            })
+                .done(function (data) {
+                    sy.bus.dialog.dismiss.publish();
+                    sy.bus.auth.setToken.publish(data.user);
+                })
+                .statusCode({
+                    400: function (xhr, textStatus, errorThrown) {
+                        var data = JSON.parse(xhr.responseText);
+                        alert('Sorry, your Auth provider didn\'t provide the following required info. At the moment, we require this information:\r\n\r\n' + data.missingFields.join('\r\n'));
+                    }
+                });
+        } else {
+            alert('Error authenticating!');
+        }
     }
 
     // Set up the module
@@ -124,9 +131,15 @@
                 }
             }
 
+            var success = true;
+            if (args.error) {
+                success = false;
+            }
+
             window.returnValue = {
                 type: type,
-                args: args
+                args: args,
+                success: success
             };
             window.close();
         });

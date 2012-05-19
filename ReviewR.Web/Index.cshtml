@@ -5,8 +5,6 @@
     var settings = Services.GetService<ISettings>();
     var auth = Services.GetService<AuthenticationService>();
     
-    Uri requestUrl = Request.Url;
-
     var env = settings.Get("Environment");
     var ver = typeof(ReviewR.Web.ReviewRApplication).Assembly.GetName().Version.ToString();
     
@@ -21,7 +19,7 @@
     }
 }
 <!DOCTYPE html>
-<html data-root="@Href("~/")" data-environment="@env" data-token="@ReviewR.Web.Services.Utils.DecodeCookieToJson(Context)" @Html.Raw(oauthData)>
+<html data-root="@Href("~/")" data-version="@ver" data-environment="@env" data-token="@ReviewR.Web.Services.Utils.DecodeCookieToJson(Context)" @Html.Raw(oauthData)>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -33,7 +31,7 @@
 <body>
     <div id="root">
         <a href="http://github.com/anurse/reviewr" target="_blank">
-            <img style="position: absolute; top: 40px; right: 0; border: 0; z-index: 1000" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+            <img style="position: absolute; top: 40px; right: 0; border: 0; z-index: 1000" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
                 alt="Fork me on GitHub">
         </a>
         <header class="navbar navbar-fixed-top">
@@ -42,8 +40,7 @@
                     <a class="brand" href="/">ReviewR</a>
                     <nav id="master-nav">
                         <ul class="nav" data-bind="visible: currentUser().loggedIn">
-                            <li data-bind="visible: currentUser().isAdmin"><a href="~/_dbadmin" data-link="exterior">
-                                Database Admin</a></li>
+                            <li data-bind="visible: currentUser().isAdmin"><a href="~/_dbadmin" data-link="exterior">Admin</a></li>
                             <li><a href="/">Dashboard</a></li>
                         </ul>
                     </nav>
@@ -67,7 +64,12 @@
             </div>
         </header>
         <p class="alert">
-            This is ReviewR @env v@(ver). This is a development version. Data may be wiped without notice.
+            This is ReviewR @env v@(ver).
+            @if(env == "Preview") {
+                <text>Data will be preserved where possible but may be lost.</text>
+            } else if(env != "Production") {
+                <text>Data may be wiped without notice.</text>
+            }
         </p>
         <div id="syrah-page-host"></div>
         <div class="modal fade" id="syrah-dialog-host"></div>

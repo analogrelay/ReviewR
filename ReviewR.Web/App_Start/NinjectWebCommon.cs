@@ -82,8 +82,6 @@ namespace ReviewR.Web.App_Start
             kernel.Bind<Authenticator>()
                   .To<GoogleAuthenticator>();
             kernel.Bind<Authenticator>()
-                  .To<TwitterAuthenticator>();
-            kernel.Bind<Authenticator>()
                   .To<MicrosoftAuthenticator>();
         }        
     }

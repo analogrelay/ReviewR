@@ -8,20 +8,23 @@
 
     namespace.define('rR', function (ns) {
         var _modules = [];
-        ns.App = function (rootUrl, environment, pageHost, dialogHost) {
+        ns.App = function (pageHost, dialogHost) {
             var self = this;
-            sy.App.apply(self, [rootUrl, environment, pageHost, dialogHost]);
+            sy.App.apply(self, [pageHost, dialogHost]);
 
             // Fields
-            self.environment = ko.observable(environment || '');
+            self.environment = ko.observable(sy.setting('environment') || '');
+            self.version = ko.observable(sy.setting('version') || '');
             self.currentUser = ko.observable(new rR.models.User());
             self.appBarVisible = ko.observable(false);
 
             // Computed Properties
-            self.isDev = ko.computed(function () { self.environment() === 'Development'; });
-            self.isTest = ko.computed(function () { self.environment() === 'Test'; });
-            self.isProd = ko.computed(function () { self.environment() === 'Production'; });
-            self.isStage = ko.computed(function () { self.environment() === 'Staging'; });
+            self.isDataVolatile = ko.computed(function () {
+                return self.environment() !== 'Production';
+            });
+            self.isDataBestEffort = ko.computed(function () {
+                return self.environment() === 'Preview';
+            });
 
             // Top-level commands
             self.logout = function () {

@@ -50,13 +50,19 @@ namespace VibrantUtils
             if (op != null && op.Body.NodeType == ExpressionType.Call)
             {
                 // Check and make sure that call is on the top of the stack after removing Requires
-                var expected = ((MethodCallExpression)op.Body).Method;
+                var call = ((MethodCallExpression)op.Body);
+                var expected = call.Method;
                 StackTrace stack = new StackTrace(argumentException);
                 var frame = stack.GetFrames().SkipWhile(f => f.GetMethod().DeclaringType.FullName == typeof(Requires).FullName).FirstOrDefault();
                 var actual = frame.GetMethod();
                 Assert.True(actual != null, "Unable to find stack frame.");
-                Assert.True(String.Equals(expected.DeclaringType.FullName + "." + expected.Name, actual.DeclaringType.FullName + "." + actual.Name),
-                            "Expected exception was thrown at an unexpected site. If this is intentional, pass ignoreTrace = true to ContractAssert method");
+
+                string expectedSite = call.Object.Type.FullName + "." + expected.Name;
+                string actualSite = actual.DeclaringType.FullName + "." + actual.Name;
+                Assert.True(String.Equals(expectedSite, actualSite),
+                            "Expected exception was thrown at an unexpected site." + Environment.NewLine +
+                            "Expected: " + expectedSite + Environment.NewLine +
+                            "Actual: " + actualSite);
             }
 
             Assert.Equal(paramName, argumentException.ParamName);

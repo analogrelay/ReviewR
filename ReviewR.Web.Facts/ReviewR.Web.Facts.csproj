@@ -111,7 +111,9 @@
     <Compile Include="Api\MyControllerFacts.cs" />
     <Compile Include="Api\IterationsControllerFacts.cs" />
     <Compile Include="Api\ITestableController.cs" />
+    <Compile Include="Api\SessionsControllerFacts.cs" />
     <Compile Include="Services\Authenticators\AuthenticatorFacts.cs" />
+    <Compile Include="Services\Authenticators\FacebookAuthenticatorFacts.cs" />
     <Compile Include="Services\TokenServiceFacts.cs" />
     <Compile Include="Services\ReviewServiceFacts.cs" />
     <Compile Include="Services\IterationServiceFacts.cs" />

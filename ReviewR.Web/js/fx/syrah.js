@@ -34,10 +34,10 @@
             }
         }
 
-        ns.App = function (rootUrl, environment, pageHost, dialogHost) {
+        ns.App = function (pageHost, dialogHost) {
             var self = this;
-            var _rootUrl = rootUrl || setting('root');
-            var _environment = environment || setting('environment');
+            var _rootUrl = setting('root');
+            var _environment = setting('environment');
             var _pageHost = unwrapViewHost(pageHost) || createViewHost('#syrah-page-host');
             var _dialogHost = unwrapViewHost(dialogHost) || createViewHost('#syrah-dialog-host');
             var _modules = [];
@@ -63,9 +63,10 @@
                 var url = vpath;
                 if (vpath[0] === '~' && vpath[1] === '/') {
                     url = _rootUrl + vpath.substr(2);
-                }
-                if (full) {
-                    url = location.protocol + '//' + location.host + url;
+
+                    if (full) {
+                        url = location.protocol + '//' + location.host + url;
+                    }
                 }
                 return url;
             };

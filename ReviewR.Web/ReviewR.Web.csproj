@@ -308,7 +308,6 @@
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\Authenticators\Authenticator.cs" />
     <Compile Include="Services\Authenticators\MicrosoftAuthenticator.cs" />
-    <Compile Include="Services\Authenticators\TwitterAuthenticator.cs" />
     <Compile Include="Services\Authenticators\GoogleAuthenticator.cs" />
     <Compile Include="Services\Authenticators\FacebookAuthenticator.cs" />
     <Compile Include="Services\ChangeService.cs" />
@@ -777,6 +776,8 @@
           <DevelopmentServerPort>41620</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:64848/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://reviewr.vibrantcode.com/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -2,6 +2,7 @@
 @using ReviewR.Web.Services;
 @{
     var auth = Services.GetService<AuthenticationService>();
+    var settings = Services.GetService<ISettings>();
 }
 
 <header class="modal-header">
@@ -13,8 +14,12 @@
         @foreach (var authr in auth.Authenticators.Values.Pairwise())
         {
             <li>
-                <button class="btn" disabled="@(!authr.Item1.Active)" data-bind="click: makeLoginHandler('@authr.Item1.Id','@authr.Item1.Name')">@authr.Item1.Name</button>
-                <button class="btn" disabled="@(!authr.Item2.Active)" data-bind="click: makeLoginHandler('@authr.Item2.Id','@authr.Item2.Name')">@authr.Item2.Name</button>
+                @if(authr.Item1 != null) {
+                    <button class="btn" disabled="@(!authr.Item1.Active)" data-bind="click: makeLoginHandler('@authr.Item1.Id','@authr.Item1.GetDialogUrl(settings, "__LAND__")')">@authr.Item1.DisplayName</button>
+                }
+                @if(authr.Item2 != null) {
+                    <button class="btn" disabled="@(!authr.Item2.Active)" data-bind="click: makeLoginHandler('@authr.Item2.Id','@authr.Item2.GetDialogUrl(settings, "__LAND__")')">@authr.Item2.DisplayName</button>
+                }
             </li>
         }
     </ul>

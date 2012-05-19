@@ -35,9 +35,9 @@ namespace ReviewR.Web.Services
             return new AuthenticationResult(AuthenticationOutcome.Associated, user, new List<string>());
         }
 
-        public static AuthenticationResult MissingData(IList<string> missingFields)
+        public static AuthenticationResult MissingData(IEnumerable<string> missingFields)
         {
-            return new AuthenticationResult(AuthenticationOutcome.MissingFields, null, missingFields);
+            return new AuthenticationResult(AuthenticationOutcome.MissingFields, null, new List<string>(missingFields));
         }
     }
 

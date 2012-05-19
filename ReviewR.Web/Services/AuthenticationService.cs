@@ -36,7 +36,7 @@ namespace ReviewR.Web.Services
             return Authenticators.Values.ToDictionary(a => a.Id, a => a.GetAppId(Settings));
         }
 
-        public Task<AuthenticationResult> AuthenticateWithProviderAsync(string type, string accessToken)
+        public virtual Task<AuthenticationResult> AuthenticateWithProviderAsync(string type, string accessToken)
         {
             Requires.NotNullOrEmpty(type, "type");
             Requires.NotNullOrEmpty(accessToken, "accessToken");
@@ -51,7 +51,7 @@ namespace ReviewR.Web.Services
             {
                 // Check for a credential for this user
                 Credential cred = Data.Credentials
-                                      .Where(c => c.Provider == auth.Name && c.Identifier == u.Identifier)
+                                      .Where(c => c.Provider == auth.DisplayName && c.Identifier == u.Identifier)
                                       .FirstOrDefault();
                 if (cred != null)
                 {
@@ -72,7 +72,7 @@ namespace ReviewR.Web.Services
                         // Ok, associate a new credential and successfully log that user in
                         cred = new Credential()
                         {
-                            Provider = auth.Name,
+                            Provider = auth.DisplayName,
                             Identifier = u.Identifier
                         };
                         user.Credentials.Add(cred);
@@ -103,7 +103,7 @@ namespace ReviewR.Web.Services
                     Email = u.Email,
                     Credentials = new List<Credential>() {
                         new Credential() {
-                            Provider = auth.Name,
+                            Provider = auth.DisplayName,
                             Identifier = u.Identifier
                         }
                     }
@@ -116,7 +116,7 @@ namespace ReviewR.Web.Services
 
         protected internal virtual Task<UserInfo> ExchangeToken(string accessToken, Authenticator auth)
         {
-            return auth.CompleteAuthentication(accessToken);
+            return auth.CompleteAuthentication(Settings, accessToken);
         }
     }
 }
