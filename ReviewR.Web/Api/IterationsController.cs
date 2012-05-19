@@ -90,8 +90,23 @@ namespace ReviewR.Web.Api
             return NoContent();
         }
 
-        [AcceptVerbs("PUT", "PATCH")]
-        public HttpResponseMessage PutPublished(int id, bool published)
+        public HttpResponseMessage Put(int id, bool? published, string diff)
+        {
+            if(published != null && !String.IsNullOrEmpty(diff)) {
+                return BadRequest();
+            }
+            else if (published != null)
+            {
+                return PutPublished(id, published.Value);
+            }
+            else if (!String.IsNullOrEmpty(diff))
+            {
+                return PutDiff(id, diff);
+            }
+            return BadRequest();
+        }
+
+        internal HttpResponseMessage PutPublished(int id, bool published)
         {
             Requires.InRange(id >= 0, "id");
 
@@ -104,7 +119,7 @@ namespace ReviewR.Web.Api
             {
                 return Forbidden();
             }
-            return Ok(new IterationModel()
+            return NoContent(new IterationModel()
             {
                 Id = result.Object.Id,
                 Description = result.Object.Description,
@@ -113,8 +128,7 @@ namespace ReviewR.Web.Api
             });
         }
 
-        [AcceptVerbs("PUT", "PATCH")]
-        public HttpResponseMessage PutDiff(int id, string diff)
+        internal HttpResponseMessage PutDiff(int id, string diff)
         {
             Requires.InRange(id >= 0, "id");
             Requires.NotNullOrEmpty(diff, "diff");
@@ -128,7 +142,7 @@ namespace ReviewR.Web.Api
             {
                 return Forbidden();
             }
-            return Ok(new IterationModel()
+            return NoContent(new IterationModel()
             {
                 Id = result.Object.Id,
                 Description = result.Object.Description,
