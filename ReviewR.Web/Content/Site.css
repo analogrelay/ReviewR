@@ -292,9 +292,23 @@ li.active a.iteration-tab, li.active a.iteration-tab.unpublished {
     height: 28px;
 }
 
-.scroll-overflow {
-    overflow: auto;
+div.file-list {
+    padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
+
+    div.file-list li {
+        white-space: nowrap;
+    }
+
+        div.file-list li span {
+            width: 100%;
+            display: inline-block;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+        }
 
 #syrah-page-host {
     padding: 10px;

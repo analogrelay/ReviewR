@@ -15,7 +15,7 @@
         <div class="iteration-row row-fluid">
             <!-- ko with: activeIteration() -->
             <div class="span2">
-                <div class="well scroll-overflow">
+                <div class="well file-list">
                     <!-- ko if: folders().length === 0 -->
                     <p>
                         This iteration has no files. 
@@ -27,11 +27,11 @@
                         <!-- ko foreach: folders() -->
                         <li class="nav-header">
                             <i class="icon-folder-open"></i>
-                            <span data-bind="text: name"></span>
+                            <span data-bind="text: name, attr: { title: name }"></span>
                         </li>
                         <!-- ko foreach: files() -->
                         <li data-bind="css: { 'active': active() }">
-                            <a href="#" data-bind="attr: { href: viewUrl }">
+                            <a href="#" data-bind="attr: { href: viewUrl, title: fileName }">
                                 <i data-bind="css: { 'icon-plus': changeType() === 0, 'icon-minus': changeType() === 2, 'icon-pencil': changeType() === 1 }"></i>
                                 <span data-bind="text: fileName"></span>
                             </a>
