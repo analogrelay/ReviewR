@@ -163,6 +163,7 @@
         self.fullPath = ko.observable(fullPath);
         self.changeType = ko.observable(init.changeType);
         self.diff = ko.observable();
+        self.hasComments = ko.observable(init.hasComments);
         self.active = ko.computed(function () {
             return (_owner.activeFile() && _owner.activeFile().id() === self.id());
         });

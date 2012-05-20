@@ -61,8 +61,8 @@
                                 <td class="diff-linenum">
                                     <i data-bind="css: {'icon-plus': type() === 1, 'icon-minus': type() === 2, 'icon-map-marker': type() === 3}"></i>
                                 </td>
-                                <td class="diff-line">
-                                    <a href="#" data-bind="click: startComment" class="diff-add-comment-button"><i class="icon-comment"></i></a>
+                                <td class="diff-line" width="100%" data-bind="click: startComment">
+                                    <i class="icon-comment diff-add-comment-button"></i>
                                     <pre data-bind="text: text"></pre>
                                 </td>
                             </tr>

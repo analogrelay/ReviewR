@@ -111,6 +111,7 @@ table.diff-view {
 
     table.diff-view tr.diff-removed td.diff-line {
         background-color: #fdd;
+        cursor: pointer;
     }
 
     table.diff-view tr.diff-removed:hover td.diff-line {
@@ -119,18 +120,25 @@ table.diff-view {
         opacity: 0.75;
     }
 
-    table.diff-view tr td.diff-line a.diff-add-comment-button {
+    table.diff-view tr td.diff-line i.diff-add-comment-button {
+        display: inline-block;
         position: absolute;
         left: 0;
         padding-right: 5px;
-        margin-left: -15px;
+        margin-left: -25px;
         margin-top: 3px;
         cursor: pointer;
-        display: none;
+        
+        -webkit-transition: opacity 0.1s linear;
+        filter: alpha(opacity=0);
+        -moz-opacity: 0;
+        opacity: 0;
     }
 
-    table.diff-view tr:hover td.diff-line a.diff-add-comment-button {
-        display: inline-block;
+    table.diff-view tr:hover td.diff-line i.diff-add-comment-button {
+        filter: alpha(opacity=100);
+        -moz-opacity: 1;
+        opacity: 1;
     }
 
 tr.diff-comments td.diff-comment-container .well {
@@ -309,6 +317,7 @@ div.file-list {
             overflow-x: hidden;
             text-overflow: ellipsis;
         }
+        
 
 #syrah-page-host {
     padding: 10px;

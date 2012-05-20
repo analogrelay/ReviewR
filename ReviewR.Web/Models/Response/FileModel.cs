@@ -12,5 +12,6 @@ namespace ReviewR.Web.Models.Response
         public string FileName { get; set; }
         public string FullPath { get; set; }
         public FileChangeType ChangeType { get; set; }
+        public bool HasComments { get; set; }
     }
 }

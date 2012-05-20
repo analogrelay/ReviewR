@@ -47,7 +47,8 @@ namespace ReviewR.Web.Api
                     Id = f.Id,
                     FileName = g.Key == null ? f.DisplayFileName : f.DisplayFileName.Substring(g.Key.Length + 1),
                     FullPath = f.DisplayFileName,
-                    ChangeType = f.ChangeType
+                    ChangeType = f.ChangeType,
+                    HasComments = f.Comments.Any()
                 }).ToArray()
             }).ToArray());
         }
