@@ -1,25 +1,33 @@
 declare module Knockout {
-    declare interface Observable {
+    interface Observable { }
+
+    interface Observable {
+        (newValue: any): void;
         (): any;
-        (value: any): void;
+        subscribe: (newValue: any) => void;
     }
 
-    declare interface ObservableArray extends Observable {
+    interface ObservableArray extends Observable {
+        (newValue: any[]): void;
         (): any[];
-        (value: any[]): void;
+        subscribe: (newValue: any[]) => void;
+        removeAll(): void;
+        push(...values: any[]): void;
     }
 
     declare interface KnockoutObject {
         applyBindings(model: any, rootElement?: Element): void;
         applyBindingsToDescendants(model: any, rootElement?: Element): void;
         renderTemplate(template: string, model: any, options: Object, element: HTMLElement): void;
-        
+
+        observable(value: any): Observable;
         observable(): Observable;
-        observable(initialValue: any): Observable;
-        observableArray(): ObservableArray;
-        observableArray(initialValue: any[]): ObservableArray;
+        
         computed(calculation: () => any): Observable;
 
+        observableArray(value: any[]): ObservableArray;
+        observableArray(): ObservableArray;
+        
         isWriteableObservable(obj: any): bool;
         isObservable(obj: any): bool;
     }

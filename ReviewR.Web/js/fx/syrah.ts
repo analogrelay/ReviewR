@@ -1,4 +1,3 @@
-/// <reference path="../../Scripts/signals.js" />
 /// <reference path="syrah.dom.ts" />
 /// <reference path="syrah.binding.ts" />
 /// <reference path="syrah.routing.ts" />
@@ -213,7 +212,9 @@ export class Module {
         this.app.closeDialog();
     }
 
-    public route(name: string, url: string, handler: Function) {
+    public route(name: string, url: string, handler: Function);
+    public route(name: string, url: RegExp, handler: Function);
+    public route(name: string, url: any, handler: Function) {
         this.routes.push({
             name: this.name + '.' + name,
             url: url,
@@ -283,7 +284,7 @@ export class ViewModelBase {
     constructor () {
         this.customError = ko.observable('');
 
-        this.isValid = ko.computed(() => {
+        this.isValid = ko.computed(() : bool => {
             var v = true;
             for (var key in self) {
                 if (this.hasOwnProperty(key) &&
@@ -298,7 +299,7 @@ export class ViewModelBase {
 
         this.errorMessage = ko.computed(() =>
             this.isValid() ? this.customError() : 'Whoops, there were some errors :(');
-        this.hasMessage = ko.computed(() =>
+        this.hasMessage = ko.computed(() : bool =>
             !this.isValid() || (this.customError() && (this.customError().length > 0)));
     }
 

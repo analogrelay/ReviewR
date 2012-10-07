@@ -152,5 +152,4 @@ class AuthModule extends sy.Module {
         });
     }
 }
-
 rR.module(AuthModule);
