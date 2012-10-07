@@ -14,7 +14,7 @@ module syrah {
                 this.router.refresh();
             }
 
-            public map(name: string, url: string, handler : (...) => void) {
+            public map(name: string, url: string, handler: Function) {
                 this.router.route(name, url, handler);
             }
 

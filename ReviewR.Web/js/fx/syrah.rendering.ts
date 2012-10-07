@@ -3,12 +3,16 @@
 
 module syrah {
     export module rendering {
+        export interface ViewOptions {
+            templateId?: string;
+        }
+
         export class View {
             public injected = new signals.Signal();
             public removed = new signals.Signal();
             constructor (public templateId: string,
                          public modalConstructor: () => Object,
-                         public options: Object) { }
+                         public options: ViewOptions) { }
         }
 
         export class Page extends View {

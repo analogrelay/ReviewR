@@ -642,13 +642,16 @@
     <Content Include="js\fx\old\namespace.js" />
     <Content Include="js\fx\old\syrah.bus.js" />
     <Content Include="js\fx\old\syrah.js" />
-    <Content Include="js\fx\old\syrah.rendering.js" />
     <Content Include="js\fx\old\syrah.routing.js" />
     <TypeScriptCompile Include="js\fx\syrah.ts" />
     <TypeScriptCompile Include="js\fx\syrah.dom.ts" />
     <TypeScriptCompile Include="js\fx\syrah.binding.ts" />
     <Content Include="js\fx\syrah.binding.js">
       <DependentUpon>syrah.binding.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="js\fx\syrah.bus.ts" />
+    <Content Include="js\fx\syrah.bus.js">
+      <DependentUpon>syrah.bus.ts</DependentUpon>
     </Content>
     <Content Include="js\fx\syrah.dom.js">
       <DependentUpon>syrah.dom.ts</DependentUpon>
@@ -661,6 +664,10 @@
       <DependentUpon>syrah.rendering.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="js\fx\syrah.utils.ts" />
+    <TypeScriptCompile Include="js\fx\syrah.routing.ts" />
+    <Content Include="js\fx\syrah.routing.js">
+      <DependentUpon>syrah.routing.ts</DependentUpon>
+    </Content>
     <Content Include="js\fx\syrah.utils.js">
       <DependentUpon>syrah.utils.ts</DependentUpon>
     </Content>
@@ -672,6 +679,14 @@
     <TypeScriptCompile Include="js\ref\jquery.bootstrap.d.ts" />
     <TypeScriptCompile Include="js\ref\knockout.d.ts" />
     <TypeScriptCompile Include="js\ref\signals.d.ts" />
+    <TypeScriptCompile Include="js\ref\Backbone.lite.d.ts" />
+    <Content Include="js\ref\Backbone.lite.d.js">
+      <DependentUpon>Backbone.lite.d.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="js\ref\Modernizr.d.ts" />
+    <Content Include="js\ref\Modernizr.d.js">
+      <DependentUpon>Modernizr.d.ts</DependentUpon>
+    </Content>
     <Content Include="js\rR.models.js" />
     <Content Include="js\rR.app.js" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
@@ -797,6 +812,16 @@
   <ItemGroup>
     <Content Include="js\fx\syrah.utils.js.map">
       <DependentUpon>syrah.utils.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\fx\syrah.routing.js.map">
+      <DependentUpon>syrah.routing.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\fx\syrah.bus.js.map">
+      <DependentUpon>syrah.bus.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <PropertyGroup>

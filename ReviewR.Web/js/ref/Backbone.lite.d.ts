@@ -17,8 +17,8 @@ declare module Backbone {
 
         public route(route: RegExp, name: string);
         public route(route: string, name: string);
-        public route(route: RegExp, name: string, callback : (...) => void);
-        public route(route: string, name: string, callback : (...) => void);
+        public route(route: RegExp, name: string, callback: Function);
+        public route(route: string, name: string, callback: Function);
 
         public navigate(fragment: string);
         public navigate(fragment: string, options: RouterNavigateOptions);
