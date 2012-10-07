@@ -1,38 +1,37 @@
-﻿/// <reference path="namespace.js" />
-/// <reference path="Backbone.lite.js" />
-(function (undefined) {
-    "use strict";
-    namespace.define('syrah.routing', function (ns) {
-        ns.Router = function () {
-            Backbone.history || (Backbone.history = new Backbone.History());
-
-            var self = this;
-            var _router = new Backbone.Router();
-            var _currentRoute;
-
-            self.currentRoute = function () {
-                return _currentRoute;
-            };
-
-            self.refresh = function () {
-                _router.refresh();
+var syrah;
+(function (syrah) {
+    (function (routing) {
+        var Router = (function () {
+            function Router() {
+                this.router = new Backbone.Router();
+                Backbone.history || (Backbone.history = new Backbone.History());
             }
-
-            self.map = function (name, url, handler) {
-                _router.route(url, name, handler);
+            Router.prototype.refresh = function () {
+                this.router.refresh();
             };
-
-            self.start = function (root) {
-                Backbone.history.start({ root: root, pushState: Modernizr.history });
+            Router.prototype.map = function (name, url, handler) {
+                this.router.route(name, url, handler);
             };
-
-            self.stop = function () {
+            Router.prototype.start = function (root) {
+                Backbone.history.start({
+                    root: root,
+                    pushState: Modernizr.pushState
+                });
+            };
+            Router.prototype.stop = function () {
                 Backbone.history.stop();
-            }
-            
-            self.navigate = function (url) {
-                _router.navigate(url, { trigger: true });
-            }
-        };
-    });
-})();
+            };
+            Router.prototype.navigate = function (url) {
+                this.router.navigate(url, {
+                    trigger: true
+                });
+            };
+            return Router;
+        })();
+        routing.Router = Router;        
+    })(syrah.routing || (syrah.routing = {}));
+    var routing = syrah.routing;
+
+})(syrah || (syrah = {}));
+
+//@ sourceMappingURL=syrah.routing.js.map

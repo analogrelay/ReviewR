@@ -8,14 +8,6 @@
             syrah.plugins.Proxy.apply(self, [currentAccessor]);
         }
 
-        self.querySelector = function (selector) {
-            if (self.current && self.current().querySelector) {
-                return self.current().querySelector(selector);
-            } else {
-                throw 'Override querySelector(selector)';
-            }
-        };
-
         self.initDialog = function (element, onHide) {
             if (self.current && self.current().initDialog) {
                 return self.current().initDialog(element, onHide);
@@ -61,4 +53,4 @@
     }, function () {
         return jQuery && jQuery.fn.modal;
     });
-})();
+    })();

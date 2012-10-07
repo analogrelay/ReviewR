@@ -636,19 +636,42 @@
     <Content Include="Global.asax" />
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
     <Content Include="js\fx\Backbone.lite.js" />
-    <Content Include="js\fx\syrah.plugins.binding.js" />
-    <Content Include="js\fx\syrah.utils.js" />
-    <Content Include="js\fx\syrah.plugins.dom.js" />
-    <Content Include="js\fx\namespace.js" />
-    <Content Include="js\fx\syrah.bus.js" />
-    <Content Include="js\fx\syrah.js" />
-    <Content Include="js\fx\syrah.plugins.js" />
-    <Content Include="js\fx\syrah.rendering.js" />
-    <Content Include="js\fx\syrah.routing.js" />
+    <Content Include="js\fx\old\syrah.plugins.binding.js" />
+    <Content Include="js\fx\old\syrah.utils.js" />
+    <Content Include="js\fx\old\old_syrah.plugins.dom.js" />
+    <Content Include="js\fx\old\namespace.js" />
+    <Content Include="js\fx\old\syrah.bus.js" />
+    <Content Include="js\fx\old\syrah.js" />
+    <Content Include="js\fx\old\syrah.rendering.js" />
+    <Content Include="js\fx\old\syrah.routing.js" />
+    <TypeScriptCompile Include="js\fx\syrah.ts" />
+    <TypeScriptCompile Include="js\fx\syrah.dom.ts" />
+    <TypeScriptCompile Include="js\fx\syrah.binding.ts" />
+    <Content Include="js\fx\syrah.binding.js">
+      <DependentUpon>syrah.binding.ts</DependentUpon>
+    </Content>
+    <Content Include="js\fx\syrah.dom.js">
+      <DependentUpon>syrah.dom.ts</DependentUpon>
+    </Content>
+    <Content Include="js\fx\syrah.js">
+      <DependentUpon>syrah.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="js\fx\syrah.rendering.ts" />
+    <Content Include="js\fx\syrah.rendering.js">
+      <DependentUpon>syrah.rendering.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="js\fx\syrah.utils.ts" />
+    <Content Include="js\fx\syrah.utils.js">
+      <DependentUpon>syrah.utils.ts</DependentUpon>
+    </Content>
     <Content Include="js\modules\rR.m.reviews.js" />
     <Content Include="js\modules\rR.m.home.js" />
     <Content Include="js\fx\knockout.validation.js" />
     <Content Include="js\modules\rR.m.auth.js" />
+    <TypeScriptCompile Include="js\ref\jquery.d.ts" />
+    <TypeScriptCompile Include="js\ref\jquery.bootstrap.d.ts" />
+    <TypeScriptCompile Include="js\ref\knockout.d.ts" />
+    <TypeScriptCompile Include="js\ref\signals.d.ts" />
     <Content Include="js\rR.models.js" />
     <Content Include="js\rR.app.js" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
@@ -750,6 +773,31 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Auth\_Login.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\fx\syrah.js.map">
+      <DependentUpon>syrah.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\fx\syrah.dom.js.map">
+      <DependentUpon>syrah.dom.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\fx\syrah.binding.js.map">
+      <DependentUpon>syrah.binding.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\fx\syrah.rendering.js.map">
+      <DependentUpon>syrah.rendering.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\fx\syrah.utils.js.map">
+      <DependentUpon>syrah.utils.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

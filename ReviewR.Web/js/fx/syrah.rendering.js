@@ -1,97 +1,90 @@
-﻿/// <reference path="syrah.plugins.dom.js" />
-/// <reference path="syrah.js" />
-(function (undefined) {
-    "use strict";
-    namespace.define('syrah.rendering', function (ns) {
-        ns.View = function (templateId, modelConstructor, options) {
-            var self = this;
-            self.injected = new signals.Signal();
-            self.removed = new signals.Signal();
-            self.templateId = templateId;
-            self.modelConstructor = modelConstructor;
-            self.options = options;
-        }
-
-        ns.Page = function (templateId, modelConstructor, options) {
-            var self = this;
-            syrah.rendering.View.apply(this, [templateId, modelConstructor, options]);
-            self.obscured = new syrah.Signal();
-            self.revealed = new syrah.Signal();
-        }
-
-        ns.ViewHost = function (element, dialogMode) {
-            var self = this;
-            var _hostElement = element;
-            var _currentView;
-
-            self._injectView = function (name, model) {
-                throw 'Override _injectView(name, model)';
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+}
+var syrah;
+(function (syrah) {
+    (function (rendering) {
+        var View = (function () {
+            function View(templateId, modalConstructor, options) {
+                this.templateId = templateId;
+                this.modalConstructor = modalConstructor;
+                this.options = options;
+                this.injected = new signals.Signal();
+                this.removed = new signals.Signal();
             }
+            return View;
+        })();
+        rendering.View = View;        
+        var Page = (function (_super) {
+            __extends(Page, _super);
+            function Page() {
+                _super.apply(this, arguments);
 
-            self.obscure = function () {
-                if (_currentView && _currentView.obscured) {
-                    _currentView.obscured.dispatch();
+                this.obscured = new signals.Signal();
+                this.revealed = new signals.Signal();
+            }
+            return Page;
+        })(View);
+        rendering.Page = Page;        
+        var ViewHost = (function () {
+            function ViewHost(host) {
+                this.host = host;
+            }
+            ViewHost.prototype.injectView = function (name, model) {
+            };
+            ViewHost.prototype.obscure = function () {
+                if(this.currentView instanceof Page) {
+                    (this.currentView).obscured.dispatch();
                 }
-            }
-
-            self.reveal = function () {
-                if (_currentView && _currentView.revealed) {
-                    _currentView.revealed.dispatch();
+            };
+            ViewHost.prototype.reveal = function () {
+                if(this.currentView instanceof Page) {
+                    (this.currentView).revealed.dispatch();
                 }
-            }
-
-            self.clearView = function () {
-                _hostElement.innerHTML = '';
-                var old = _currentView;
-                _currentView = null;
-                if (old && old.removed) {
+            };
+            ViewHost.prototype.clearView = function () {
+                this.host.innerHTML = '';
+                var old = this.currentView;
+                this.currentView = null;
+                if(old) {
                     old.removed.dispatch();
                 }
-            }
-
-            self.setView = function (view, model) {
-                /// <param name="view" type="syrah.rendering.View" />
-                /// <param name="model" type="Object" />
-                self.clearView();
-
-                // Create a view model
-                if (!model) { model = new view.modelConstructor(); }
-                self._injectView(view.templateId, model);
-                _currentView = view;
-
-                if (_currentView && _currentView.injected) {
-                    _currentView.injected.dispatch(_currentView, model);
+            };
+            ViewHost.prototype.setView = function (view, model) {
+                this.clearView();
+                if(!model) {
+                    model = view.modalConstructor();
                 }
-
-                if (model.load && typeof(model.load) === 'function') {
-                    model.load();
+                this.injectView(view.templateId, model);
+                this.currentView = view;
+                this.currentView.injected.dispatch(this.currentView, model);
+                if(model.load && typeof (model.load) === "function") {
+                    (model.load)();
                 }
             };
-
-            self.initDialog = function () {
-                syrah.dom.initDialog(_hostElement, function () {
-                    self.clearView();
+            ViewHost.prototype.initDialog = function () {
+                var _this = this;
+                syrah.dom.initDialog(this.host, function () {
+                    _this.clearView();
                 });
-            }
-
-            self.showDialog = function (view, model) {
-                if (view) {
-                    self.setView(view, model);
-                }
-                syrah.plugins.dom.showDialog(_hostElement);
             };
+            ViewHost.prototype.showDialog = function (view, model) {
+                if(view && model) {
+                    this.setView(view, model);
+                }
+                syrah.dom.showDialog(this.host);
+            };
+            ViewHost.prototype.closeDialog = function () {
+                syrah.dom.hideDialog(this.host);
+            };
+            return ViewHost;
+        })();
+        rendering.ViewHost = ViewHost;        
+    })(syrah.rendering || (syrah.rendering = {}));
+    var rendering = syrah.rendering;
 
-            self.closeDialog = function () {
-                syrah.plugins.dom.closeDialog(_hostElement);
-            }
+})(syrah || (syrah = {}));
 
-            function dialogHidden() {
-                self.clearView();
-            }
-
-            if (dialogMode) {
-                syrah.plugins.dom.initDialog(_hostElement, dialogHidden);
-            }
-        };
-    });
-})();
+//@ sourceMappingURL=syrah.rendering.js.map
