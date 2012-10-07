@@ -46,6 +46,7 @@ module rR {
 
         // Bus handlers
         private onSetToken(user) {
+
         }
 
         private onClearToken() {

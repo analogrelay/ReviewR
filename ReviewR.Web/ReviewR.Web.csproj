@@ -636,13 +636,7 @@
     <Content Include="Global.asax" />
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
     <Content Include="js\fx\Backbone.lite.js" />
-    <Content Include="js\fx\old\syrah.plugins.binding.js" />
     <Content Include="js\fx\old\syrah.utils.js" />
-    <Content Include="js\fx\old\old_syrah.plugins.dom.js" />
-    <Content Include="js\fx\old\namespace.js" />
-    <Content Include="js\fx\old\syrah.bus.js" />
-    <Content Include="js\fx\old\syrah.js" />
-    <Content Include="js\fx\old\syrah.routing.js" />
     <TypeScriptCompile Include="js\fx\syrah.ts" />
     <TypeScriptCompile Include="js\fx\syrah.dom.ts" />
     <TypeScriptCompile Include="js\fx\syrah.binding.ts" />
@@ -680,6 +674,8 @@
     <TypeScriptCompile Include="js\ref\knockout.d.ts" />
     <TypeScriptCompile Include="js\ref\signals.d.ts" />
     <TypeScriptCompile Include="js\ref\Backbone.lite.d.ts" />
+    <Content Include="js\old\rR.app.js" />
+    <Content Include="js\old\rR.models.js" />
     <Content Include="js\ref\Backbone.lite.d.js">
       <DependentUpon>Backbone.lite.d.ts</DependentUpon>
     </Content>
@@ -687,8 +683,6 @@
     <Content Include="js\ref\Modernizr.d.js">
       <DependentUpon>Modernizr.d.ts</DependentUpon>
     </Content>
-    <Content Include="js\rR.models.js" />
-    <Content Include="js\rR.app.js" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
@@ -727,6 +721,10 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Compile Include="DynamicData\Registration.cs" />
     <Content Include="Content\Site.css" />
+    <TypeScriptCompile Include="js\rR.app.ts" />
+    <Content Include="js\rR.app.js">
+      <DependentUpon>rR.app.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.7.2.intellisense.js" />
@@ -822,6 +820,11 @@
   <ItemGroup>
     <Content Include="js\fx\syrah.bus.js.map">
       <DependentUpon>syrah.bus.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\rR.app.js.map">
+      <DependentUpon>rR.app.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <PropertyGroup>
