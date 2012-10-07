@@ -1,20 +1,26 @@
-var syrah;
-(function (syrah) {
-    (function (bus) {
-        bus.navigate = new bus.Sink();
-        bus.exec = new bus.Sink();
-        bus.dismiss = new bus.Sink();
-    })(syrah.bus || (syrah.bus = {}));
-    var bus = syrah.bus;
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+}
+define(["require", "exports", 'syrah.dom', 'syrah.binding', 'syrah.bus', 'syrah.routing', 'syrah.rendering'], function(require, exports, __dom__, __binding__, __bus__, __routing__, __rendering__) {
+    var dom = __dom__;
 
-})(syrah || (syrah = {}));
+    var binding = __binding__;
 
-var syrah;
-(function (syrah) {
+    var bus = __bus__;
+
+    var routing = __routing__;
+
+    var rendering = __rendering__;
+
+    bus.create('navigate');
+    bus.create('exec');
+    bus.create('dismiss');
     function setting(key) {
         return document.documentElement.getAttribute('data-' + key);
     }
-    syrah.setting = setting;
+    exports.setting = setting;
     function createViewHost() {
         var selectors = [];
         for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -22,14 +28,14 @@ var syrah;
         }
         var found = null;
         for(var selector in selectors) {
-            found = syrah.dom.querySelector(selector);
+            found = dom.querySelector(selector);
         }
         if(!found) {
             throw new Error('View host not found');
         }
-        return new syrah.binding.KnockoutViewHost(found);
+        return new binding.KnockoutViewHost(found);
     }
-    syrah.createViewHost = createViewHost;
+    exports.createViewHost = createViewHost;
             function unwrapViewHost(funcOrObj) {
         if(typeof funcOrObj === "function") {
             return new funcOrObj();
@@ -37,18 +43,10 @@ var syrah;
             return funcOrObj;
         }
     }
-    syrah.unwrapViewHost = unwrapViewHost;
-    var DialogViewModel = (function () {
-        function DialogViewModel() { }
-        DialogViewModel.prototype.close = function () {
-            syrah.bus.dismiss.publish();
-        };
-        return DialogViewModel;
-    })();
-    syrah.DialogViewModel = DialogViewModel;    
+    exports.unwrapViewHost = unwrapViewHost;
     var App = (function () {
         function App(pageHost, dialogHost) {
-            this.router = new syrah.routing.Router();
+            this.router = new routing.Router();
             this.actions = {
             };
             this.running = false;
@@ -61,8 +59,8 @@ var syrah;
                     options.url = this.resolveUrl(options.url);
                 });
             }
-            syrah.bus.navigate.subscribe(this.onNavigate);
-            syrah.bus.exec.subscribe(this.onExec);
+            bus.get('navigate').subscribe(this.onNavigate);
+            bus.get('exec').subscribe(this.onExec);
         }
         App.prototype.route = function (name, url, handler) {
             this.router.map(name, url, handler);
@@ -130,7 +128,7 @@ var syrah;
         };
         return App;
     })();
-    syrah.App = App;    
+    exports.App = App;    
     var Module = (function () {
         function Module(name) {
             this.name = name;
@@ -197,7 +195,7 @@ var syrah;
             if(typeof (templateId) === 'undefined') {
                 templateId = viewId;
             }
-            var view = new syrah.rendering.View(templateId, modelConstructor, options);
+            var view = new rendering.View(templateId, modelConstructor, options);
             collection[viewId] = view;
             return view;
         };
@@ -209,7 +207,49 @@ var syrah;
         };
         return Module;
     })();
-    syrah.Module = Module;    
-})(syrah || (syrah = {}));
+    exports.Module = Module;    
+    var ViewModelBase = (function () {
+        function ViewModelBase() {
+            var _this = this;
+            this.customError = ko.observable('');
+            this.isValid = ko.computed(function () {
+                var v = true;
+                for(var key in self) {
+                    if(_this.hasOwnProperty(key) && ko.isObservable(_this[key]) && _this[key].validating && _this[key].validating()) {
+                        v &= self[key].isValid();
+                    }
+                }
+                return v;
+            });
+            this.errorMessage = ko.computed(function () {
+                return _this.isValid() ? _this.customError() : 'Whoops, there were some errors :(';
+            });
+            this.hasMessage = ko.computed(function () {
+                return !_this.isValid() || (_this.customError() && (_this.customError().length > 0));
+            });
+        }
+        ViewModelBase.prototype.validate = function () {
+            for(var key in this) {
+                if(this.hasOwnProperty(key) && ko.isObservable(this[key]) && this[key].validating) {
+                    this[key].validating(true);
+                }
+            }
+        };
+        return ViewModelBase;
+    })();
+    exports.ViewModelBase = ViewModelBase;    
+    var DialogViewModelBase = (function (_super) {
+        __extends(DialogViewModelBase, _super);
+        function DialogViewModelBase() {
+            _super.apply(this, arguments);
+
+        }
+        DialogViewModelBase.prototype.close = function () {
+            bus.get('dismiss').publish();
+        };
+        return DialogViewModelBase;
+    })(ViewModelBase);
+    exports.DialogViewModelBase = DialogViewModelBase;    
+})
 
 //@ sourceMappingURL=syrah.js.map

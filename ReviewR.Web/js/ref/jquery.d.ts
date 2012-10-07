@@ -42,8 +42,19 @@ interface JQueryAjaxSettings {
 /*
    Interface for the jqXHR object
 */
-interface JQueryXHR extends XMLHttpRequest {
-   overrideMimeType();
+
+interface JQueryXHRDoneCallback { 
+    (data: any, textStatus: string, jqXHR: JQueryXHR): void;
+}
+
+interface JQueryXHRFailCallback { 
+    (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void;
+}
+
+interface JQueryXHR extends XMLHttpRequest, JQueryPromise {
+    overrideMimeType();
+    done(...doneCallbacks: JQueryXHRDoneCallback[]) : JQueryXHR;
+    fail(...failCallbacks: JQueryXHRFailCallback[]) : JQueryXHR;
 }
 
 /*
@@ -152,7 +163,7 @@ interface JQueryStatic {
    /****
     AJAX
    *****/
-   ajax(url: string, settings: JQueryAjaxSettings);
+   ajax(url: string, settings: JQueryAjaxSettings) : JQueryXHR;
 
    ajaxPrefilter(dataTypes: string, handler: (opts: any, originalOpts: any, jqXHR: JQueryXHR) => any): any;
    ajaxPrefilter(handler: (opts: any, originalOpts: any, jqXHR: JQueryXHR) => any): any;
