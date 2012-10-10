@@ -1,19 +1,86 @@
-var Shapes;
-(function (Shapes) {
-    var Point = (function () {
-        function Point(x, y) {
-            this.x = x;
-            this.y = y;
-        }
-        Point.prototype.getDist = function () {
-            return Math.sqrt(this.x * this.x + this.y * this.y);
-        };
-        Point.origin = new Point(0, 0);
-        return Point;
-    })();
-    Shapes.Point = Point;    
-})(Shapes || (Shapes = {}));
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+}
+define(["require", "exports", '../fx/syrah', '../rR.models'], function(require, exports, __sy__, __models__) {
+    var sy = __sy__;
 
-var p = new Shapes.Point(3, 4);
-var dist = p.getDist();
+    var models = __models__;
+
+    (function (FileChangeType) {
+        FileChangeType._map = [];
+        FileChangeType._map[0] = "Added";
+        FileChangeType.Added = 0;
+        FileChangeType._map[1] = "Modified";
+        FileChangeType.Modified = 1;
+        FileChangeType._map[2] = "Removed";
+        FileChangeType.Removed = 2;
+    })(exports.FileChangeType || (exports.FileChangeType = {}));
+
+    var CommentViewModel = (function (_super) {
+        __extends(CommentViewModel, _super);
+        function CommentViewModel(owner, line, init) {
+            var _this = this;
+                _super.call(this);
+            this.owner = owner;
+            this.line = line;
+            this.id = ko.observable(init.id || 0);
+            this.body = ko.observable(init.body || '');
+            this.author = ko.observable();
+            this.isAuthor = ko.observable(init.isAuthor || false);
+            this.postedOn = ko.observable();
+            if(init.postedOn) {
+                this.postedOn(new Date(init.postedOn));
+            }
+            if(init.author) {
+                this.author(new models.UserReference(init.author));
+            }
+            this.displayPostedOn = ko.computed(function () {
+                return $.timeago(_this.postedOn());
+            });
+        }
+        CommentViewModel.prototype.deleteComment = function () {
+            $.ajax('~/api/v1/comments/' + this.id(), {
+                type: 'delete'
+            }).done(function () {
+                this.line.comments.remove(self);
+            }).fail(function (xhr) {
+                switch(xhr.status) {
+                    case 404: {
+                        alert('no such comment!');
+                        break;
+
+                    }
+                    case 403: {
+                        alert('hey! you can\'t delete someone else\'s comment!');
+                        break;
+
+                    }
+                }
+            });
+        };
+        return CommentViewModel;
+    })(sy.ViewModelBase);
+    exports.CommentViewModel = CommentViewModel;    
+    var DiffLineViewModel = (function (_super) {
+        __extends(DiffLineViewModel, _super);
+        function DiffLineViewModel() {
+            _super.apply(this, arguments);
+
+        }
+        return DiffLineViewModel;
+    })(sy.ViewModelBase);
+    exports.DiffLineViewModel = DiffLineViewModel;    
+    var ViewReviewViewModel = (function (_super) {
+        __extends(ViewReviewViewModel, _super);
+        function ViewReviewViewModel() {
+            _super.apply(this, arguments);
+
+        }
+        return ViewReviewViewModel;
+    })(sy.ViewModelBase);
+    exports.ViewReviewViewModel = ViewReviewViewModel;    
+})
+
 //@ sourceMappingURL=rR.m.reviews.js.map

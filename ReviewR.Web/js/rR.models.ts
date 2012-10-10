@@ -1,5 +1,5 @@
 /// <reference path="ref\knockout.d.ts" />
-interface UserReferenceInit {
+export interface UserReferenceInit {
     id?: number;
     email?: string;
     emailHash?: string;
@@ -21,7 +21,7 @@ export class UserReference {
     }
 }
 
-interface UserInit extends UserReferenceInit {
+export interface UserInit extends UserReferenceInit {
     roles?: string[];
     loggedIn?: bool;
 }
@@ -42,7 +42,7 @@ export class User extends UserReference {
     }
 }
 
-interface ReviewInit {
+export interface ReviewInit {
     id?: number;
     title?: string;
     authorName?: string;
