@@ -1,16 +1,17 @@
 declare module Knockout {
-    interface Observable { }
-
     interface Observable {
         (newValue: any): void;
         (): any;
-        subscribe: (newValue: any) => void;
+        subscribe(handler: () => void): void;
+        subscribe(handler: (newValue: any) => void): void;
     }
 
     interface ObservableArray extends Observable {
         (newValue: any[]): void;
         (): any[];
-        subscribe: (newValue: any[]) => void;
+        subscribe(handler: () => void): void;
+        subscribe(handler: (newValue: any[]) => void): void;
+        remove(value: any): void;
         removeAll(): void;
         push(...values: any[]): void;
     }
