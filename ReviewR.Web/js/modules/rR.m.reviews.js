@@ -10,13 +10,18 @@ define(["require", "exports", '../fx/syrah', '../rR.models'], function(require, 
 
     (function (FileChangeType) {
         FileChangeType._map = [];
-        FileChangeType._map[0] = "Added";
         FileChangeType.Added = 0;
-        FileChangeType._map[1] = "Modified";
         FileChangeType.Modified = 1;
-        FileChangeType._map[2] = "Removed";
         FileChangeType.Removed = 2;
     })(exports.FileChangeType || (exports.FileChangeType = {}));
+
+    (function (LineChangeType) {
+        LineChangeType._map = [];
+        LineChangeType.Same = 0;
+        LineChangeType.Added = 1;
+        LineChangeType.Removed = 2;
+        LineChangeType.HunkHeader = 3;
+    })(exports.LineChangeType || (exports.LineChangeType = {}));
 
     var CommentViewModel = (function (_super) {
         __extends(CommentViewModel, _super);
@@ -65,9 +70,8 @@ define(["require", "exports", '../fx/syrah', '../rR.models'], function(require, 
     exports.CommentViewModel = CommentViewModel;    
     var DiffLineViewModel = (function (_super) {
         __extends(DiffLineViewModel, _super);
-        function DiffLineViewModel() {
-            _super.apply(this, arguments);
-
+        function DiffLineViewModel(init, owner) {
+                _super.call(this);
         }
         return DiffLineViewModel;
     })(sy.ViewModelBase);

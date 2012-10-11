@@ -6,9 +6,16 @@ import sy = module('../fx/syrah');
 import models = module('../rR.models');
 
 export enum FileChangeType {
-    Added,
-    Modified,
-    Removed
+    Added = 0,
+    Modified = 1,
+    Removed = 2
+}
+
+export enum LineChangeType {
+    Same = 0,
+    Added = 1,
+    Removed = 2,
+    HunkHeader = 3
 }
 
 export interface CommentViewModelInit {
@@ -59,7 +66,21 @@ export class CommentViewModel extends sy.ViewModelBase {
     }
 }
 
+export interface DiffLineViewModelInit {
+    type: LineChangeType;
+    text: string;
+    index: number;
+    leftLine: number;
+    rightLine: number;
+    comments: CommentViewModelInit[];
+}
+
 export class DiffLineViewModel extends sy.ViewModelBase {
+
+
+    constructor (init: DiffLineViewModelInit, owner: ViewReviewViewModel) {
+        super();
+    }
 }
 
 export class ViewReviewViewModel extends sy.ViewModelBase {

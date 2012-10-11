@@ -636,7 +636,6 @@
     <Content Include="Global.asax" />
     <Content Include="Infrastructure\Temp\WhatIsThis.txt" />
     <Content Include="js\fx\Backbone.lite.js" />
-    <Content Include="js\fx\old\syrah.utils.js" />
     <TypeScriptCompile Include="js\fx\syrah.ts" />
     <TypeScriptCompile Include="js\fx\syrah.dom.ts" />
     <TypeScriptCompile Include="js\fx\syrah.binding.ts" />
@@ -665,21 +664,35 @@
     <Content Include="js\fx\syrah.utils.js">
       <DependentUpon>syrah.utils.ts</DependentUpon>
     </Content>
-    <Content Include="js\modules\rR.m.reviews.js" />
-    <Content Include="js\modules\rR.m.home.js" />
+    <Content Include="js\modules\old\rR.m.reviews.js" />
+    <Content Include="js\modules\old\rR.m.home.js" />
     <Content Include="js\fx\knockout.validation.js" />
-    <Content Include="js\modules\rR.m.auth.js" />
+    <Content Include="js\modules\old\rR.m.auth.js" />
     <TypeScriptCompile Include="js\ref\jquery.d.ts" />
     <TypeScriptCompile Include="js\ref\jquery.bootstrap.d.ts" />
     <TypeScriptCompile Include="js\ref\knockout.d.ts" />
     <TypeScriptCompile Include="js\ref\signals.d.ts" />
     <TypeScriptCompile Include="js\ref\Backbone.lite.d.ts" />
+    <TypeScriptCompile Include="js\modules\rR.m.auth.ts" />
+    <Content Include="js\modules\rR.m.auth.js">
+      <DependentUpon>rR.m.auth.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="js\modules\rR.m.home.ts" />
+    <Content Include="js\modules\rR.m.home.js">
+      <DependentUpon>rR.m.home.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="js\modules\rR.m.reviews.ts" />
+    <Content Include="js\modules\rR.m.reviews.js">
+      <DependentUpon>rR.m.reviews.ts</DependentUpon>
+    </Content>
     <Content Include="js\old\rR.app.js" />
     <Content Include="js\old\rR.models.js" />
     <Content Include="js\ref\Backbone.lite.d.js">
       <DependentUpon>Backbone.lite.d.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="js\ref\Modernizr.d.ts" />
+    <TypeScriptCompile Include="js\ref\knockout.validation.d.ts" />
+    <TypeScriptCompile Include="js\ref\jquery.timeago.d.ts" />
     <Content Include="js\ref\Modernizr.d.js">
       <DependentUpon>Modernizr.d.ts</DependentUpon>
     </Content>
@@ -724,6 +737,10 @@
     <TypeScriptCompile Include="js\rR.app.ts" />
     <Content Include="js\rR.app.js">
       <DependentUpon>rR.app.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="js\rR.models.ts" />
+    <Content Include="js\rR.models.js">
+      <DependentUpon>rR.models.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -825,6 +842,26 @@
   <ItemGroup>
     <Content Include="js\rR.app.js.map">
       <DependentUpon>rR.app.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\modules\rR.m.auth.js.map">
+      <DependentUpon>rR.m.auth.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\rR.models.js.map">
+      <DependentUpon>rR.models.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\modules\rR.m.home.js.map">
+      <DependentUpon>rR.m.home.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\modules\rR.m.reviews.js.map">
+      <DependentUpon>rR.m.reviews.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <PropertyGroup>
